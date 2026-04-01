@@ -1,0 +1,100 @@
+<!-- Navbar at the top -->
+<app-navbar></app-navbar>
+
+<!-- Sidebar -->
+<app-sidebar></app-sidebar>
+
+<div class="min-h-screen bg-[#f9fafb] transition-all duration-300 pb-12" 
+     [style.margin-left]="sidebarService.isCollapsed() ? '80px' : '280px'">
+  
+  <div class="px-10 pt-24 max-w-[1400px] mx-auto space-y-8 animate-in fade-in duration-500">
+    
+    <!-- Header Section -->
+    <div class="flex items-center justify-between">
+      <div class="space-y-1">
+        <h1 class="text-[30px] font-bold text-[#101828]">Services</h1>
+        <p class="text-[16px] text-[#4a5565]">Manage all services across departments</p>
+      </div>
+      <button (click)="onAddService()" 
+              class="bg-[#155dfc] text-white px-6 py-2.5 rounded-[10px] flex items-center gap-2 text-[16px] font-medium shadow-[0px_4px_6px_rgba(0,0,0,0.1)] hover:bg-blue-700 transition-all">
+        <span class="material-icons text-[20px]">add</span>
+        Add Service
+      </button>
+    </div>
+
+    <!-- Controls Section (Search & Filter) -->
+    <div class="bg-white p-6 rounded-[12px] shadow-sm border border-[#e5e7eb] flex items-center gap-4">
+      <div class="relative flex-1">
+        <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[20px]">search</span>
+        <input type="text" [(ngModel)]="searchQuery" placeholder="Search services..." 
+               class="w-full h-[48px] pl-12 pr-4 bg-white border border-[#d1d5dc] rounded-[10px] text-[16px] focus:outline-none focus:ring-1 focus:ring-[#155dfc] placeholder:text-[#9ca3af]">
+      </div>
+      
+      <div class="relative w-[240px]">
+        <select class="w-full h-[48px] px-4 bg-white border border-[#d1d5dc] rounded-[10px] text-[16px] appearance-none focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+          <option value="">All Categories</option>
+          <option value="Health">Health</option>
+          <option value="Education">Education</option>
+          <option value="Finance">Finance</option>
+        </select>
+        <span class="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-[#4a5565] pointer-events-none">expand_more</span>
+      </div>
+
+      <button class="h-[48px] px-6 bg-white border border-[#d1d5dc] rounded-[10px] flex items-center gap-2 text-[16px] font-medium text-[#364153] hover:bg-gray-50 transition-colors">
+        <span class="material-icons text-[20px]">filter_list</span>
+        Filter
+      </button>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div *ngFor="let service of services" 
+           class="bg-white rounded-[14px] overflow-hidden border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all flex flex-col group">
+        
+        <!-- Service Preview / Brand Area -->
+        <div class="h-[140px] flex items-center justify-center relative bg-[#f8fbff]"
+             [style.background]="service.gradient">
+          <img [src]="service.icon" [alt]="service.name" class="w-20 h-20 object-contain rounded-[10px] shadow-sm group-hover:scale-105 transition-transform duration-300">
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-6 flex flex-col flex-1 space-y-4">
+          <div class="space-y-1">
+            <h3 class="text-[18px] font-bold text-[#101828] leading-tight group-hover:text-[#155dfc] transition-colors line-clamp-1">{{service.name}}</h3>
+            <p class="text-[14px] text-[#6a7282] font-medium">{{service.category}}</p>
+          </div>
+
+          <div class="border-b border-[#f3f4f6] pb-4">
+            <p class="text-[12px] text-[#99a1af] uppercase font-bold tracking-wider mb-1">Department</p>
+            <p class="text-[14px] font-medium text-[#364153]">{{service.department}}</p>
+          </div>
+
+          <div class="flex items-center justify-between mt-auto">
+            <span [ngClass]="{
+              'bg-[#dcfce7] text-[#008236] border-[#bbf7d0]': service.status === 'Active',
+              'bg-[#f3f4f6] text-[#364153] border-[#e5e7eb]': service.status === 'Inactive',
+              'bg-[#fef9c2] text-[#a65f00] border-[#fef08a]': service.status === 'Draft'
+            }" class="px-3 py-1 rounded-full text-[12px] font-bold border">
+              {{service.status}}
+            </span>
+            
+            <div class="flex items-center gap-2">
+              <button (click)="onView(service)" 
+                      class="bg-[#eff6ff] text-[#155dfc] h-[36px] px-4 rounded-[10px] text-[14px] font-medium hover:bg-blue-100 transition-colors">
+                View
+              </button>
+              <button (click)="onEdit(service)" 
+                      class="bg-[#f0fdf4] text-[#00a63e] h-[36px] px-4 rounded-[10px] text-[14px] font-medium hover:bg-green-100 transition-colors">
+                Edit
+              </button>
+              <button class="bg-[#f9fafb] text-[#6a7282] h-[36px] w-[36px] flex items-center justify-center rounded-[10px] hover:bg-gray-100 transition-colors">
+                <span class="material-icons text-[18px]">more_vert</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

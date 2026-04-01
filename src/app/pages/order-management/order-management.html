@@ -1,0 +1,133 @@
+<div class="min-h-screen bg-[#f9fafb]">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <main class="transition-all duration-300 pt-[96px] pb-8 pr-12"
+        [ngStyle]="{'margin-left': sidebarService.isCollapsed() ? '80px' : '255px'}">
+    
+    <div class="max-w-[1450px] mx-auto space-y-8">
+      
+      <!-- Header -->
+      <div class="space-y-1">
+        <h1 class="text-[30px] font-bold text-[#101828]">Order Management</h1>
+        <p class="text-[16px] text-[#4a5565]">View and manage service orders and transactions</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Orders -->
+        <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] flex items-center gap-3">
+          <div class="w-12 h-12 bg-[#2b7fff] rounded-[10px] flex items-center justify-center p-3 relative">
+            <img [src]="imgVector" class="w-6 h-6" alt="">
+            <img [src]="imgVector1" class="absolute w-4 h-4 left-4 top-4" alt="">
+            <img [src]="imgVector2" class="absolute w-4 h-4 right-4 top-4" alt="">
+            <img [src]="imgVector3" class="absolute w-2 h-2 bottom-4 right-4" alt="">
+          </div>
+          <div>
+            <p class="text-[14px] text-[#4a5565]">Total Orders</p>
+            <p class="text-[24px] font-bold text-[#101828]">1,245</p>
+          </div>
+        </div>
+
+        <!-- Completed -->
+        <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] flex items-center gap-3">
+          <div class="w-12 h-12 bg-[#00c950] rounded-[10px] flex items-center justify-center p-3 relative">
+            <img [src]="imgVector" class="w-6 h-6" alt="">
+            <img [src]="imgVector1" class="absolute w-4 h-4 left-4 top-4" alt="">
+            <img [src]="imgVector2" class="absolute w-4 h-4 right-4 top-4" alt="">
+            <img [src]="imgVector3" class="absolute w-2 h-2 bottom-4 right-4" alt="">
+          </div>
+          <div>
+            <p class="text-[14px] text-[#4a5565]">Completed</p>
+            <p class="text-[24px] font-bold text-[#101828]">1,089</p>
+          </div>
+        </div>
+
+        <!-- Processing -->
+        <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] flex items-center gap-3">
+          <div class="w-12 h-12 bg-[#f0b100] rounded-[10px] flex items-center justify-center p-3 relative text-white">
+            <img [src]="imgVector4" class="w-6 h-6" alt="">
+            <img [src]="imgVector5" class="absolute w-4 h-4 right-3 top-3" alt="">
+          </div>
+          <div>
+            <p class="text-[14px] text-[#4a5565]">Processing</p>
+            <p class="text-[24px] font-bold text-[#101828]">98</p>
+          </div>
+        </div>
+
+        <!-- Failed -->
+        <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] flex items-center gap-3">
+          <div class="w-12 h-12 bg-[#fb2c36] rounded-[10px] flex items-center justify-center p-3 relative">
+            <img [src]="imgVector" class="w-6 h-6" alt="">
+            <img [src]="imgVector1" class="absolute w-4 h-4 left-4 top-4" alt="">
+            <img [src]="imgVector2" class="absolute w-4 h-4 right-4 top-4" alt="">
+            <img [src]="imgVector3" class="absolute w-2 h-2 bottom-4 right-4" alt="">
+          </div>
+          <div>
+            <p class="text-[14px] text-[#4a5565]">Failed</p>
+            <p class="text-[24px] font-bold text-[#101828]">58</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Card -->
+      <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] space-y-6">
+        
+        <!-- Search and Action Row -->
+        <div class="flex items-center gap-4">
+          <div class="relative flex-1">
+            <img [src]="imgVector6" class="absolute left-3 top-3.5 w-4 h-4 opacity-50" alt="">
+            <img [src]="imgVector7" class="absolute right-3 top-3.5 w-4 h-4 opacity-50" alt="">
+            <input type="text" placeholder="Search orders..."
+                   class="w-full h-[45.6px] pl-10 pr-10 border border-[#d1d5dc] rounded-[10px] text-[16px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]/50">
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="border border-[#e5e7eb] rounded-[10px] overflow-hidden">
+          <table class="w-full text-left">
+            <thead class="bg-[#f9fafb] border-b border-[#e5e7eb]">
+              <tr>
+                <th class="px-6 py-4 text-[14px] font-semibold text-[#364153]">Order ID</th>
+                <th class="px-6 py-4 text-[14px] font-semibold text-[#364153]">User</th>
+                <th class="px-6 py-4 text-[14px] font-semibold text-[#364153]">Service</th>
+                <th class="px-6 py-4 text-[14px] font-semibold text-[#364153]">Amount</th>
+                <th class="px-6 py-4 text-[14px] font-semibold text-[#364153]">Status</th>
+                <th class="px-6 py-4 text-[14px] font-semibold text-[#364153]">Date</th>
+                <th class="px-6 py-4 text-[14px] font-semibold text-[#364153]">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#e5e7eb]">
+              <tr *ngFor="let order of orders" class="hover:bg-gray-50 transition-colors group">
+                <td class="px-6 py-4.5 text-[14px] text-[#101828] font-medium">{{order.id}}</td>
+                <td class="px-6 py-4.5 text-[14px] text-[#101828]">{{order.user}}</td>
+                <td class="px-6 py-4.5 text-[14px] text-[#101828]">{{order.service}}</td>
+                <td class="px-6 py-4.5 text-[14px] text-[#101828]">{{order.amount}}</td>
+                <td class="px-6 py-4.5">
+                  <span class="px-3 py-1 rounded-full text-[12px] font-medium"
+                        [ngClass]="{
+                          'bg-[#dcfce7] text-[#008236]': order.status === 'Completed',
+                          'bg-[#dbeafe] text-[#1447e6]': order.status === 'Processing',
+                          'bg-[#fef9c2] text-[#a65f00]': order.status === 'Pending',
+                          'bg-[#ffe2e2] text-[#c10007]': order.status === 'Failed'
+                        }">
+                    {{order.status}}
+                  </span>
+                </td>
+                <td class="px-6 py-4.5 text-[14px] text-[#101828]">{{order.date}}</td>
+                <td class="px-6 py-4.5">
+                  <button (click)="viewDetails(order)" 
+                          class="p-2 hover:bg-[#155dfc]/10 rounded-[10px] transition-colors">
+                    <img [src]="imgIcon" class="w-4 h-4 opacity-100 group-hover:brightness-50" alt="View">
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</div>

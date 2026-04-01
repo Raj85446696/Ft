@@ -1,0 +1,47 @@
+/* User Activity Report Styles */
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+main {
+  animation: fadeInScale 0.4s ease-out forwards;
+}
+
+/* Custom Table Shadows and Borders */
+table {
+  border-spacing: 0;
+}
+
+th {
+  letter-spacing: 0.05em;
+}
+
+/* Chart Animations */
+circle {
+  transition: stroke-dashoffset 1s ease-in-out;
+}
+
+/* Smooth transitions for interactive elements */
+input, select, button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scrollbar Customization for Tables */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #d1d5dc;
+  border-radius: 10px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #a1a5af;
+}

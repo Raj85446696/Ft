@@ -1,0 +1,166 @@
+<div class="min-h-screen bg-[#f9fafb]">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content Padding & Sidebar Collapse Responsive -->
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+    
+    <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      <!-- Header Section -->
+      <div class="flex items-center justify-between">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 text-[14px] text-[#6a7282] font-medium">
+            <a routerLink="/dashboard" class="hover:text-[#155dfc] transition-colors">Home</a>
+            <span class="material-icons text-[16px]">chevron_right</span>
+            <span class="text-[#101828]">Manage Group</span>
+          </div>
+          <h1 class="text-[30px] font-bold text-[#101828]">Manage Groups</h1>
+          <p class="text-[16px] text-[#4a5565]">View and configure application access groups across all departments</p>
+        </div>
+        <button routerLink="/app-inside/manage-group/create"
+          class="bg-[#155dfc] text-white px-6 py-2.5 rounded-[12px] flex items-center gap-2 text-[16px] font-bold shadow-lg shadow-blue-500/20 hover:bg-[#0047e0] transition-all active:scale-95 group">
+          <span class="material-icons text-[20px] group-hover:rotate-90 transition-transform duration-300">add</span>
+          Create New Group
+        </button>
+      </div>
+
+      <!-- Quick Summary Row -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-[16px] border border-[#e5e7eb] shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 bg-[#eff6ff] rounded-[12px] flex items-center justify-center text-[#155dfc]">
+            <span class="material-icons">groups</span>
+          </div>
+          <div>
+            <p class="text-[14px] text-[#6a7282] uppercase font-bold tracking-wider">Total Groups</p>
+            <p class="text-[24px] font-bold text-[#101828]">{{groups.length}}</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-[16px] border border-[#e5e7eb] shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 bg-[#dcfce7] rounded-[12px] flex items-center justify-center text-[#15803d]">
+            <span class="material-icons">group_add</span>
+          </div>
+          <div>
+            <p class="text-[14px] text-[#6a7282] uppercase font-bold tracking-wider">Total Members</p>
+            <p class="text-[24px] font-bold text-[#101828]">68</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-[16px] border border-[#e5e7eb] shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 bg-[#fef9c2] rounded-[12px] flex items-center justify-center text-[#a65f00]">
+            <span class="material-icons">domain</span>
+          </div>
+          <div>
+            <p class="text-[14px] text-[#6a7282] uppercase font-bold tracking-wider">Departments Linked</p>
+            <p class="text-[24px] font-bold text-[#101828]">05</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-[16px] border border-[#e5e7eb] shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 bg-[#f8fbff] rounded-[12px] flex items-center justify-center text-[#155dfc]">
+            <span class="material-icons">verified_user</span>
+          </div>
+          <div>
+            <p class="text-[14px] text-[#6a7282] uppercase font-bold tracking-wider">Active Roles</p>
+            <p class="text-[24px] font-bold text-[#101828]">12</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group List Header & List Controller Row -->
+      <div class="bg-white rounded-[16px] border border-[#e5e7eb] shadow-sm overflow-hidden min-h-[400px]">
+        <div class="p-6 border-b border-[#e5e7eb] flex items-center justify-between">
+          <h3 class="text-[18px] font-bold text-[#101828]">All Groups ({{groups.length}})</h3>
+          <div class="flex items-center gap-4">
+            <div class="relative w-[320px]">
+              <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[20px]">search</span>
+              <input type="text" [(ngModel)]="searchQuery" placeholder="Search by group name..." 
+                     class="w-full h-[44px] pl-12 pr-4 bg-[#f9fafb] border border-[#d1d5dc] rounded-[10px] text-[15px] focus:outline-none focus:ring-1 focus:ring-[#155dfc] placeholder:text-[#9ca3af]">
+            </div>
+            <button class="h-[44px] px-4 bg-white border border-[#d1d5dc] rounded-[10px] flex items-center gap-2 text-[15px] font-bold text-[#364153] hover:bg-gray-50 transition-colors">
+              <span class="material-icons text-[20px]">filter_list</span>
+              Filter
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead class="bg-[#f9fafb]">
+              <tr>
+                <th class="text-left py-4 px-6 text-[13px] font-bold text-[#4a5565] uppercase tracking-wider">Group Name</th>
+                <th class="text-left py-4 px-6 text-[13px] font-bold text-[#4a5565] uppercase tracking-wider">Description</th>
+                <th class="text-left py-4 px-6 text-[13px] font-bold text-[#4a5565] uppercase tracking-wider">Linked Depts</th>
+                <th class="text-left py-4 px-6 text-[13px] font-bold text-[#4a5565] uppercase tracking-wider">Members</th>
+                <th class="text-left py-4 px-6 text-[13px] font-bold text-[#4a5565] uppercase tracking-wider">Status</th>
+                <th class="text-right py-4 px-6 text-[13px] font-bold text-[#4a5565] uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#e5e7eb]">
+              <tr *ngFor="let group of groups" class="hover:bg-[#f8fbff] transition-colors group">
+                <td class="py-5 px-6">
+                  <span class="text-[15px] font-bold text-[#101828]">{{group.name}}</span>
+                </td>
+                <td class="py-5 px-6">
+                  <p class="text-[14px] text-[#6a7282] max-w-[280px] line-clamp-1 italic">{{group.description}}</p>
+                </td>
+                <td class="py-5 px-6">
+                  <div class="flex flex-wrap gap-1.5 min-w-[120px]">
+                    <span *ngFor="let dept of group.departments" 
+                          class="bg-[#eff6ff] text-[#155dfc] text-[11px] font-bold px-2 py-0.5 rounded-[6px] border border-[#dbeafe]">
+                      {{dept}}
+                    </span>
+                  </div>
+                </td>
+                <td class="py-5 px-6">
+                  <div class="flex flex-col">
+                    <span class="text-[14px] font-bold text-[#101828]">{{group.membersCount}} Members</span>
+                    <span class="text-[11px] text-[#6a7282] mt-0.5 italic">Added on {{group.createdAt}}</span>
+                  </div>
+                </td>
+                <td class="py-5 px-6">
+                  <button (click)="onToggleStatus(group)" 
+                    class="px-3 py-1 rounded-full text-[12px] font-bold border flex items-center gap-1.5 transition-all w-fit"
+                    [ngClass]="{
+                      'bg-[#dcfce7] text-[#15803d] border-[#bbf7d0] hover:bg-green-100': group.status === 'Active',
+                      'bg-[#f3f4f6] text-[#4a5565] border-[#e5e7eb] hover:bg-gray-200': group.status === 'Inactive'
+                    }">
+                    <span class="w-1.5 h-1.5 rounded-full" [ngClass]="group.status === 'Active' ? 'bg-[#15803d]' : 'bg-[#6a7282]'"></span>
+                    {{group.status}}
+                  </button>
+                </td>
+                <td class="py-5 px-6 text-right">
+                  <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button (click)="$event.stopPropagation()"
+                            class="bg-white border border-[#d1d5dc] text-[#364153] h-[36px] w-[36px] flex items-center justify-center rounded-[8px] hover:bg-gray-50 hover:text-[#155dfc] hover:border-[#155dfc] transition-all">
+                      <span class="material-icons text-[18px]">edit</span>
+                    </button>
+                    <button (click)="onDelete(group)" 
+                            class="bg-[#fee2e2] text-[#b91c1c] h-[36px] w-[36px] flex items-center justify-center rounded-[8px] hover:bg-[#ef4444] hover:text-white transition-all">
+                      <span class="material-icons text-[18px]">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Empty State -->
+          <div *ngIf="groups.length === 0" class="flex flex-col items-center justify-center py-24 space-y-4">
+             <div class="w-20 h-20 bg-[#f9fafb] rounded-full flex items-center justify-center text-[#9ca3af]">
+                <span class="material-icons text-[48px]">group_off</span>
+             </div>
+             <div class="text-center">
+                <p class="text-[18px] font-bold text-[#101828]">No groups found</p>
+                <p class="text-[14px] text-[#6a7282]">You might want to refine your search or create a new group.</p>
+             </div>
+             <button class="bg-[#155dfc] text-white px-6 py-2.5 rounded-[10px] text-[15px] font-bold hover:shadow-lg transition-all">
+               Create First Group
+             </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

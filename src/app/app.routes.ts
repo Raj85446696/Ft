@@ -1,0 +1,79 @@
+import { Routes } from '@angular/router';
+import { Login } from './pages/login/login';
+import { Onboard } from './pages/onboard/onboard';
+import { Dashboard } from './pages/dashboard/dashboard';
+import { ManageDepartments } from './pages/manage-departments/manage-departments';
+import { AddDepartment } from './pages/add-department/add-department';
+import { ViewDepartment } from './pages/view-department/view-department';
+import { EditDepartment } from './pages/edit-department/edit-department';
+import { DepartmentSettings } from './pages/department-settings/department-settings';
+import { MyAccount } from './pages/my-account/my-account';
+import { RatingFeedback } from './pages/rating-feedback/rating-feedback';
+import { PartnerOnboarding } from './pages/partner-onboarding/partner-onboarding';
+import { CacheRefresh } from './pages/cache-refresh/cache-refresh';
+import { OrderManagement } from './pages/order-management/order-management';
+import { ManageBanner } from './pages/manage-banner/manage-banner';
+import { UserReport } from './pages/user-report/user-report';
+import { ServiceReport } from './pages/service-report/service-report';
+import { PartnerReport } from './pages/partner-report/partner-report';
+import { MonthlyReport } from './pages/department-report/monthly/monthly-report';
+import { YearlyReport } from './pages/department-report/yearly/yearly-report';
+import { TopDepartmentSearch } from './pages/department-report/top-search/top-department-search';
+import { Services } from './pages/app-inside/services/services';
+import { BiTokenPage } from './pages/app-inside/bi-token/bi-token';
+import { CreateBiToken } from './pages/app-inside/bi-token/create-bi-token/create-bi-token';
+import { UploadTranslation } from './pages/app-inside/upload-translation/upload-translation';
+import { ManageGroup } from './pages/app-inside/manage-group/manage-group';
+import { CreateGroup } from './pages/app-inside/manage-group/create-group/create-group';
+import { ServiceOnboard } from './pages/service-onboard/service-onboard';
+import { ManageScheme } from './pages/services-plus/manage-scheme/manage-scheme';
+import { CreateScheme } from './pages/services-plus/create-scheme/create-scheme';
+import { UserManagement } from './pages/user-management/user-management';
+import { CreateUser } from './pages/user-management/create-user/create-user';
+import { RoleManagement } from './pages/role-management/role-management';
+import { PermissionsPage } from './pages/permissions/permissions';
+import { OnboardRequests } from './pages/onboard-requests/onboard-requests';
+import { EmailGroupPage } from './pages/manage-email/email-group/email-group';
+import { ViewEmailPage } from './pages/manage-email/view-email/view-email';
+import { CustomEmailPage } from './pages/manage-email/custom-email/custom-email';
+
+export const routes: Routes = [
+  { path: 'login', component: Login },
+  { path: 'onboard', component: Onboard },
+  { path: 'dashboard', component: Dashboard },
+  { path: 'manage-departments', component: ManageDepartments },
+  { path: 'add-department', component: AddDepartment },
+  { path: 'view-department', component: ViewDepartment },
+  { path: 'edit-department', component: EditDepartment },
+  { path: 'department-settings', component: DepartmentSettings },
+  { path: 'my-account', component: MyAccount },
+  { path: 'rating-feedback', component: RatingFeedback },
+  { path: 'partner-onboarding', component: PartnerOnboarding },
+  { path: 'cache-refresh', component: CacheRefresh },
+  { path: 'order-management', component: OrderManagement },
+  { path: 'manage-banner', component: ManageBanner },
+  { path: 'user-report', component: UserReport },
+  { path: 'service-report', component: ServiceReport },
+  { path: 'partner-report', component: PartnerReport },
+  { path: 'dept-report/monthly', component: MonthlyReport },
+  { path: 'dept-report/yearly', component: YearlyReport },
+  { path: 'dept-report/top-search', component: TopDepartmentSearch },
+  { path: 'app-inside/services', component: Services },
+  { path: 'app-inside/bi-token', component: BiTokenPage },
+  { path: 'app-inside/bi-token/create', component: CreateBiToken },
+  { path: 'app-inside/upload-translation', component: UploadTranslation },
+  { path: 'app-inside/manage-group', component: ManageGroup },
+  { path: 'app-inside/manage-group/create', component: CreateGroup },
+  { path: 'service-onboard', component: ServiceOnboard },
+  { path: 'services-plus/manage-scheme', component: ManageScheme },
+  { path: 'services-plus/create-scheme', component: CreateScheme },
+  { path: 'user-management', component: UserManagement },
+  { path: 'user-management/create', component: CreateUser },
+  { path: 'role-management', component: RoleManagement },
+  { path: 'permissions', component: PermissionsPage },
+  { path: 'onboard-requests', component: OnboardRequests },
+  { path: 'manage-email/email-group', component: EmailGroupPage },
+  { path: 'manage-email/view-email', component: ViewEmailPage },
+  { path: 'manage-email/custom-email', component: CustomEmailPage },
+  { path: '', redirectTo: 'login', pathMatch: 'full' }
+];

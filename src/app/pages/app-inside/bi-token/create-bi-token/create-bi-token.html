@@ -1,0 +1,206 @@
+<div class="min-h-screen bg-[#f9fafb]">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+    
+    <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      <!-- Breadcrumbs & Header -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2 text-[14px] text-[#6a7282] font-medium">
+          <a routerLink="/dashboard" class="hover:text-[#155dfc] transition-colors flex items-center gap-1">
+            <span class="material-icons text-[18px]">home</span>
+            Dashboard
+          </a>
+          <span class="material-icons text-[16px]">chevron_right</span>
+          <a routerLink="/app-inside/bi-token" class="hover:text-[#155dfc] transition-colors">App Inside</a>
+          <span class="material-icons text-[16px]">chevron_right</span>
+          <a routerLink="/app-inside/bi-token" class="hover:text-[#155dfc] transition-colors">BI Token</a>
+          <span class="material-icons text-[16px]">chevron_right</span>
+          <span class="text-[#101828]">Create New Token</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <button routerLink="/app-inside/bi-token" 
+                     class="w-10 h-10 bg-white border border-[#e5e7eb] rounded-[10px] flex items-center justify-center text-[#6a7282] hover:bg-gray-50 transition-all shadow-sm">
+              <span class="material-icons">arrow_back</span>
+            </button>
+            <div class="space-y-1">
+              <h1 class="text-[32px] font-bold text-[#101828] leading-tight">Create BI Token</h1>
+              <p class="text-[16px] text-[#4a5565]">Generate a new secure token for data analytics</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button routerLink="/app-inside/bi-token" 
+                    class="h-[46px] px-6 rounded-[12px] text-[15px] font-bold text-[#364153] border border-[#d1d5dc] bg-white hover:bg-gray-50 transition-all">
+              Cancel
+            </button>
+            <button (click)="onSave()" 
+                    class="h-[46px] px-8 bg-[#155dfc] text-white rounded-[12px] text-[15px] font-bold shadow-lg shadow-blue-500/20 hover:bg-[#0047e0] transition-all flex items-center gap-2">
+              <span class="material-icons text-[18px]">vpn_key</span>
+              Generate & Save Token
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Side: Basic Info -->
+        <div class="lg:col-span-2 space-y-8">
+          
+          <!-- Token Identification Card -->
+          <div class="bg-white rounded-[16px] border border-[#e5e7eb] shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100">
+            <div class="p-6 border-b border-[#e5e7eb] bg-[#fcfcfd]">
+              <h3 class="text-[18px] font-bold text-[#101828] flex items-center gap-2">
+                <span class="material-icons text-[#155dfc] text-[20px]">badge</span>
+                Token Identification
+              </h3>
+            </div>
+            <div class="p-8 space-y-6">
+              <div class="space-y-2">
+                <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide flex items-center justify-between">
+                  Token Name *
+                  <span class="text-[12px] text-[#6a7282] lowercase font-normal italic">Unique identifier for this token</span>
+                </label>
+                <div class="relative group">
+                  <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[20px] group-focus-within:text-[#155dfc] transition-colors">key</span>
+                  <input type="text" [(ngModel)]="token.name" placeholder="e.g. Q1 Marketing Report API" 
+                         class="w-full h-[54px] pl-12 pr-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all hover:bg-gray-50/50">
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Purpose & Description</label>
+                <div class="relative group">
+                  <span class="material-icons absolute left-4 top-4 text-[#9ca3af] text-[20px] group-focus-within:text-[#155dfc] transition-colors">description</span>
+                  <textarea [(ngModel)]="token.description" rows="4" placeholder="Briefly describe what this token will be used for..." 
+                            class="w-full pl-12 pr-4 pt-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all hover:bg-gray-50/50 min-h-[120px]"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lifecycle & Expiry Card -->
+          <div class="bg-white rounded-[16px] border border-[#e5e7eb] shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200">
+            <div class="p-6 border-b border-[#e5e7eb] bg-[#fcfcfd]">
+              <h3 class="text-[18px] font-bold text-[#101828] flex items-center gap-2">
+                <span class="material-icons text-[#00c950] text-[20px]">event_repeat</span>
+                Lifecycle & Expiry
+              </h3>
+            </div>
+            <div class="p-8">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Expiry Type</label>
+                  <div class="relative">
+                    <select class="w-full h-[54px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] appearance-none focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] cursor-pointer">
+                      <option value="60">60 Days (Standard)</option>
+                      <option value="90">90 Days</option>
+                      <option value="180">180 Days (Long-term)</option>
+                      <option value="custom">Custom Date</option>
+                    </select>
+                    <span class="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-[#6a7282] pointer-events-none">expand_more</span>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Custom Expiry Date</label>
+                  <div class="relative group">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[20px] group-focus-within:text-[#155dfc] transition-colors">calendar_today</span>
+                    <input type="date" [(ngModel)]="token.expiryDate" 
+                           class="w-full h-[54px] pl-12 pr-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Permissions & Security -->
+        <div class="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 delay-300">
+          
+          <div class="bg-[#101828] text-white rounded-[20px] p-8 shadow-xl shadow-gray-400/20 relative overflow-hidden group">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-[#155dfc]/20 rounded-full blur-[40px] group-hover:scale-150 transition-transform duration-700"></div>
+            <div class="relative space-y-4">
+              <div class="w-12 h-12 bg-white/10 rounded-[12px] flex items-center justify-center">
+                <span class="material-icons text-[#155dfc] text-[28px]">verified_user</span>
+              </div>
+              <h3 class="text-[20px] font-bold leading-tight">Security Best Practices</h3>
+              <ul class="space-y-3">
+                <li class="flex items-start gap-3 text-[14px] text-gray-400">
+                  <span class="material-icons text-[#00c950] text-[18px]">check_circle</span>
+                  <span>Rotate your tokens every 90 days for maximum safety.</span>
+                </li>
+                <li class="flex items-start gap-3 text-[14px] text-gray-400">
+                  <span class="material-icons text-[#00c950] text-[18px]">check_circle</span>
+                  <span>Never share secret tokens via email or chat applications.</span>
+                </li>
+                <li class="flex items-start gap-3 text-[14px] text-gray-400">
+                  <span class="material-icons text-[#00c950] text-[18px]">check_circle</span>
+                  <span>Limit token permissions to the minimum scope required.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Permisssions Menu -->
+          <div class="bg-white rounded-[16px] border border-[#e5e7eb] shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-[#e5e7eb] bg-[#fcfcfd]">
+              <h3 class="text-[18px] font-bold text-[#101828] flex items-center gap-2">
+                <span class="material-icons text-[#a65f00] text-[20px]">manage_accounts</span>
+                Access Scopes
+              </h3>
+            </div>
+            <div class="p-6 space-y-4">
+              <label class="flex items-center justify-between p-4 rounded-[12px] border border-[#e5e7eb] hover:bg-gray-50 transition-colors cursor-pointer group">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-[#eff6ff] rounded-[8px] flex items-center justify-center text-[#155dfc] group-hover:scale-110 transition-transform">
+                    <span class="material-icons text-[20px]">analytics</span>
+                  </div>
+                  <div>
+                    <p class="font-bold text-[#364153] text-[15px]">Read Analytics</p>
+                    <p class="text-[12px] text-[#6a7282]">View dashboard data</p>
+                  </div>
+                </div>
+                <input type="checkbox" [(ngModel)]="token.permissions.read" class="w-[20px] h-[20px] accent-[#155dfc] rounded-[6px]">
+              </label>
+
+              <label class="flex items-center justify-between p-4 rounded-[12px] border border-[#e5e7eb] hover:bg-gray-50 transition-colors cursor-pointer group">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-[#fef9c2] rounded-[8px] flex items-center justify-center text-[#a65f00] group-hover:scale-110 transition-transform">
+                    <span class="material-icons text-[20px]">edit</span>
+                  </div>
+                  <div>
+                    <p class="font-bold text-[#364153] text-[15px]">Modify Metrics</p>
+                    <p class="text-[12px] text-[#6a7282]">Update threshold values</p>
+                  </div>
+                </div>
+                <input type="checkbox" [(ngModel)]="token.permissions.write" class="w-[20px] h-[20px] accent-[#155dfc] rounded-[6px]">
+              </label>
+
+              <label class="flex items-center justify-between p-4 rounded-[12px] border border-[#e5e7eb] border-dashed text-[#9ca3af] cursor-not-allowed group">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-gray-100 rounded-[8px] flex items-center justify-center text-[#9ca3af]">
+                    <span class="material-icons text-[20px]">delete_forever</span>
+                  </div>
+                  <div>
+                    <p class="font-bold text-[15px]">Full System Delete</p>
+                    <p class="text-[12px]">Admin permission required</p>
+                  </div>
+                </div>
+                <span class="material-icons text-[18px]">lock</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

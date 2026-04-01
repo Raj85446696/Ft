@@ -1,0 +1,60 @@
+/* Partner Onboarding Report Styles */
+
+@keyframes drawPath {
+  from { stroke-dasharray: 0 1000; }
+  to { stroke-dasharray: 1000 1000; }
+}
+
+.animate-draw-path {
+  animation: drawPath 2.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+main > div {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* 3D Perspective for trend graph */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Custom Scrollbar for large tables */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Micro-interactions */
+tr:hover td:first-child span {
+  color: #155dfc;
+}
+
+/* Chart Point Hover */
+circle {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+circle:hover {
+  r: 2;
+  stroke: white;
+  stroke-width: 0.5;
+}

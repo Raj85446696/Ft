@@ -1,0 +1,118 @@
+<!-- Navbar at the top -->
+<app-navbar></app-navbar>
+
+<!-- Sidebar -->
+<app-sidebar></app-sidebar>
+
+<div class="min-h-screen bg-slate-50 transition-all duration-300" 
+     [style.margin-left]="sidebarService.isCollapsed() ? '80px' : '280px'">
+  
+  <div class="p-8 pt-24">
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Yearly Department Report</h1>
+        <p class="text-gray-500 mt-1">Annual performance trends and ministry-wise growth analytics</p>
+      </div>
+      <button (click)="exportReport()" class="flex items-center gap-2 bg-[#155dfc] text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+        <span class="material-icons text-[20px]">download</span>
+        Export Report
+      </button>
+    </div>
+
+    <!-- Filters and Dynamic Year Toggle -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8 flex flex-wrap gap-6 items-end">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-bold text-gray-600 ml-1">Reporting Year</label>
+        <select [(ngModel)]="selectedYear" class="bg-slate-50 border-none rounded-xl px-4 py-2.5 text-gray-700 focus:ring-2 focus:ring-blue-500 transition-all min-w-[120px] cursor-pointer appearance-none">
+          <option *ngFor="let y of years" [value]="y">{{y}}</option>
+        </select>
+      </div>
+      
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-bold text-gray-600 ml-1">Performance Metric</label>
+        <select [(ngModel)]="selectedMetric" class="bg-slate-50 border-none rounded-xl px-4 py-2.5 text-gray-700 focus:ring-2 focus:ring-blue-500 transition-all min-w-[200px] cursor-pointer appearance-none">
+          <option *ngFor="let m of metrics" [value]="m">{{m}}</option>
+        </select>
+      </div>
+
+      <button class="bg-slate-900 text-white px-8 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-all ml-auto">
+        Generate Yearly Analysis
+      </button>
+    </div>
+
+    <!-- Yearly Trend Visualization -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">Ministry Performance Trends</h2>
+          <p class="text-sm text-gray-500 mt-1">Comparative linear growth analysis across ministries</p>
+        </div>
+        
+        <!-- Legend -->
+        <div class="flex gap-6">
+          <div *ngFor="let ministry of ministryStats" class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full" [style.background-color]="ministry.color"></div>
+            <span class="text-xs font-bold text-gray-600 uppercase tracking-tighter">{{ministry.name}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linear Trend SVG -->
+      <div class="h-[350px] w-full relative group">
+        <svg class="w-full h-full overflow-visible" viewBox="0 0 1100 350">
+          <!-- Horizontal Grid Lines -->
+          <g class="stroke-slate-100 stroke-1">
+            <line x1="0" y1="0" x2="1100" y2="0" stroke-dasharray="4" />
+            <line x1="0" y1="87.5" x2="1100" y2="87.5" stroke-dasharray="4" />
+            <line x1="0" y1="175" x2="1100" y2="175" stroke-dasharray="4" />
+            <line x1="0" y1="262.5" x2="1100" y2="262.5" stroke-dasharray="4" />
+            <line x1="0" y1="350" x2="1100" y2="350" />
+          </g>
+
+          <!-- Ministry 1 (Health) Trend Line -->
+          <path d="M0,280 L100,260 L200,240 L300,250 L400,220 L500,200 L600,180 L700,160 L800,180 L900,140 L1000,100 L1100,80"
+                fill="none" stroke="#155dfc" stroke-width="4" stroke-linecap="round" class="animate-draw-path" />
+          
+          <!-- Ministry 2 (Edu) Trend Line -->
+          <path d="M0,320 L100,310 L200,300 L300,290 L400,270 L500,260 L600,250 L700,230 L800,225 L900,210 L1000,190 L1100,150"
+                fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" class="animate-draw-path opacity-70" />
+
+          <!-- Ministry 3 (Finance) Trend Line -->
+          <path d="M0,250 L100,230 L200,210 L300,190 L400,200 L500,170 L600,150 L700,130 L800,110 L900,100 L1000,80 L1100,40"
+                fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" class="animate-draw-path opacity-80" />
+
+          <!-- X-Axis Labels -->
+          <g class="text-[12px] fill-gray-400 font-bold uppercase">
+            <text *ngFor="let data of yearlyData; let i = index" [attr.x]="i * 100" y="375" text-anchor="middle">{{data.month}}</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Ministry Performance Breakdown -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let ministry of ministryStats" class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border" [style.border-left-color]="ministry.color">
+        <div class="flex justify-between items-start mb-6">
+          <h3 class="text-lg font-black text-gray-900 leading-tight">{{ministry.name}}</h3>
+          <span class="text-xs font-black text-emerald-500 bg-emerald-50 px-2 py-1 rounded-lg">{{ministry.growth}}</span>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">Total Requests</p>
+            <p class="text-xl font-black text-gray-900">{{ministry.total}}</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">Monthly Avg</p>
+            <p class="text-xl font-black text-gray-900">{{ministry.avg}}</p>
+          </div>
+        </div>
+        
+        <button class="w-full mt-6 py-2.5 rounded-xl bg-slate-50 text-slate-600 font-bold text-sm hover:bg-slate-100 transition-all flex items-center justify-center gap-2">
+          View Detail Summary
+          <span class="material-icons text-[16px]">open_in_new</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

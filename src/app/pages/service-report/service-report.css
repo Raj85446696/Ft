@@ -1,0 +1,56 @@
+/* Service Activity Report Styles */
+
+@keyframes drawPath {
+  from { stroke-dasharray: 0 1000; }
+  to { stroke-dasharray: 1000 1000; }
+}
+
+.animate-draw-path {
+  animation: drawPath 2s ease-out forwards;
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+main {
+  animation: fadeInScale 0.4s ease-out forwards;
+}
+
+/* Tooltip and Hover micro-interactions */
+.group-hover\/bar\:opacity-100 {
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+path {
+  transition: all 0.3s ease;
+}
+
+circle {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Legend and Status Indicators */
+.rank-badge-glow {
+  box-shadow: 0 0 15px rgba(21, 93, 252, 0.3);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar for list modules */
+.grid-cols-1::-webkit-scrollbar {
+  width: 4px;
+}
+
+.grid-cols-1::-webkit-scrollbar-track {
+  background: white;
+}
+
+.grid-cols-1::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}

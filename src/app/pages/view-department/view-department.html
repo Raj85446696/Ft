@@ -1,0 +1,198 @@
+<!-- View Department Page -->
+<div class="bg-white relative min-h-screen flex flex-col">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+
+    <!-- Page Header -->
+    <div class="mb-[32px]">
+      <div class="flex items-center text-[14px] text-[#4a5565] mb-[8px] font-medium">
+        Home &nbsp;/&nbsp; Departments &nbsp;/&nbsp; Manage &nbsp;/&nbsp; View
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="font-['Inter:Bold',sans-serif] font-bold text-[30px] text-[#101828] leading-[36px]">
+            View Department
+          </h1>
+          <p class="text-[#4a5565] text-[16px] mt-[8px]">Department details (read-only)</p>
+        </div>
+        <div class="flex items-center gap-[16px]">
+          <button routerLink="/manage-departments" class="flex items-center gap-[8px] text-[#4a5565] border border-[#d1d5dc] bg-white h-[44px] px-[20px] rounded-[10px] shadow-sm hover:bg-[#f3f4f6] font-medium text-[14px] transition-colors cursor-pointer">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            Close
+          </button>
+          <button routerLink="/edit-department" class="flex items-center gap-[8px] bg-[#155dfc] text-white h-[44px] px-[24px] rounded-[10px] shadow-sm hover:bg-[#1447e6] font-medium text-[16px] transition-colors cursor-pointer">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            Edit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert Banner -->
+    <div class="bg-[#eff6ff] border border-[#bedbff] rounded-[10px] p-[16px] mb-[32px] flex items-center gap-[12px]">
+      <svg xmlns="http://www.w-images.com/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#155dfc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      <span class="text-[#1447e6] text-[15px] font-medium">View Mode: All fields are read-only. Click 'Edit' to make changes.</span>
+    </div>
+
+    <div class="w-full">
+      <!-- 1. Department Logo -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[24px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          </div>
+          Department Logo
+        </h2>
+        
+        <div class="flex items-center gap-[24px]">
+          <div class="w-[80px] h-[80px] bg-[#eff6ff] border border-[#d1d5dc] rounded-[10px] flex items-center justify-center text-[#155dfc] text-[28px] font-bold">
+            {{ department.name.charAt(0) }}
+          </div>
+          <p class="text-[14px] text-[#4a5565]">Official Department Logo</p>
+        </div>
+      </div>
+
+      <!-- 2. Basic Information -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[24px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </div>
+          Basic Information
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div class="col-span-2 space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Department Name</label>
+            <p class="text-[16px] text-[#101828] font-medium">{{ department.name }}</p>
+          </div>
+          <div class="col-span-2 space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Department Description</label>
+            <p class="text-[16px] text-[#101828]">{{ department.description }}</p>
+          </div>
+          <div class="col-span-1 space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Short Description</label>
+            <p class="text-[16px] text-[#101828]">{{ department.shortDescription }}</p>
+          </div>
+          <div class="col-span-1 space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Department Type</label>
+            <p class="text-[16px] text-[#101828]">{{ department.type }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Category Details -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[24px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          </div>
+          Category Details
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div class="space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Primary Category</label>
+            <p class="text-[16px] text-[#101828]">{{ department.primaryCategory }}</p>
+          </div>
+          <div class="space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Secondary Category</label>
+            <p class="text-[16px] text-[#101828]">{{ department.secondaryCategory }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Language & Regions -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[24px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          </div>
+          Language & Regions
+        </h2>
+        <div class="space-y-[4px]">
+          <label class="block text-[14px] font-medium text-[#6b7280]">Languages</label>
+          <p class="text-[16px] text-[#101828]">{{ department.languages }}</p>
+        </div>
+      </div>
+
+      <!-- 5. Address & Location -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[24px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </div>
+          Address & Location
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div class="col-span-2 space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Address</label>
+            <p class="text-[16px] text-[#101828]">{{ department.address }}</p>
+          </div>
+          <div class="col-span-2 space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">State</label>
+            <p class="text-[16px] text-[#101828]">{{ department.state }}</p>
+          </div>
+          <div class="space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Latitude</label>
+            <p class="text-[16px] text-[#101828]">{{ department.latitude }}</p>
+          </div>
+          <div class="space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Longitude</label>
+            <p class="text-[16px] text-[#101828]">{{ department.longitude }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Contact Information -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[24px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+             <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          </div>
+          Contact Information
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div class="space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Helpline Numbers</label>
+            <p class="text-[16px] text-[#101828]">{{ department.helpline }}</p>
+          </div>
+          <div class="space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Land Phone</label>
+            <p class="text-[16px] text-[#101828]">{{ department.landphone }}</p>
+          </div>
+          <div class="col-span-2 space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Website URL</label>
+            <p class="text-[16px] text-[#155dfc] hover:underline"><a [href]="department.website" target="_blank">{{ department.website }}</a></p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 7. Working Hours -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[24px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+             <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          Working Hours
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div class="space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Working Days</label>
+            <p class="text-[16px] text-[#101828]">{{ department.workingDays }}</p>
+          </div>
+          <div class="space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Weekly Holiday</label>
+            <p class="text-[16px] text-[#101828]">{{ department.weeklyHoliday }}</p>
+          </div>
+          <div class="col-span-2 space-y-[4px]">
+            <label class="block text-[14px] font-medium text-[#6b7280]">Working Hours</label>
+            <p class="text-[16px] text-[#101828]">{{ department.workingHours }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,240 @@
+<div class="min-h-screen bg-[#f9fafb]">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+    
+    <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      <!-- Breadcrumbs & Header -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2 text-[14px] text-[#6a7282] font-medium">
+          <a routerLink="/dashboard" class="hover:text-[#155dfc] transition-colors flex items-center gap-1">
+            <span class="material-icons text-[18px]">home</span>
+            Dashboard
+          </a>
+          <span class="material-icons text-[16px]">chevron_right</span>
+          <span class="text-[#101828]">Upload Translation</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="space-y-1">
+            <h1 class="text-[32px] font-bold text-[#101828] leading-tight">Upload Translation</h1>
+            <p class="text-[16px] text-[#4a5565]">Manage multi-language support by uploading translation files</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button routerLink="/app-inside/services" 
+                    class="h-[46px] px-6 rounded-[12px] text-[15px] font-bold text-[#364153] border border-[#d1d5dc] bg-white hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10">
+              Cancel
+            </button>
+            <button (click)="onUpload()" [disabled]="!selectedFile"
+                    class="h-[46px] px-8 bg-[#155dfc] text-white rounded-[12px] text-[15px] font-bold shadow-lg shadow-blue-500/20 hover:bg-[#0047e0] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+              <span class="material-icons text-[20px]">cloud_upload</span>
+              Confirm & Upload
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left: Upload & Preview -->
+        <div class="lg:col-span-2 space-y-8">
+          
+          <div class="bg-white rounded-[20px] border border-[#e5e7eb] shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100">
+            <div class="p-6 border-b border-[#e5e7eb] bg-[#fcfcfd]">
+              <h2 class="text-[18px] font-bold text-[#101828] flex items-center gap-2">
+                <span class="material-icons text-[#155dfc] text-[20px]">file_upload</span>
+                Select Translation Files
+              </h2>
+            </div>
+            
+            <div class="p-8">
+              <!-- Upload Box -->
+              <div 
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)"
+                class="relative border-2 border-dashed rounded-[16px] p-12 text-center transition-all duration-300 group"
+                [ngClass]="{
+                  'border-[#155dfc] bg-[#eff6ff] scale-[1.01]': isDragging,
+                  'border-[#d1d5dc] hover:border-[#155dfc] hover:bg-[#f8fbff]': !isDragging
+                }">
+                
+                <input type="file" id="fileInput" class="hidden" (change)="onFileSelected($event)" accept=".json,.csv,.xlsx">
+                
+                <div class="space-y-4">
+                  <div class="w-16 h-16 bg-[#eff6ff] rounded-[14px] flex items-center justify-center mx-auto transition-transform duration-300 group-hover:scale-110">
+                    <span class="material-icons text-[#155dfc] text-[32px]">folder_zip</span>
+                  </div>
+                  <div>
+                    <h4 class="text-[18px] font-bold text-[#101828]">Click to upload or drag and drop</h4>
+                    <p class="text-[14px] text-[#6a7282] mt-1 italic font-medium">Supported formats: JSON, CSV, XLSX (Max. 10MB)</p>
+                  </div>
+                  <button type="button" onclick="document.getElementById('fileInput').click()" 
+                          class="mt-2 px-6 py-2.5 bg-white border border-[#d1d5dc] rounded-[10px] text-[15px] font-bold text-[#364153] hover:bg-gray-50 hover:border-[#155dfc] transition-all shadow-sm active:scale-95">
+                    Browse Files
+                  </button>
+                </div>
+              </div>
+
+              <!-- Selected File Card -->
+              <div *ngIf="selectedFile" class="mt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div class="bg-[#f0fdf4] border border-[#bbf7d0] rounded-[12px] p-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white rounded-[10px] flex items-center justify-center text-[#15803d] border border-[#bbf7d0]">
+                      <span class="material-icons text-[22px]">description</span>
+                    </div>
+                    <div>
+                      <p class="text-[14px] font-bold text-[#15803d] truncate max-w-[200px] md:max-w-[400px]">{{selectedFile.name}}</p>
+                      <p class="text-[12px] text-[#15803d]/70">{{(selectedFile.size / 1024).toFixed(1)}} KB</p>
+                    </div>
+                  </div>
+                  <button (click)="selectedFile = null" class="text-[#ef4444] hover:bg-[#fee2e2] p-1.5 rounded-[8px] transition-colors">
+                    <span class="material-icons text-[20px]">delete_forever</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- History Table -->
+          <div class="bg-white rounded-[20px] border border-[#e5e7eb] shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-500 delay-300">
+            <div class="p-6 border-b border-[#e5e7eb] bg-[#fcfcfd]">
+              <h2 class="text-[18px] font-bold text-[#101828] flex items-center gap-2">
+                <span class="material-icons text-[#a65f00] text-[20px]">history</span>
+                Upload History
+              </h2>
+            </div>
+            
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-[#f9fafb]">
+                  <tr>
+                    <th class="py-4 px-6 text-left text-[13px] font-bold text-[#4a5565] uppercase tracking-wider">File Name</th>
+                    <th class="py-4 px-6 text-left text-[13px] font-bold text-[#4a5565] uppercase tracking-wider font-bold">Language</th>
+                    <th class="py-4 px-6 text-left text-[13px] font-bold text-[#4a5565] uppercase tracking-wider font-bold">Date</th>
+                    <th class="py-4 px-6 text-left text-[13px] font-bold text-[#4a5565] uppercase tracking-wider font-bold">Status</th>
+                    <th class="py-4 px-6 text-right text-[13px] font-bold text-[#4a5565] uppercase tracking-wider font-bold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-[#e5e7eb]">
+                  <tr *ngFor="let entry of history" class="hover:bg-[#f8fbff] transition-colors group">
+                    <td class="py-5 px-6">
+                      <div class="flex items-center gap-3">
+                        <span class="material-icons text-[#6a7282] text-[20px]">file_present</span>
+                        <span class="text-[15px] font-bold text-[#101828]">{{entry.fileName}}</span>
+                      </div>
+                    </td>
+                    <td class="py-5 px-6">
+                      <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-[#155dfc]"></div>
+                        <span class="text-[14px] text-[#4a5565] font-bold">{{entry.language}}</span>
+                      </div>
+                    </td>
+                    <td class="py-5 px-6 text-[14px] text-[#6a7282] font-medium">{{entry.uploadedAt}}</td>
+                    <td class="py-5 px-6">
+                      <span class="px-2.5 py-1 rounded-[8px] text-[12px] font-bold flex items-center gap-1.5 w-fit"
+                        [ngClass]="{
+                          'bg-[#dcfce7] text-[#15803d]': entry.status === 'Completed',
+                          'bg-[#fff7ed] text-[#c2410c]': entry.status === 'Processing',
+                          'bg-[#fee2e2] text-[#b91c1c]': entry.status === 'Failed'
+                        }">
+                        <span class="material-icons text-[14px]" *ngIf="entry.status === 'Completed'">check_circle</span>
+                        <span class="material-icons text-[14px] animate-spin" *ngIf="entry.status === 'Processing'">autorenew</span>
+                        {{entry.status}}
+                      </span>
+                    </td>
+                    <td class="py-5 px-6 text-right">
+                      <button class="text-[#6a7282] hover:text-[#155dfc] transition-colors p-1 rounded-full hover:bg-[#eff6ff]">
+                        <span class="material-icons">more_vert</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Configuration -->
+        <div class="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 delay-200">
+          
+          <div class="bg-white rounded-[20px] border border-[#e5e7eb] shadow-sm overflow-hidden overflow-hidden">
+            <div class="p-6 border-b border-[#e5e7eb] bg-[#fcfcfd]">
+              <h2 class="text-[18px] font-bold text-[#101828] flex items-center gap-2">
+                <span class="material-icons text-[#155dfc] text-[20px]">settings</span>
+                Upload Settings
+              </h2>
+            </div>
+            <div class="p-8 space-y-6">
+              <div class="space-y-2">
+                <label class="text-[13px] font-bold text-[#364153] uppercase tracking-wider">Target Language</label>
+                <select [(ngModel)]="targetLanguage" 
+                        class="w-full h-[52px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all cursor-pointer">
+                  <option value="hi">Hindi (हिन्दी)</option>
+                  <option value="bn">Bengali (বাংলা)</option>
+                  <option value="ma">Marathi (मराठी)</option>
+                  <option value="gu">Gujarati (ગુજરાતી)</option>
+                </select>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-[13px] font-bold text-[#364153] uppercase tracking-wider">File Format</label>
+                <div class="flex items-center gap-2">
+                  <button class="flex-1 h-[44px] rounded-[10px] bg-[#eff6ff] text-[#155dfc] text-[13px] font-bold border border-[#bae6fd]">JSON</button>
+                  <button class="flex-1 h-[44px] rounded-[10px] bg-white border border-[#d1d5dc] text-[#6a7282] text-[13px] font-bold hover:bg-gray-50">CSV</button>
+                  <button class="flex-1 h-[44px] rounded-[10px] bg-white border border-[#d1d5dc] text-[#6a7282] text-[13px] font-bold hover:bg-gray-50">EXCEL</button>
+                </div>
+              </div>
+
+              <div class="pt-4 border-t border-[#e5e7eb] space-y-4">
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <div class="relative flex items-center h-5">
+                    <input type="checkbox" checked class="w-[20px] h-[20px] accent-[#155dfc] rounded-[6px] cursor-pointer">
+                  </div>
+                  <div>
+                    <span class="text-[14px] font-bold text-[#101828] group-hover:text-[#155dfc] transition-colors">Overwrite duplicates</span>
+                    <p class="text-[12px] text-[#6a7282]">Replace existing keys if found in the file</p>
+                  </div>
+                </label>
+                
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <div class="relative flex items-center h-5">
+                    <input type="checkbox" class="w-[20px] h-[20px] accent-[#155dfc] rounded-[6px] cursor-pointer">
+                  </div>
+                  <div>
+                    <span class="text-[14px] font-bold text-[#101828] group-hover:text-[#155dfc] transition-colors">Auto-Translate</span>
+                    <p class="text-[12px] text-[#6a7282]">Use AI to fill in missing translations</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Documentation Tip -->
+          <div class="bg-[#101828] text-white rounded-[24px] p-8 relative overflow-hidden group">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-[#155dfc]/10 rounded-full blur-[40px] group-hover:scale-150 transition-transform duration-700"></div>
+            <div class="relative space-y-4">
+              <div class="w-12 h-12 bg-white/5 rounded-[12px] flex items-center justify-center">
+                <span class="material-icons text-[#155dfc] text-[28px]">lightbulb</span>
+              </div>
+              <h3 class="text-[20px] font-bold leading-tight">Pro Tip: Structure</h3>
+              <p class="text-[14px] text-gray-400 leading-relaxed">
+                Ensure your JSON follow a nested structure. Keys at the root level will be treated as global namespace.
+              </p>
+              <button class="text-[14px] font-bold text-[#155dfc] flex items-center gap-1 hover:underline">
+                View template guide
+                <span class="material-icons text-[18px]">launch</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

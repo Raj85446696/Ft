@@ -1,0 +1,118 @@
+<!-- Manage Departments Page -->
+<div class="bg-white relative min-h-screen flex flex-col">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-[32px]">
+      <div>
+        <h1 class="font-['Inter:Bold',sans-serif] font-bold text-[30px] text-[#101828] leading-[36px]">
+          Manage Departments
+        </h1>
+        <p class="text-[#4a5565] text-[16px] mt-[8px]">View and manage all departments in the system</p>
+      </div>
+      <!-- Add Department Button -->
+      <button
+        routerLink="/add-department"
+        class="bg-[#155dfc] flex items-center gap-[8px] h-[40px] px-[20px] rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)] cursor-pointer hover:bg-[#1447e6] transition-colors">
+        <img [src]="imgAdd" alt="" class="w-[20px] h-[20px]" />
+        <span class="text-white font-medium text-[16px] whitespace-nowrap">Add Department</span>
+      </button>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[20px] mb-[24px]">
+      <div class="flex items-center gap-[16px]">
+        <!-- Search -->
+        <div class="relative flex-1 max-w-[500px]">
+          <img [src]="imgSearch" alt="" class="absolute left-[12px] top-[11px] w-[18px] h-[18px]" />
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="Search departments..."
+            class="w-full border border-[#d1d5dc] rounded-[10px] pl-[40px] pr-[16px] py-[10px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+        </div>
+        <!-- Type Filter -->
+        <select [(ngModel)]="filterType"
+          class="border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc] bg-white min-w-[180px] cursor-pointer">
+          <option value="">All Types</option>
+          <option value="Central">Central</option>
+          <option value="State">State</option>
+          <option value="Both">Both</option>
+        </select>
+        <!-- Status Filter -->
+        <select [(ngModel)]="filterStatus"
+          class="border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc] bg-white min-w-[180px] cursor-pointer">
+          <option value="">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+          <option value="Maintenance">Maintenance</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Department Cards Grid -->
+    <div class="grid grid-cols-4 gap-[24px]">
+      <div *ngFor="let dept of filtered"
+        class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] overflow-hidden hover:shadow-md transition-shadow">
+
+        <!-- Card Header with gradient -->
+        <div class="h-[128px] flex items-center justify-center"
+          style="background: linear-gradient(155deg, #eff6ff 0%, #eef2ff 100%)">
+          <div class="w-[80px] h-[80px] rounded-[10px] bg-[#dbeafe] flex items-center justify-center text-[#155dfc] text-[28px] font-bold">
+            {{ dept.name.charAt(0) }}
+          </div>
+        </div>
+
+        <!-- Card Body -->
+        <div class="p-[20px]">
+          <h3 class="font-semibold text-[16px] text-[#101828] leading-[24px] mb-[12px] line-clamp-2 min-h-[48px]">
+            {{ dept.name }}
+          </h3>
+
+          <!-- Type & Status badges -->
+          <div class="flex items-center justify-between mb-[12px]">
+            <span class="bg-[#eff6ff] border border-[#bedbff] text-[#1447e6] text-[12px] font-medium px-[10px] py-[4px] rounded-[8px]">
+              {{ dept.type }}
+            </span>
+            <span class="text-[12px] font-medium px-[12px] py-[4px] rounded-full" [ngClass]="getStatusClass(dept.status)">
+              {{ dept.status }}
+            </span>
+          </div>
+
+          <!-- Services count -->
+          <p class="text-[14px] text-[#101828] mb-[16px]">
+            <span class="font-medium">{{ dept.services }}</span>
+            <span class="text-[#4a5565]"> Services</span>
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-[8px]">
+            <button routerLink="/view-department" class="flex-1 bg-[#eff6ff] text-[#155dfc] text-[14px] font-medium h-[36px] rounded-[10px] flex items-center justify-center gap-[6px] hover:bg-[#dbeafe] transition-colors cursor-pointer">
+              <img [src]="imgView" alt="" class="w-[14px] h-[14px]" />
+              View
+            </button>
+            <button routerLink="/edit-department" class="flex-1 bg-[#f0fdf4] text-[#00a63e] text-[14px] font-medium h-[36px] rounded-[10px] flex items-center justify-center gap-[6px] hover:bg-[#dcfce7] transition-colors cursor-pointer">
+              <img [src]="imgEdit" alt="" class="w-[14px] h-[14px]" />
+              Edit
+            </button>
+            <button routerLink="/department-settings" class="w-[36px] h-[36px] bg-[#fdf2f8] text-[#db2777] rounded-[10px] flex items-center justify-center hover:bg-[#fce7f3] transition-colors cursor-pointer" title="Settings">
+              <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="filtered.length === 0" class="col-span-4 text-center py-[64px] text-[#4a5565]">
+        <p class="text-[20px] font-medium">No departments found</p>
+        <p class="text-[14px] mt-[8px]">Try adjusting your search or filters</p>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,375 @@
+<div class="min-h-screen bg-[#f9fafb]">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content Padding -->
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+    
+    <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      <!-- Breadcrumbs & Header -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2 text-[14px] text-[#6a7282] font-medium">
+          <a routerLink="/dashboard" class="flex items-center gap-1 hover:text-[#155dfc] transition-colors">
+            <span class="material-icons text-[18px]">home</span>
+            Dashboard
+          </a>
+          <span class="material-icons text-[16px]">chevron_right</span>
+          <span class="text-[#101828]">Service Onboarding</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="space-y-1">
+            <h1 class="text-[32px] font-bold text-[#101828] leading-tight">Service Registration</h1>
+            <p class="text-[16px] text-[#4a5565]">Register your new service into the UMANG ecosystem</p>
+          </div>
+          <div class="flex items-center gap-3">
+             <button routerLink="/app-inside/services" 
+                class="h-[46px] px-6 rounded-[12px] text-[15px] font-bold text-[#364153] border border-[#d1d5dc] bg-white hover:bg-gray-50 transition-all">
+               Cancel
+             </button>
+             <button *ngIf="currentStep < 3" (click)="nextStep()" 
+                class="h-[46px] px-8 bg-[#155dfc] text-white rounded-[12px] text-[15px] font-bold shadow-lg shadow-blue-500/20 hover:bg-[#0047e0] transition-all flex items-center gap-2">
+               Continue
+               <span class="material-icons text-[18px]">arrow_forward</span>
+             </button>
+             <button *ngIf="currentStep === 3" (click)="onSubmit()" 
+                class="h-[46px] px-8 bg-[#00a63e] text-white rounded-[12px] text-[15px] font-bold shadow-lg shadow-green-500/20 hover:bg-[#008231] transition-all flex items-center gap-2">
+               <span class="material-icons text-[18px]">verified</span>
+               Confirm Registration
+             </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step Progress Header -->
+      <div class="bg-white rounded-[20px] p-8 border border-[#e5e7eb] shadow-sm overflow-hidden">
+        <div class="relative flex items-center justify-between max-w-[800px] mx-auto">
+          <!-- Connector Lines -->
+          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[3px] bg-[#eff6ff] -z-0">
+            <div class="h-full bg-[#155dfc] transition-all duration-500" 
+                 [style.width]="(currentStep - 1) * 50 + '%'"></div>
+          </div>
+
+          <!-- Step Indicators -->
+          <div class="relative z-10 flex flex-col items-center gap-3">
+             <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
+                  [ngClass]="currentStep >= 1 ? 'bg-[#155dfc] text-white shadow-lg' : 'bg-white text-[#6a7282] border-2 border-[#d1d5dc]'">
+                <span class="material-icons text-[20px]" *ngIf="currentStep <= 1">badge</span>
+                <span class="material-icons text-[20px]" *ngIf="currentStep > 1">check</span>
+             </div>
+             <span class="text-[14px] font-bold" [ngClass]="currentStep >= 1 ? 'text-[#155dfc]' : 'text-[#6a7282]'">Basic Identity</span>
+          </div>
+
+          <div class="relative z-10 flex flex-col items-center gap-3">
+             <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
+                  [ngClass]="currentStep >= 2 ? 'bg-[#155dfc] text-white shadow-lg' : 'bg-white text-[#6a7282] border-2 border-[#d1d5dc]'">
+                <span class="material-icons text-[20px]" *ngIf="currentStep <= 2">settings_input_component</span>
+                <span class="material-icons text-[20px]" *ngIf="currentStep > 2">check</span>
+             </div>
+             <span class="text-[14px] font-bold" [ngClass]="currentStep >= 2 ? 'text-[#155dfc]' : 'text-[#6a7282]'">Technical Details</span>
+          </div>
+
+          <div class="relative z-10 flex flex-col items-center gap-3">
+             <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
+                  [ngClass]="currentStep >= 3 ? 'bg-[#155dfc] text-white shadow-lg' : 'bg-white text-[#6a7282] border-2 border-[#d1d5dc]'">
+                <span class="material-icons text-[20px]">fact_check</span>
+             </div>
+             <span class="text-[14px] font-bold" [ngClass]="currentStep >= 3 ? 'text-[#155dfc]' : 'text-[#6a7282]'">Review & Publish</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
+        
+        <!-- Step Contents -->
+        <div class="lg:col-span-2 space-y-8" [ngSwitch]="currentStep">
+           
+           <!-- Step 1: Basic Information -->
+           <div *ngSwitchCase="1" class="bg-white rounded-[24px] border border-[#e5e7eb] shadow-sm p-8 animate-in fade-in slide-in-from-right-4 duration-500">
+             <h2 class="text-[20px] font-bold text-[#101828] mb-8">Service Identity</h2>
+             <div class="space-y-6">
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div class="space-y-2">
+                   <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Service Name *</label>
+                   <input type="text" [(ngModel)]="service.name" placeholder="e.g. My Gov Finance Tracker" 
+                          class="w-full h-[54px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                 </div>
+                 <div class="space-y-2">
+                   <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Service Slug (URL) *</label>
+                   <input type="text" [(ngModel)]="service.slug" placeholder="e.g. finance-tracker" 
+                          class="w-full h-[54px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                 </div>
+               </div>
+
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div class="space-y-2">
+                   <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Category *</label>
+                   <select [(ngModel)]="service.category" 
+                           class="w-full h-[54px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] appearance-none focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                      <option value="" disabled>Select Category</option>
+                      <option *ngFor="let cat of categories" [value]="cat">{{cat}}</option>
+                   </select>
+                 </div>
+                 <div class="space-y-2">
+                   <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Primary Department *</label>
+                   <select [(ngModel)]="service.department" 
+                           class="w-full h-[54px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] appearance-none focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                      <option value="" disabled>Select Department</option>
+                      <option *ngFor="let dept of departments" [value]="dept">{{dept}}</option>
+                   </select>
+                 </div>
+               </div>
+
+               <div class="space-y-2">
+                 <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Languages Support</label>
+                 <div class="flex flex-wrap gap-2">
+                   <button *ngFor="let lang of availableLanguages" 
+                           (click)="toggleLanguage(lang)"
+                           class="h-[36px] px-4 rounded-[10px] text-[13px] font-bold border transition-all"
+                           [ngClass]="service.languages.includes(lang) ? 'bg-[#155dfc] text-white border-[#155dfc] shadow-sm' : 'bg-white border-[#d1d5dc] hover:border-[#155dfc] text-[#4a5565]'">
+                      {{lang}}
+                   </button>
+                 </div>
+               </div>
+
+               <div class="pt-4 border-t border-[#f3f4f6] space-y-6">
+                 <h3 class="text-[16px] font-bold text-[#101828]">Owner & Contact Information</h3>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div class="space-y-2">
+                     <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Owner Name</label>
+                     <input type="text" [(ngModel)]="service.ownerName" placeholder="Full name" 
+                            class="w-full h-[54px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                   </div>
+                   <div class="space-y-2">
+                     <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Owner Email</label>
+                     <input type="email" [(ngModel)]="service.ownerEmail" placeholder="email@gov.in" 
+                            class="w-full h-[54px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                   </div>
+                 </div>
+               </div>
+
+               <div class="space-y-2">
+                 <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">About the Service</label>
+                 <textarea [(ngModel)]="service.description" rows="4" placeholder="Briefly explain what this service offers..." 
+                           class="w-full px-4 pt-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all min-h-[120px]"></textarea>
+               </div>
+             </div>
+           </div>
+
+           <!-- Step 2: Technical Configuration -->
+           <div *ngSwitchCase="2" class="bg-white rounded-[24px] border border-[#e5e7eb] shadow-sm p-8 animate-in fade-in slide-in-from-right-4 duration-500">
+             <h2 class="text-[20px] font-bold text-[#101828] mb-8">Technical & Security Config</h2>
+             <div class="space-y-8">
+                <div class="space-y-4">
+                  <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Service Integration Pattern</label>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="px-6 py-4 rounded-[16px] border border-[#e5e7eb] cursor-pointer flex items-center justify-between transition-all"
+                           [ngClass]="service.type === 'External' ? 'bg-[#eff6ff] border-[#155dfc] shadow-sm' : 'hover:bg-gray-50'">
+                        <div class="flex items-center gap-3">
+                           <span class="material-icons text-[#155dfc]">auto_mode</span>
+                           <div>
+                             <span class="font-bold text-[#101828] block">External API</span>
+                             <span class="text-[11px] text-[#6a7282]">Standard JSON Integration</span>
+                           </div>
+                        </div>
+                        <input type="radio" name="type" [(ngModel)]="service.type" value="External" class="accent-[#155dfc]">
+                    </label>
+                    <label class="px-6 py-4 rounded-[16px] border border-[#e5e7eb] cursor-pointer flex items-center justify-between transition-all"
+                           [ngClass]="service.type === 'Internal' ? 'bg-[#eff6ff] border-[#155dfc] shadow-sm' : 'hover:bg-gray-50'">
+                        <div class="flex items-center gap-3">
+                           <span class="material-icons text-[#a65f00]">hub</span>
+                           <div>
+                             <span class="font-bold text-[#101828] block">Direct Link</span>
+                             <span class="text-[11px] text-[#6a7282]">URL Redirection</span>
+                           </div>
+                        </div>
+                        <input type="radio" name="type" [(ngModel)]="service.type" value="Internal" class="accent-[#155dfc]">
+                    </label>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="space-y-2">
+                    <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Authentication Method</label>
+                    <select [(ngModel)]="service.authMethod" class="w-full h-[54px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                       <option value="API Key">API Key (Header Based)</option>
+                       <option value="OAuth2">OAuth 2.0</option>
+                       <option value="None">None (Public)</option>
+                    </select>
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Response Format</label>
+                    <select [(ngModel)]="service.responseFormat" class="w-full h-[54px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                       <option value="JSON">JSON (Standard)</option>
+                       <option value="XML">XML (Legacy Support)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="space-y-4 pt-6 mt-6 border-t border-[#f3f4f6]">
+                  <h3 class="text-[16px] font-bold text-[#101828]">Gateway Endpoints</h3>
+                  <div class="space-y-4">
+                    <div class="space-y-2 text-[#9ca3af]">
+                      <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Development Endpoint</label>
+                      <div class="relative group">
+                         <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[20px]">terminal</span>
+                         <input type="text" [(ngModel)]="service.endpoints.dev" placeholder="https://api.dev.example.gov.in/v1" 
+                                class="w-full h-[52px] pl-12 pr-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                      </div>
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Production Endpoint</label>
+                      <div class="relative group">
+                         <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[20px]">public</span>
+                         <input type="text" [(ngModel)]="service.endpoints.prod" placeholder="https://api.example.gov.in/v1" 
+                                class="w-full h-[52px] pl-12 pr-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-4 pt-6 border-t border-[#f3f4f6]">
+                   <h3 class="text-[16px] font-bold text-[#101828]">Legal & Compliance Links</h3>
+                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div class="space-y-2">
+                        <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Privacy Policy URL</label>
+                        <input type="text" [(ngModel)]="service.privacyPolicy" placeholder="https://example.gov.in/privacy" 
+                               class="w-full h-[50px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc]">
+                      </div>
+                      <div class="space-y-2">
+                        <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Terms of Service URL</label>
+                        <input type="text" [(ngModel)]="service.termsInfo" placeholder="https://example.gov.in/terms" 
+                               class="w-full h-[50px] px-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc]">
+                      </div>
+                   </div>
+                </div>
+             </div>
+           </div>
+
+           <!-- Step 3: Review -->
+           <div *ngSwitchCase="3" class="bg-white rounded-[24px] border border-[#e5e7eb] shadow-sm p-8 animate-in fade-in slide-in-from-right-4 duration-500">
+             <h2 class="text-[20px] font-bold text-[#101828] mb-8">Review Registration</h2>
+             <div class="space-y-8">
+               <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                 <div class="space-y-1">
+                   <p class="text-[11px] text-[#6a7282] uppercase font-bold tracking-wider">Service Name</p>
+                   <p class="text-[16px] font-bold text-[#101828] line-clamp-1">{{service.name || 'N/A'}}</p>
+                 </div>
+                 <div class="space-y-1">
+                   <p class="text-[11px] text-[#6a7282] uppercase font-bold tracking-wider">Department</p>
+                   <p class="text-[16px] font-bold text-[#101828]">{{service.department || 'N/A'}}</p>
+                 </div>
+                 <div class="space-y-1">
+                   <p class="text-[11px] text-[#6a7282] uppercase font-bold tracking-wider">Owner</p>
+                   <p class="text-[16px] font-bold text-[#101828]">{{service.ownerName || 'N/A'}}</p>
+                 </div>
+               </div>
+
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-[#f3f4f6]">
+                 <div class="p-6 bg-[#f8fbff] rounded-[20px] border border-[#eff6ff] space-y-4">
+                    <h4 class="text-[14px] font-bold text-[#155dfc] flex items-center gap-2">
+                       <span class="material-icons text-[18px]">hub</span>
+                       Technical Integration
+                    </h4>
+                    <div class="space-y-3">
+                      <div class="flex items-center justify-between text-[13px]">
+                        <span class="text-[#6a7282]">Pattern:</span>
+                        <span class="font-bold text-[#101828]">{{service.type}}</span>
+                      </div>
+                      <div class="flex items-center justify-between text-[13px]">
+                        <span class="text-[#6a7282]">Auth:</span>
+                        <span class="font-bold text-[#101828]">{{service.authMethod}}</span>
+                      </div>
+                      <div class="flex items-center justify-between text-[13px]">
+                        <span class="text-[#6a7282]">Format:</span>
+                        <span class="font-bold text-[#101828]">{{service.responseFormat}}</span>
+                      </div>
+                    </div>
+                 </div>
+                 <div class="p-6 bg-[#fdf2f2] rounded-[20px] border border-[#fee2e2] space-y-4">
+                    <h4 class="text-[14px] font-bold text-[#b91c1c] flex items-center gap-2">
+                       <span class="material-icons text-[18px]">gavel</span>
+                       Legal Compliance
+                    </h4>
+                    <div class="space-y-3">
+                      <div class="flex items-center justify-between text-[13px]">
+                        <span class="text-[#6a7282]">Privacy Policy:</span>
+                        <span class="font-bold" [ngClass]="service.privacyPolicy ? 'text-[#15803d]' : 'text-[#b91c1c]'">
+                           {{service.privacyPolicy ? 'Linked' : 'Missing'}}
+                        </span>
+                      </div>
+                      <div class="flex items-center justify-between text-[13px]">
+                        <span class="text-[#6a7282]">Terms of Service:</span>
+                        <span class="font-bold" [ngClass]="service.termsInfo ? 'text-[#15803d]' : 'text-[#b91c1c]'">
+                           {{service.termsInfo ? 'Linked' : 'Missing'}}
+                        </span>
+                      </div>
+                    </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+           <!-- Navigation Controls Logic -->
+           <div class="flex items-center gap-4">
+             <button *ngIf="currentStep > 1" (click)="prevStep()" 
+                class="bg-white border border-[#d1d5dc] px-6 h-[46px] rounded-[12px] text-[15px] font-bold text-[#4a5565] hover:bg-gray-50 flex items-center gap-2 transition-all">
+                <span class="material-icons text-[18px]">arrow_back</span>
+                Previous Step
+             </button>
+           </div>
+        </div>
+
+        <!-- Sidebar Detailed Summary & Tips -->
+        <div class="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 delay-200">
+           
+           <div class="bg-[#101828] text-white rounded-[24px] p-8 relative overflow-hidden group">
+              <div class="absolute -right-8 -top-8 w-32 h-32 bg-[#155dfc]/10 rounded-full blur-[40px] group-hover:scale-150 transition-transform duration-700"></div>
+              <div class="relative space-y-4">
+                 <div class="w-12 h-12 bg-white/5 rounded-[14px] flex items-center justify-center text-[#155dfc]">
+                    <span class="material-icons text-[28px]">description</span>
+                 </div>
+                 <h3 class="text-[20px] font-bold leading-tight">Service Manifest</h3>
+                 <p class="text-[14px] text-gray-400 leading-relaxed">
+                   Generating a service manifest creates the digital identity for your application within UMANG.
+                 </p>
+                 <button class="text-[14px] font-bold text-[#155dfc] hover:underline flex items-center gap-1">
+                   Integration Guide
+                   <span class="material-icons text-[18px]">launch</span>
+                 </button>
+              </div>
+           </div>
+
+           <!-- Real-time Checklist Sidebar -->
+           <div class="bg-white rounded-[20px] border border-[#e5e7eb] shadow-sm p-8 space-y-6">
+              <h4 class="text-[18px] font-bold text-[#101828]">Onboarding Status</h4>
+              <ul class="space-y-4">
+                <li class="flex items-start gap-3 text-[14px]" [ngClass]="service.name && service.department ? 'text-[#15803d]' : 'text-gray-400'">
+                  <span class="material-icons text-[20px]">{{service.name && service.department ? 'check_circle' : 'radio_button_unchecked'}}</span>
+                  <span>Identity & Category Set</span>
+                </li>
+                <li class="flex items-start gap-3 text-[14px]" [ngClass]="service.ownerEmail ? 'text-[#15803d]' : 'text-gray-400'">
+                  <span class="material-icons text-[20px]">{{service.ownerEmail ? 'check_circle' : 'radio_button_unchecked'}}</span>
+                  <span>Owner Contact Provided</span>
+                </li>
+                <li class="flex items-start gap-3 text-[14px]" [ngClass]="service.endpoints.prod ? 'text-[#15803d]' : 'text-gray-400'">
+                  <span class="material-icons text-[20px]">{{service.endpoints.prod ? 'check_circle' : 'radio_button_unchecked'}}</span>
+                  <span>Production Gateway Live</span>
+                </li>
+              </ul>
+              
+              <div class="pt-6 border-t border-[#f3f4f6]">
+                 <p class="text-[12px] text-[#6a7282] italic leading-relaxed">
+                   Registration requests are typically reviewed within 2-3 business days.
+                 </p>
+              </div>
+           </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

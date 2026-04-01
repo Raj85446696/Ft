@@ -1,0 +1,171 @@
+<div class="min-h-screen bg-[#f9fafb]">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content Padding & Sidebar Collapse Responsive -->
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+    
+    <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      <!-- Breadcrumbs & Header -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2 text-[14px] text-[#6a7282] font-medium">
+          <a routerLink="/dashboard" class="flex items-center gap-1 hover:text-[#155dfc] transition-colors">
+            <span class="material-icons text-[18px]">home</span>
+            Home
+          </a>
+          <span class="material-icons text-[16px]">chevron_right</span>
+          <a routerLink="/app-inside/manage-group" class="hover:text-[#155dfc] transition-colors">Manage Group</a>
+          <span class="material-icons text-[16px]">chevron_right</span>
+          <span class="text-[#101828]">Create New Group</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <button routerLink="/app-inside/manage-group" 
+               class="w-10 h-10 bg-white border border-[#e5e7eb] rounded-[10px] flex items-center justify-center text-[#6a7282] hover:bg-gray-50 transition-all shadow-sm">
+              <span class="material-icons">arrow_back</span>
+            </button>
+            <div class="space-y-1">
+              <h1 class="text-[30px] font-bold text-[#101828]">Create New Group</h1>
+              <p class="text-[16px] text-[#4a5565]">Define name, departments, and permissions for the new group</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button routerLink="/app-inside/manage-group" 
+               class="h-[46px] px-6 rounded-[12px] text-[15px] font-bold text-[#364153] border border-[#d1d5dc] bg-white hover:bg-gray-50 transition-all">
+              Cancel
+            </button>
+            <button (click)="onSubmit()" 
+               [disabled]="!group.name || group.departments.length === 0"
+               class="h-[46px] px-8 bg-[#155dfc] text-white rounded-[12px] text-[15px] font-bold shadow-lg shadow-blue-500/20 hover:bg-[#0047e0] transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              Create Group
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left: Form Info -->
+        <div class="lg:col-span-2 space-y-8">
+          
+          <!-- Basic Info Card -->
+          <div class="bg-white rounded-[20px] border border-[#e5e7eb] shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100">
+            <div class="p-6 border-b border-[#e5e7eb] bg-[#fcfcfd]">
+              <h3 class="text-[18px] font-bold text-[#101828] flex items-center gap-2">
+                <span class="material-icons text-[#155dfc] text-[20px]">badge</span>
+                Basic Identification
+              </h3>
+            </div>
+            <div class="p-8 space-y-6">
+              <div class="space-y-2">
+                <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide flex items-center justify-between">
+                  Group Name *
+                  <span class="text-[12px] text-[#6a7282] lowercase font-normal italic">e.g. Regional Support Managers</span>
+                </label>
+                <div class="relative group">
+                  <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[20px] group-focus-within:text-[#155dfc] transition-colors">groups</span>
+                  <input type="text" [(ngModel)]="group.name" placeholder="Enter group name..." 
+                         class="w-full h-[54px] pl-12 pr-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all hover:bg-gray-50/50">
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-[14px] font-bold text-[#364153] uppercase tracking-wide">Purpose & Description</label>
+                <div class="relative group">
+                  <span class="material-icons absolute left-4 top-4 text-[#9ca3af] text-[20px] group-focus-within:text-[#155dfc] transition-colors">description</span>
+                  <textarea [(ngModel)]="group.description" rows="4" placeholder="Briefly describe what this group will do..." 
+                            class="w-full pl-12 pr-4 pt-4 bg-white border border-[#d1d5dc] rounded-[12px] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all hover:bg-gray-50/50 min-h-[120px]"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Departments Association Card -->
+          <div class="bg-white rounded-[20px] border border-[#e5e7eb] shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200">
+            <div class="p-6 border-b border-[#e5e7eb] bg-[#fcfcfd]">
+              <h3 class="text-[18px] font-bold text-[#101828] flex items-center gap-2">
+                <span class="material-icons text-[#15803d] text-[20px]">domain</span>
+                Associate Departments *
+              </h3>
+            </div>
+            <div class="p-8">
+              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <button *ngFor="let dept of departments" 
+                   (click)="toggleDepartment(dept)"
+                   class="h-[52px] rounded-[12px] border transition-all flex items-center justify-center gap-2 text-[14px] font-bold active:scale-95"
+                   [ngClass]="{
+                     'bg-[#eff6ff] text-[#155dfc] border-[#155dfc] shadow-sm shadow-blue-200': group.departments.includes(dept),
+                     'bg-white text-[#4a5565] border-[#d1d5dc] hover:border-[#155dfc] hover:text-[#155dfc]': !group.departments.includes(dept)
+                   }">
+                  <span class="material-icons text-[18px]" *ngIf="group.departments.includes(dept)">check_circle</span>
+                  {{dept}}
+                </button>
+              </div>
+              <p class="mt-6 text-[12px] text-[#6a7282] italic font-medium flex items-center gap-1.5">
+                 <span class="material-icons text-[14px]">info</span>
+                 Users in this group will have access to the selected departments' data.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Permissions & Security -->
+        <div class="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 delay-300">
+          
+          <!-- Permissions List Sidebar -->
+          <div class="bg-white rounded-[20px] border border-[#e5e7eb] shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-[#e5e7eb] bg-[#fcfcfd]">
+              <h3 class="text-[18px] font-bold text-[#101828] flex items-center gap-2">
+                <span class="material-icons text-[#a65f00] text-[20px]">security</span>
+                Permissions
+              </h3>
+            </div>
+            <div class="p-6 space-y-4">
+              <div *ngFor="let perm of permissions" 
+                   (click)="togglePermission(perm.id)"
+                   class="p-4 rounded-[16px] border border-[#e5e7eb] cursor-pointer group transition-all"
+                   [ngClass]="{
+                     'bg-[#fffbeb] border-[#fef08a] shadow-sm': group.permissions.includes(perm.id),
+                     'bg-white hover:bg-gray-50': !group.permissions.includes(perm.id)
+                   }">
+                <div class="flex items-start justify-between">
+                  <div class="space-y-1">
+                    <p class="font-bold text-[#364153] text-[15px]">{{perm.label}}</p>
+                    <p class="text-[12px] text-[#6a7282] max-w-[200px]">{{perm.description}}</p>
+                  </div>
+                  <div class="w-[20px] h-[20px] rounded-[6px] border flex items-center justify-center transition-colors shadow-inner"
+                       [ngClass]="group.permissions.includes(perm.id) ? 'bg-[#155dfc] border-[#155dfc]' : 'bg-[#f4f4f7] border-[#d1d5dc]'">
+                    <span class="material-icons text-white text-[16px]" *ngIf="group.permissions.includes(perm.id)">check</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Group Summary Card -->
+          <div class="bg-[#101828] text-white rounded-[24px] p-8 relative overflow-hidden group">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-[#155dfc]/20 rounded-full blur-[40px] group-hover:scale-150 transition-transform duration-700"></div>
+            <div class="relative space-y-4">
+               <h4 class="text-[14px] text-[#155dfc] font-bold uppercase tracking-widest">Group Preview</h4>
+               <p class="text-[20px] font-bold leading-tight line-clamp-1 h-7">{{group.name || 'Untitled Group'}}</p>
+               <div class="flex flex-wrap gap-2 min-h-6">
+                 <span *ngFor="let dept of group.departments.slice(0, 3)" 
+                       class="text-[10px] font-bold px-2 py-0.5 bg-white/10 rounded-full border border-white/20">{{dept}}</span>
+                 <span *ngIf="group.departments.length > 3" class="text-[10px] font-bold text-gray-400 italic">+{{group.departments.length - 3}} more</span>
+               </div>
+               <div class="pt-4 flex items-center justify-between border-t border-white/5 text-[12px] text-gray-400">
+                  <span>Selected Perms</span>
+                  <span class="font-bold text-white">{{group.permissions.length || 0}} Module(s)</span>
+               </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

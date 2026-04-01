@@ -1,0 +1,210 @@
+<div class="min-h-screen bg-[#f9fafb]">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <main class="transition-all duration-300 pt-[106px] pb-10 pr-12"
+        [ngStyle]="{'margin-left': sidebarService.isCollapsed() ? '88px' : '285px'}">
+    
+    <div class="max-w-[1450px] mx-auto space-y-8 animate-in fade-in duration-500">
+      
+      <!-- Page Header -->
+      <div class="flex items-center justify-between">
+        <div class="space-y-1">
+          <h1 class="text-[30px] font-bold text-[#101828]">Partner Onboarding Reports</h1>
+          <p class="text-[16px] text-[#4a5565]">Analytics for ministries, departments and entities onboarding</p>
+        </div>
+        <button (click)="exportReport()"
+                class="bg-[#155dfc] text-white px-6 py-2.5 rounded-[10px] flex items-center gap-2 text-[16px] font-medium hover:bg-[#155dfc]/90 transition-all shadow-md">
+          <span class="material-icons text-[20px]">download</span>
+          Export Report
+        </button>
+      </div>
+
+      <!-- Stats Cards Row -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div *ngFor="let stat of stats" class="bg-white p-6 rounded-[15px] shadow-sm border border-[#e5e7eb] flex flex-col gap-4 hover:shadow-md transition-all group">
+          <div class="flex items-center justify-between">
+            <div class="w-12 h-12 rounded-[12px] flex items-center justify-center text-white transition-transform group-hover:scale-110"
+                 [style.background-color]="stat.color">
+              <span class="material-icons text-[24px]">{{stat.icon}}</span>
+            </div>
+            <span class="material-icons text-[#9ca3af] opacity-0 group-hover:opacity-100 transition-opacity">trending_up</span>
+          </div>
+          <div>
+            <p class="text-[14px] text-[#6a7282] font-medium">{{stat.title}}</p>
+            <p class="text-[28px] font-bold text-[#101828] tracking-tight">{{stat.value}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analysis Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Category Distribution (Left) -->
+        <div class="lg:col-span-4 bg-white p-8 rounded-[15px] shadow-sm border border-[#e5e7eb] space-y-8 flex flex-col">
+          <div class="flex items-center justify-between">
+            <h3 class="text-[20px] font-bold text-[#101828]">Partner Breakdown</h3>
+            <span class="text-[12px] text-[#6a7282] font-semibold">By Category</span>
+          </div>
+          
+          <div class="flex items-center justify-center py-4">
+             <!-- SVG Donut Chart -->
+             <div class="relative w-[200px] h-[200px]">
+               <svg viewBox="0 0 36 36" class="w-full h-full transform -rotate-90">
+                 <circle cx="18" cy="18" r="15.915" fill="none" class="stroke-[#f3f4f6]" stroke-width="3"></circle>
+                 <circle cx="18" cy="18" r="15.915" fill="none" stroke="#155dfc" stroke-width="3" stroke-dasharray="45.2 54.8" stroke-dashoffset="0" class="animate-draw-path"></circle>
+                 <circle cx="18" cy="18" r="15.915" fill="none" stroke="#00c950" stroke-width="3" stroke-dasharray="34.8 65.2" stroke-dashoffset="-45.2" class="animate-draw-path"></circle>
+                 <circle cx="18" cy="18" r="15.915" fill="none" stroke="#ffcc00" stroke-width="3" stroke-dasharray="20 80" stroke-dashoffset="-80" class="animate-draw-path"></circle>
+               </svg>
+               <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                 <p class="text-[28px] font-bold text-[#101828]">1.2K</p>
+                 <p class="text-[11px] text-[#6a7282] uppercase font-bold tracking-widest">Total</p>
+               </div>
+             </div>
+          </div>
+
+          <!-- Custom Legend -->
+          <div class="space-y-4">
+            <div *ngFor="let item of categoryData" class="flex items-center justify-between p-4 rounded-[12px] bg-[#f9fafb] border-l-4 hover:shadow-sm transition-all cursor-default" [style.border-color]="item.color">
+              <div class="flex flex-col">
+                <span class="text-[15px] font-bold text-[#101828]">{{item.label}}</span>
+                <span class="text-[12px] text-[#6a7282]">{{item.partners}} entities</span>
+              </div>
+              <div class="text-right">
+                <p class="text-[16px] font-black text-[#101828]">{{item.value}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Onboarding Trend (Right) -->
+        <div class="lg:col-span-8 bg-white p-8 rounded-[15px] shadow-sm border border-[#e5e7eb] flex flex-col">
+          <div class="flex items-center justify-between mb-10">
+            <div class="space-y-1">
+              <h3 class="text-[20px] font-bold text-[#101828]">Onboarding Trajectory</h3>
+              <p class="text-[14px] text-[#6a7282]">Monthly partner registration analysis</p>
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2 bg-[#f0f9ff] text-[#026aa2] rounded-lg text-[13px] font-bold">
+               <span class="material-icons text-[18px]">show_chart</span>
+               +15.4% Growth
+            </div>
+          </div>
+
+          <div class="flex-1 flex items-end justify-between h-[280px] px-8 relative group mb-8">
+             <!-- Grid Lines -->
+             <div class="absolute inset-0 flex flex-col justify-between py-1 pointer-events-none opacity-10">
+               <div class="w-full border-t border-[#64748b]"></div>
+               <div class="w-full border-t border-[#64748b]"></div>
+               <div class="w-full border-t border-[#64748b]"></div>
+               <div class="w-full border-t border-[#64748b]"></div>
+               <div class="w-full border-t border-[#64748b]"></div>
+             </div>
+
+             <!-- SVG Trend Line -->
+             <svg class="absolute inset-0 w-full h-[280px] overflow-visible px-8" viewBox="0 -5 100 45" preserveAspectRatio="none">
+               <defs>
+                <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#155dfc" stop-opacity="0.15"/>
+                  <stop offset="100%" stop-color="#155dfc" stop-opacity="0"/>
+                </linearGradient>
+               </defs>
+               <!-- Path calculation: x goes 0, 20, 40, 60, 80, 100 -->
+               <path d="M 0,35 Q 10,32 20,28 T 40,25 T 60,18 T 80,12 T 100,5 L 100,45 L 0,45 Z" fill="url(#areaGradient)"></path>
+               <path d="M 0,35 Q 10,32 20,28 T 40,25 T 60,18 T 80,12 T 100,5" fill="none" stroke="#155dfc" stroke-width="1" class="animate-draw-path"></path>
+               
+               <!-- Points -->
+               <circle cx="0" cy="35" r="1.2" fill="#155dfc"></circle>
+               <circle cx="20" cy="28" r="1.2" fill="#155dfc"></circle>
+               <circle cx="40" cy="25" r="1.2" fill="#155dfc"></circle>
+               <circle cx="60" cy="18" r="1.2" fill="#155dfc"></circle>
+               <circle cx="80" cy="12" r="1.2" fill="#155dfc"></circle>
+               <circle cx="100" cy="5" r="1.2" fill="#155dfc"></circle>
+             </svg>
+
+             <!-- X-Axis Labels -->
+             <div *ngFor="let point of monthlyTrend" class="text-[12px] font-bold text-[#64748b] z-10 translate-y-8">
+               {{point.month}}
+             </div>
+          </div>
+          
+          <div class="mt-4 flex gap-8 items-center border-t border-[#f3f4f6] pt-6">
+            <div class="flex items-center gap-3">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#155dfc]"></div>
+              <span class="text-[14px] text-[#4a5565] font-semibold">Ministries</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#00c950]"></div>
+              <span class="text-[14px] text-[#4a5565] font-semibold">Departments</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partner Table Section -->
+      <div class="bg-white rounded-[15px] shadow-sm border border-[#e5e7eb] overflow-hidden">
+        <div class="p-8 border-b border-[#f3f4f6] flex items-center justify-between bg-white sticky left-0">
+          <div class="space-y-1">
+            <h2 class="text-[20px] font-bold text-[#101828]">Detailed Partner Summary</h2>
+            <p class="text-[14px] text-[#6a7282]">Registry of recent partner onboarding status and tier levels</p>
+          </div>
+          <div class="flex items-center gap-4">
+             <div class="relative group">
+                <input type="text" placeholder="Search partners..." 
+                       class="h-[42px] pl-10 pr-4 bg-[#f9fafb] border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+                <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[18px]">search</span>
+             </div>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#f9fafb] border-b border-[#f3f4f6]">
+                <th class="px-8 py-5 text-[13px] font-bold text-[#364153] uppercase tracking-wider">Partner Entity</th>
+                <th class="px-8 py-5 text-[13px] font-bold text-[#364153] uppercase tracking-wider">Category</th>
+                <th class="px-8 py-5 text-[13px] font-bold text-[#364153] uppercase tracking-wider">Onboard Date</th>
+                <th class="px-8 py-5 text-[13px] font-bold text-[#364153] uppercase tracking-wider">Onboarding Progress</th>
+                <th class="px-8 py-5 text-[13px] font-bold text-[#364153] uppercase tracking-wider">Status</th>
+                <th class="px-8 py-5 text-[13px] font-bold text-[#364153] uppercase tracking-wider">Impact Tier</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#f3f4f6]">
+              <tr *ngFor="let partner of partnerList" class="hover:bg-[#f9fafb] transition-colors group">
+                <td class="px-8 py-5">
+                   <div class="flex items-center gap-3">
+                     <div class="w-10 h-10 rounded-full bg-[#f0f9ff] flex items-center justify-center text-[#155dfc] font-black italic">
+                       {{partner.name.charAt(0)}}
+                     </div>
+                     <span class="text-[15px] font-bold text-[#101828] group-hover:text-[#155dfc] transition-colors">{{partner.name}}</span>
+                   </div>
+                </td>
+                <td class="px-8 py-5">
+                  <span class="px-3 py-1 bg-gray-50 border border-[#e5e7eb] rounded-full text-[12px] font-bold text-[#4a5565]">
+                    {{partner.category}}
+                  </span>
+                </td>
+                <td class="px-8 py-5 text-[14px] text-[#6a7282] font-medium">{{partner.date}}</td>
+                <td class="px-8 py-5">
+                  <div class="w-[120px] h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
+                    <div class="h-full bg-[#155dfc] rounded-full" [style.width]="partner.status === 'Active' ? '100%' : partner.status === 'Pending' ? '65%' : '20%'"></div>
+                  </div>
+                </td>
+                <td class="px-8 py-5">
+                   <div class="flex items-center gap-2">
+                     <span class="w-2 h-2 rounded-full" [style.background-color]="partner.status === 'Active' ? '#00c950' : partner.status === 'Pending' ? '#ffcc00' : '#ff2d55'"></span>
+                     <span class="text-[14px] font-bold text-[#344054]">{{partner.status}}</span>
+                   </div>
+                </td>
+                <td class="px-8 py-5">
+                   <span class="text-[14px] font-black" [ngClass]="{'text-[#155dfc]': partner.impact === 'Critical', 'text-[#00c950]': partner.impact === 'High', 'text-[#475467]': partner.impact === 'Medium', 'text-[#9ca3af]': partner.impact === 'Low'}">
+                     {{partner.impact}}
+                   </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

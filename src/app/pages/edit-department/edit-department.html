@@ -1,0 +1,243 @@
+<!-- Edit Department Page -->
+<div class="bg-white relative min-h-screen flex flex-col">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+
+    <!-- Page Header -->
+    <div class="mb-[32px]">
+      <div class="flex items-center text-[14px] text-[#4a5565] mb-[8px] font-medium">
+        Home &nbsp;/&nbsp; Departments &nbsp;/&nbsp; Manage &nbsp;/&nbsp; Edit
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="font-['Inter:Bold',sans-serif] font-bold text-[30px] text-[#101828] leading-[36px]">
+            Edit Department
+          </h1>
+          <p class="text-[#4a5565] text-[16px] mt-[8px]">Update department information</p>
+        </div>
+        <div class="flex items-center gap-[16px]">
+          <button routerLink="/view-department" class="text-[#4a5565] border border-[#d1d5dc] bg-white h-[44px] px-[20px] rounded-[10px] shadow-sm hover:bg-[#f3f4f6] font-medium text-[14px] transition-colors cursor-pointer">
+            Cancel
+          </button>
+          <button routerLink="/manage-departments" class="bg-[#155dfc] text-white h-[44px] px-[24px] rounded-[10px] shadow-sm hover:bg-[#1447e6] font-medium text-[16px] transition-colors cursor-pointer">
+            Update Department
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <form class="w-full">
+      <!-- 1. Department Logo -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[16px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          </div>
+          Department Logo
+        </h2>
+        
+        <div class="border-2 border-dashed border-[#d1d5dc] rounded-[10px] p-[24px] flex items-center justify-between bg-[#f9fafb]">
+          <div class="flex items-center gap-[16px]">
+            <div class="w-[60px] h-[60px] bg-[#dbeafe] rounded-[10px] flex items-center justify-center text-[#155dfc] text-[24px] font-bold">
+              {{ department.name.charAt(0) }}
+            </div>
+            <div>
+              <div class="text-[#101828] font-medium text-[14px]">Official Department Logo</div>
+              <div class="text-[#6b7280] text-[12px] opacity-75">PNG, JPG up to 2MB</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-[12px]">
+            <button type="button" class="text-[14px] font-medium text-[#ef4444] hover:text-[#dc2626] cursor-pointer">Remove</button>
+            <button type="button" class="text-[14px] font-medium text-[#155dfc] border border-[#d1d5dc] bg-white px-[16px] py-[8px] rounded-[8px] shadow-sm hover:bg-[#f3f4f6] cursor-pointer">Change Logo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Basic Information -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[16px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </div>
+          Basic Information
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div class="col-span-2">
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Department Name *</label>
+            <input type="text" [(ngModel)]="department.name" name="deptName" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Department Description *</label>
+            <textarea [(ngModel)]="department.description" name="deptDesc" rows="3" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]"></textarea>
+          </div>
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Short Description *</label>
+            <input type="text" [(ngModel)]="department.shortDescription" name="shortDesc" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+          </div>
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Department Type *</label>
+            <select [(ngModel)]="department.type" name="type" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc] bg-white cursor-pointer">
+              <option value="Central">Central</option>
+              <option value="State">State</option>
+              <option value="Both">Both</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Category Details -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[16px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          </div>
+          Category Details
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Primary Category</label>
+            <select [(ngModel)]="department.primaryCategory" name="primaryCat" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc] bg-white cursor-pointer">
+              <option value="Health">Health</option>
+              <option value="Education">Education</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Secondary Category</label>
+            <div class="w-full min-h-[44px] border border-[#d1d5dc] rounded-[10px] px-[12px] py-[6px] flex flex-wrap gap-[8px] focus-within:border-[#155dfc] focus-within:ring-1 focus-within:ring-[#155dfc]">
+              <div *ngFor="let cat of department.secondaryCategories" class="flex items-center gap-[6px] bg-[#eff6ff] text-[#1447e6] text-[12px] font-medium px-[10px] py-[4px] rounded-[6px]">
+                {{ cat }}
+                <button type="button" (click)="removeChip(department.secondaryCategories, cat)" class="cursor-pointer opacity-70 hover:opacity-100">
+                  <svg xmlns="http://www.w-images.com/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              </div>
+              <input type="text" placeholder="Add..." class="flex-1 min-w-[50px] outline-none text-[14px] bg-transparent" />
+            </div>
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Search Keywords</label>
+            <div class="w-full min-h-[44px] border border-[#d1d5dc] rounded-[10px] px-[12px] py-[6px] flex flex-wrap gap-[8px] focus-within:border-[#155dfc] focus-within:ring-1 focus-within:ring-[#155dfc]">
+              <div *ngFor="let kw of department.searchKeywords" class="flex items-center gap-[6px] bg-[#f3f4f6] text-[#4a5565] text-[12px] font-medium px-[10px] py-[4px] rounded-[6px]">
+                {{ kw }}
+                <button type="button" (click)="removeChip(department.searchKeywords, kw)" class="cursor-pointer opacity-70 hover:opacity-100">
+                  <svg xmlns="http://www.w-images.com/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              </div>
+              <input type="text" placeholder="Add keywords..." class="flex-1 min-w-[50px] outline-none text-[14px] bg-transparent" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Language & Regions -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[16px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          </div>
+          Language & Regions
+        </h2>
+        <div>
+          <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Languages</label>
+          <div class="w-full min-h-[44px] border border-[#d1d5dc] rounded-[10px] px-[12px] py-[6px] flex flex-wrap gap-[8px] focus-within:border-[#155dfc] focus-within:ring-1 focus-within:ring-[#155dfc]">
+            <div *ngFor="let lang of department.languages" class="flex items-center gap-[6px] bg-[#eff6ff] text-[#1447e6] text-[12px] font-medium px-[10px] py-[4px] rounded-[6px]">
+              {{ lang }}
+              <button type="button" (click)="removeChip(department.languages, lang)" class="cursor-pointer opacity-70 hover:opacity-100">
+                <svg xmlns="http://www.w-images.com/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <input type="text" placeholder="Add language..." class="flex-1 min-w-[50px] outline-none text-[14px] bg-transparent" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Address & Location -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[16px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+            <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </div>
+          Address & Location
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div class="col-span-2">
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Address *</label>
+            <input type="text" [(ngModel)]="department.address" name="address" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">State *</label>
+            <select [(ngModel)]="department.state" name="state" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc] bg-white cursor-pointer">
+              <option value="Delhi">Delhi</option>
+              <option value="Maharashtra">Maharashtra</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Latitude</label>
+            <input type="text" [(ngModel)]="department.latitude" name="lat" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+          </div>
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Longitude</label>
+            <input type="text" [(ngModel)]="department.longitude" name="lng" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Contact Information -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[16px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+             <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          </div>
+          Contact Information
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Helpline Numbers</label>
+            <input type="text" [(ngModel)]="department.helpline" name="helpline" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+          </div>
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Land Phone</label>
+            <input type="text" [(ngModel)]="department.landPhone" name="landPhone" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Website URL *</label>
+            <input type="url" [(ngModel)]="department.website" name="website" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+          </div>
+        </div>
+      </div>
+      
+      <!-- 7. Working Hours -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[16px] flex items-center gap-[8px]">
+          <div class="w-[20px] h-[20px] bg-[#eff6ff] rounded flex items-center justify-center text-[#155dfc]">
+             <svg xmlns="http://www.w-images.com/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          Working Hours
+        </h2>
+        <div class="grid grid-cols-2 gap-[24px]">
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Working Days</label>
+            <select [(ngModel)]="department.workingDays" name="workingDays" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc] bg-white cursor-pointer">
+              <option value="Monday to Friday">Monday to Friday</option>
+              <option value="Monday to Saturday">Monday to Saturday</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Weekly Holiday</label>
+            <select [(ngModel)]="department.weeklyHoliday" name="weeklyHoliday" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc] bg-white cursor-pointer">
+              <option value="Saturday, Sunday">Saturday, Sunday</option>
+              <option value="Sunday">Sunday</option>
+            </select>
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[14px] font-medium text-[#364153] mb-[8px]">Working Hours</label>
+             <input type="text" [(ngModel)]="department.workingHours" name="workingHours" class="w-full border border-[#d1d5dc] rounded-[10px] px-[16px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]" />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

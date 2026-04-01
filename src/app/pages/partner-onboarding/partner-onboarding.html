@@ -1,0 +1,326 @@
+<div class="min-h-screen bg-[#f9fafb]">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <main class="transition-all duration-300 pt-[96px] pb-8 pr-12"
+    [ngStyle]="{'margin-left': sidebarService.isCollapsed() ? '80px' : '255px'}">
+
+    <div class="max-w-[1450px] mx-auto space-y-6">
+
+      <!-- Header -->
+      <div class="ml-5 space-y-1">
+        <h1 class="text-[24px] font-bold text-[#101828]">Partner Onboarding</h1>
+        <p class="text-[14px] text-[#4a5565]">Manage partner registration and token generation</p>
+      </div>
+
+      <!-- Existing Partners Accordion -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[10px] shadow-sm overflow-hidden">
+        <div class="bg-[#eff6ff] border-b border-[#dbeafe] px-6 py-4 flex items-center justify-between cursor-pointer"
+          (click)="existingPartnersOpen = !existingPartnersOpen">
+          <div class="flex items-center gap-3">
+            <div class="bg-[#155dfc] w-8 h-8 rounded-[10px] flex items-center justify-center">
+              <img [src]="imgPartner" class="w-5 h-5" alt="Partner">
+            </div>
+            <h2 class="text-[18px] font-bold text-[#101828]">Existing Partners</h2>
+          </div>
+          <img [src]="imgArrow" class="w-5 h-5 transition-transform duration-200"
+            [class.rotate-90]="existingPartnersOpen" alt="Arrow">
+        </div>
+
+        <div *ngIf="existingPartnersOpen" class="p-6 space-y-8 animate-in fade-in duration-300">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-4">
+            <!-- Select Partner Dropdown -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Select the partners</label>
+              <div class="relative">
+                <select [(ngModel)]="existingPartner.selectedPartner"
+                  class="w-full h-10 px-4 pr-10 border border-[#d1d5dc] rounded-[10px] bg-white text-[14px] appearance-none focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+                  <option value="" disabled selected>Select a partner</option>
+                  <option *ngFor="let p of partners" [value]="p.name">{{p.name}}</option>
+                </select>
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <span class="text-[#364153] text-[10px]">▼</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Partner Username -->
+            <div class="space-y-2 lg:row-start-1 lg:col-start-2">
+              <label class="text-[14px] font-medium text-[#364153]">Partner Username <span
+                  class="text-[#fb2c36]">*</span></label>
+              <div class="relative">
+                <img [src]="imgUser" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="User">
+                <input type="text" [(ngModel)]="existingPartner.username" placeholder="username"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Partner Name -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Partner Name <span
+                  class="text-[#fb2c36]">*</span></label>
+              <div class="relative">
+                <img [src]="imgBuilding" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Building">
+                <input type="text" [(ngModel)]="existingPartner.name" placeholder="Enter partner name"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Partner Domain -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Partner Domain <span
+                  class="text-[#fb2c36]">*</span></label>
+              <div class="relative">
+                <img [src]="imgDomain" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Domain">
+                <input type="text" [(ngModel)]="existingPartner.domain" placeholder="partner.umang.gov.in"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Registered Email -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Registered Email</label>
+              <div class="relative">
+                <img [src]="imgEmail" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Email">
+                <input type="email" [(ngModel)]="existingPartner.email" placeholder="email@partner.com"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Registered Mobile -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Registered Mobile</label>
+              <div class="relative">
+                <img [src]="imgMobile" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Mobile">
+                <input type="tel" [(ngModel)]="existingPartner.mobile" placeholder="+91 98765 43210"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Is International -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Is International</label>
+              <div class="flex items-center gap-3">
+                <div class="relative inline-flex items-center cursor-pointer"
+                  (click)="existingPartner.isInternational = !existingPartner.isInternational">
+                  <div class="w-11 h-6 bg-[#d1d5dc] rounded-full transition-colors"
+                    [class.bg-[#155dfc]]="existingPartner.isInternational"></div>
+                  <div class="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform shadow-sm"
+                    [style.transform]="existingPartner.isInternational ? 'translateX(20px)' : 'translateX(0)'"></div>
+                </div>
+                <span class="text-[14px] text-[#364153]">No</span>
+              </div>
+            </div>
+
+            <!-- API Access Token -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">API Access Token</label>
+              <div class="relative">
+                <img [src]="imgToken" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Token">
+                <input type="text" [(ngModel)]="existingPartner.accessToken" placeholder="Access token"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] font-mono focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- API Bearer Token -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">API Bearer Token</label>
+              <div class="relative">
+                <img [src]="imgBearerToken" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4a5565]/50"
+                  alt="Token">
+                <input type="text" [value]="'Generated token will appear here'" disabled
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] font-mono bg-[#f9fafb] text-[#4a5565]/50 focus:outline-none">
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-center pt-4 border-t border-[#e5e7eb]">
+            <button (click)="generateToken()"
+              class="bg-[#155dfc] text-white px-6 py-2 rounded-[10px] flex items-center gap-2 text-[16px] font-medium hover:bg-[#155dfc]/90 transition-all shadow-sm opacity-50 cursor-not-allowed">
+              <img [src]="imgWand" class="w-4 h-4 invert brightness-200" alt="Generate">
+              Generate Token
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onboard Partner Accordion -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[10px] shadow-sm overflow-hidden">
+        <div class="bg-[#f0fdf4] border-b border-[#dcfce7] px-6 py-4 flex items-center justify-between cursor-pointer"
+          (click)="onboardPartnerOpen = !onboardPartnerOpen">
+          <div class="flex items-center gap-3">
+            <div class="bg-[#00a63e] w-8 h-8 rounded-[10px] flex items-center justify-center">
+              <img [src]="imgPartner" class="w-5 h-5" alt="Partner">
+            </div>
+            <h2 class="text-[18px] font-bold text-[#101828]">Onboard Partner</h2>
+          </div>
+          <img [src]="imgArrow" class="w-5 h-5 transition-transform duration-200" [class.rotate-90]="onboardPartnerOpen"
+            alt="Arrow">
+        </div>
+
+        <div *ngIf="onboardPartnerOpen" class="p-6 space-y-8 animate-in fade-in duration-300">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-4">
+            <!-- Partner Name -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Partner Name <span
+                  class="text-[#fb2c36]">*</span></label>
+              <div class="relative">
+                <img [src]="imgBuilding" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Building">
+                <input type="text" [(ngModel)]="newPartner.name" placeholder="Enter partner name"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Partner Username -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Partner Username <span
+                  class="text-[#fb2c36]">*</span></label>
+              <div class="relative">
+                <img [src]="imgUser" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="User">
+                <input type="text" [(ngModel)]="newPartner.username" placeholder="username"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Registered Email -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Registered Email</label>
+              <div class="relative">
+                <img [src]="imgEmail" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Email">
+                <input type="email" [(ngModel)]="newPartner.email" placeholder="email@partner.com"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Registered Mobile -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Registered Mobile</label>
+              <div class="relative">
+                <img [src]="imgMobile" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Mobile">
+                <input type="tel" [(ngModel)]="newPartner.mobile" placeholder="+91 98765 43210"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Partner Domain -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Partner Domain <span
+                  class="text-[#fb2c36]">*</span></label>
+              <div class="relative">
+                <img [src]="imgDomain" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Domain">
+                <input type="text" [(ngModel)]="newPartner.domain" placeholder="partner.umang.gov.in"
+                  class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+              </div>
+            </div>
+
+            <!-- Is International -->
+            <div class="space-y-2">
+              <label class="text-[14px] font-medium text-[#364153]">Is International</label>
+              <div class="flex items-center gap-3">
+                <div class="relative inline-flex items-center cursor-pointer"
+                  (click)="newPartner.isInternational = !newPartner.isInternational">
+                  <div class="w-11 h-6 bg-[#d1d5dc] rounded-full transition-colors"
+                    [class.bg-[#00a63e]]="newPartner.isInternational"></div>
+                  <div class="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform shadow-sm"
+                    [style.transform]="newPartner.isInternational ? 'translateX(20px)' : 'translateX(0)'"></div>
+                </div>
+                <span class="text-[14px] text-[#364153]">No</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-center pt-4 border-t border-[#e5e7eb]">
+            <button (click)="saveAndGenerateToken()"
+              class="bg-[#00a63e] text-white px-6 py-2 rounded-[10px] flex items-center gap-2 text-[16px] font-medium hover:bg-[#00a63e]/90 transition-all shadow-sm opacity-50 cursor-not-allowed">
+              <img [src]="imgWand" class="w-4 h-4 invert brightness-200" alt="Save">
+              Save and Generate Token
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partners Table Listing -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[10px] shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-[#e5e7eb] flex items-center justify-between">
+          <div class="relative w-[448px]">
+            <img [src]="imgSearch" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Search">
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Search By Partner Name..."
+              class="w-full h-10 px-10 border border-[#d1d5dc] rounded-[10px] text-[14px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+          </div>
+          <button
+            class="bg-[#00a63e] text-white px-4 h-10 rounded-[10px] flex items-center gap-2 text-[16px] font-medium hover:bg-[#00a63e]/90 transition-all shadow-sm">
+            <img [src]="imgExport" class="w-4 h-4 invert brightness-200" alt="Export">
+            Export
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="bg-[#f9fafb] border-b border-[#e5e7eb]">
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Partner Name</th>
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Username</th>
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Domain</th>
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Email</th>
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Mobile</th>
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Is International</th>
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Country ISO</th>
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Status</th>
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Created Date</th>
+                <th
+                  class="px-6 py-4 text-[12px] font-semibold text-[#4a5565] uppercase tracking-wider whitespace-nowrap">
+                  Bearer Token</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#e5e7eb]">
+              <tr *ngFor="let partner of filteredPartners" class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-[14px] font-medium text-[#101828] whitespace-nowrap">{{partner.name}}</td>
+                <td class="px-6 py-4 text-[14px] font-mono text-[#101828] whitespace-nowrap">{{partner.username}}</td>
+                <td class="px-6 py-4 text-[14px] text-[#155dfc] hover:underline cursor-pointer whitespace-nowrap">
+                  {{partner.domain}}</td>
+                <td class="px-6 py-4 text-[14px] text-[#101828] whitespace-nowrap">{{partner.email}}</td>
+                <td class="px-6 py-4 text-[14px] text-[#101828] whitespace-nowrap">{{partner.mobile}}</td>
+                <td class="px-6 py-4 text-[14px] text-[#101828] whitespace-nowrap">{{partner.isInternational}}</td>
+                <td class="px-6 py-4 text-[14px] font-mono text-[#101828] whitespace-nowrap">{{partner.country}}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-semibold"
+                    [class.bg-[#dcfce7]]="partner.status === 'Active'"
+                    [class.text-[#008236]]="partner.status === 'Active'"
+                    [class.bg-[#f3f4f6]]="partner.status === 'Inactive'"
+                    [class.text-[#364153]]="partner.status === 'Inactive'">
+                    {{partner.status}}
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-[14px] text-[#101828] whitespace-nowrap">{{partner.createdDate}}</td>
+                <td class="px-6 py-4 text-[14px] font-mono text-[#4a5565] truncate max-w-[300px]">{{partner.token}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-[#f9fafb] border-t border-[#e5e7eb] px-6 py-3">
+          <p class="text-[14px] text-[#4a5565]">Showing {{filteredPartners.length}} of {{partners.length}} partners</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

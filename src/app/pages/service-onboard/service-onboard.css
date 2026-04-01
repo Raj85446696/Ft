@@ -1,0 +1,50 @@
+/* Reusing global dashboard animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInFromBottom {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.fade-in { opacity: 0; }
+.slide-in-from-bottom-4 { transform: translateY(16px); }
+.slide-in-from-right-4 { transform: translateX(16px); }
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+
+/* Transition effects */
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Checkbox/Radio interior shadow */
+.accent-\[\#155dfc\] {
+  accent-color: #155dfc;
+}
+
+/* Custom indicator spacing */
+.z-10 { z-index: 10; }
+.z-0 { z-index: 0; }
+
+/* Checklist transitions */
+ul li span.material-icons {
+  transition: color 0.3s ease;
+}

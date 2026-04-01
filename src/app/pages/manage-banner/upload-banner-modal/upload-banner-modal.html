@@ -1,0 +1,90 @@
+<div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+  <!-- Modal Card -->
+  <div class="bg-white w-full max-w-[600px] rounded-[15px] shadow-[0px_10px_25px_0px_rgba(0,0,0,0.2)] overflow-hidden relative transform transition-all duration-300 scale-100">
+    
+    <!-- Modal Header -->
+    <div class="px-8 py-6 border-b border-[#e5e7eb] flex items-center justify-between">
+      <div class="space-y-1">
+        <h2 class="text-[24px] font-bold text-[#101828]">Upload Banner</h2>
+        <p class="text-[14px] text-[#4a5565]">Upload and configure a new promotional banner</p>
+      </div>
+      <button (click)="onClose()" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+        <img [src]="imgVector" class="w-4 h-4 opacity-70" alt="Close">
+      </button>
+    </div>
+
+    <div class="p-8 space-y-6">
+      
+      <!-- Upload Area -->
+      <div class="space-y-2">
+        <label class="text-[14px] font-semibold text-[#364153]">Banner Image</label>
+        <div class="border-[1.6px] border-dashed border-[#d1d5dc] rounded-[10px] py-10 bg-gray-50/50 hover:bg-gray-50 transition-all cursor-pointer group flex flex-col items-center">
+          <div class="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+            <img [src]="imgIcon1" class="w-5 h-5" alt="Upload">
+          </div>
+          <p class="text-[14px] font-medium text-[#101828]">Click to upload banner image</p>
+          <p class="text-[12px] text-[#6a7282] mt-1">PNG, JPG up to 2MB (Recommended: 1200x400px)</p>
+        </div>
+      </div>
+
+      <!-- Form Inputs -->
+      <div class="space-y-5">
+        
+        <!-- Banner Title -->
+        <div class="space-y-2">
+          <label class="text-[14px] font-semibold text-[#364153]">Banner Title</label>
+          <input type="text" [(ngModel)]="formData.title" placeholder="Enter banner title"
+                 class="w-full h-[45px] px-4 border border-[#d1d5dc] rounded-[10px] text-[15px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]/50">
+        </div>
+
+        <!-- Target URL & Position Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="text-[14px] font-semibold text-[#364153]">Target URL</label>
+            <input type="text" [(ngModel)]="formData.url" placeholder="https://..."
+                   class="w-full h-[45px] px-4 border border-[#d1d5dc] rounded-[10px] text-[15px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]/50">
+          </div>
+          <div class="space-y-2">
+            <label class="text-[14px] font-semibold text-[#364153]">Position</label>
+            <select [(ngModel)]="formData.position"
+                    class="w-full h-[45px] px-4 border border-[#d1d5dc] rounded-[10px] text-[15px] bg-white focus:outline-none focus:ring-1 focus:ring-[#155dfc]/50 appearance-none">
+              <option value="Homepage">Homepage</option>
+              <option value="Dashboard">Dashboard</option>
+              <option value="All Pages">All Pages</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Date Range Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="text-[14px] font-semibold text-[#364153]">Start Date</label>
+            <input type="date" [(ngModel)]="formData.startDate"
+                   class="w-full h-[45px] px-4 border border-[#d1d5dc] rounded-[10px] text-[15px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]/50">
+          </div>
+          <div class="space-y-2">
+            <label class="text-[14px] font-semibold text-[#364153]">End Date</label>
+            <input type="date" [(ngModel)]="formData.endDate"
+                   class="w-full h-[45px] px-4 border border-[#d1d5dc] rounded-[10px] text-[15px] focus:outline-none focus:ring-1 focus:ring-[#155dfc]/50">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="px-8 py-6 bg-[#f9fafb] border-t border-[#e5e7eb] flex justify-end gap-4 overflow-hidden rounded-b-[15px]">
+      <button (click)="onClose()"
+              class="px-6 py-2.5 rounded-[10px] border border-[#d1d5dc] text-[#4a5565] font-medium hover:bg-gray-50 transition-all">
+        Cancel
+      </button>
+      <button (click)="onSave()"
+              class="bg-[#155dfc] px-6 py-2.5 rounded-[10px] text-white font-medium hover:bg-[#155dfc]/90 transition-all shadow-md flex items-center gap-2">
+        <span class="material-icons text-[18px]">save</span>
+        Save Banner
+      </button>
+    </div>
+
+  </div>
+</div>

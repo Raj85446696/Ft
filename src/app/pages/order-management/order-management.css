@@ -1,0 +1,28 @@
+/* Order Management Styles */
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+main {
+  animation: slideInUp 0.5s ease-out forwards;
+}
+
+/* Custom table hover and focus states */
+tr:hover {
+  background-color: rgba(249, 250, 251, 0.8);
+}
+
+input:focus {
+  border-color: #155dfc;
+  box-shadow: 0 0 0 1px rgba(21, 93, 252, 0.2);
+}
+
+/* Custom rounded corner for table header if needed */
+table thead tr th:first-child {
+  border-top-left-radius: 10px;
+}
+
+table thead tr th:last-child {
+  border-top-right-radius: 10px;
+}

@@ -1,0 +1,110 @@
+<div class="min-h-screen bg-[#f9fafb]">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+
+    <div class="max-w-[1200px] mx-auto space-y-8">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="space-y-1">
+          <h1 class="text-[30px] font-bold text-[#101828] leading-tight">Rating & Feedback</h1>
+          <p class="text-[16px] text-[#4a5565]">User reviews and service ratings</p>
+        </div>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Average Rating -->
+        <div
+          class="bg-white p-6 rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] flex items-center gap-4">
+          <div class="bg-[#f0b100] w-12 h-12 rounded-[10px] p-3 flex items-center justify-center">
+            <img [src]="imgStar" class="w-6 h-6 invert brightness-200" alt="Rating">
+          </div>
+          <div>
+            <p class="text-[14px] text-[#4a5565]">Average Rating</p>
+            <p class="text-[30px] font-bold text-[#101828]">4.6</p>
+          </div>
+        </div>
+
+        <!-- Total Reviews -->
+        <div
+          class="bg-white p-6 rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] flex items-center gap-4">
+          <div class="bg-[#2b7fff] w-12 h-12 rounded-[10px] p-3 flex items-center justify-center">
+            <img [src]="imgReviews" class="w-6 h-6 invert brightness-200" alt="Reviews">
+          </div>
+          <div>
+            <p class="text-[14px] text-[#4a5565]">Total Reviews</p>
+            <p class="text-[30px] font-bold text-[#101828]">10,080</p>
+          </div>
+        </div>
+
+        <!-- Satisfaction -->
+        <div
+          class="bg-white p-6 rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] flex items-center gap-4">
+          <div class="bg-[#00c950] w-12 h-12 rounded-[10px] p-3 flex items-center justify-center">
+            <img [src]="imgSatisfaction" class="w-6 h-6 invert brightness-200" alt="Satisfaction">
+          </div>
+          <div>
+            <p class="text-[14px] text-[#4a5565]">Satisfaction</p>
+            <p class="text-[30px] font-bold text-[#101828]">92%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Ratings Section -->
+      <div
+        class="bg-white rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] p-6 space-y-6">
+        <h2 class="text-[20px] font-bold text-[#101828]">Service Ratings</h2>
+        <div class="space-y-4">
+          <div *ngFor="let service of serviceRatings"
+            class="bg-[#f9fafb] p-4 rounded-[10px] flex items-center justify-between border border-transparent hover:border-[#e5e7eb] transition-colors">
+            <div class="space-y-1">
+              <h3 class="text-[16px] font-semibold text-[#101828]">{{service.name}}</h3>
+              <p class="text-[14px] text-[#4a5565]">{{service.reviews}} reviews</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-1 min-w-[150px]">
+                <div class="flex gap-1">
+                  <img *ngFor="let star of getStarsArray(service.rating)" [src]="imgStar" class="w-5 h-5"
+                    [class.opacity-30]="star === 0" alt="Star">
+                </div>
+                <span class="text-[16px] font-bold text-[#101828] ml-2">{{service.rating}}</span>
+              </div>
+              <span class="text-[14px] font-medium min-w-[40px] text-right"
+                [class.text-[#00a63e]]="service.changeType === 'up'"
+                [class.text-[#e7000b]]="service.changeType === 'down'">
+                {{service.change}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent User Feedback Section -->
+      <div
+        class="bg-white rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] p-6 space-y-6">
+        <h2 class="text-[20px] font-bold text-[#101828]">Recent User Feedback</h2>
+        <div class="space-y-4">
+          <div *ngFor="let review of userFeedback"
+            class="border border-[#e5e7eb] p-4 rounded-[10px] space-y-3 relative">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-[16px] font-semibold text-[#101828]">{{review.name}}</h3>
+                <p class="text-[14px] text-[#4a5565]">{{review.service}}</p>
+              </div>
+              <div class="flex gap-1">
+                <img *ngFor="let star of getStarsArray(review.rating)" [src]="imgStar" class="w-4 h-4"
+                  [class.opacity-30]="star === 0" alt="Star">
+              </div>
+            </div>
+            <p class="text-[16px] text-[#364153]">{{review.comment}}</p>
+            <p class="text-[12px] text-[#6a7282]">{{review.time}}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
