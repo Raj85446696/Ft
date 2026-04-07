@@ -82,6 +82,13 @@ export class RoleManagement {
 
   selectedRole: Role | null = this.roles[0];
 
+  // Modal State
+  isCreateModalOpen = false;
+  newRoleName = '';
+  newRoleDesc = '';
+  newRoleColor = '#3B82F6';
+  themeColors = ['#EF4444', '#3B82F6', '#10B981', '#A855F7', '#F97316', '#EC4899'];
+
   selectRole(role: Role) {
     this.selectedRole = role;
   }
@@ -98,5 +105,38 @@ export class RoleManagement {
     } else {
       this.selectedRole.permissions.splice(index, 1);
     }
+  }
+
+  // Modal Actions
+  openCreateModal() {
+    this.newRoleName = '';
+    this.newRoleDesc = '';
+    this.newRoleColor = '#3B82F6';
+    this.isCreateModalOpen = true;
+  }
+
+  closeCreateModal() {
+    this.isCreateModalOpen = false;
+  }
+
+  selectThemeColor(color: string) {
+    this.newRoleColor = color;
+  }
+
+  createRole() {
+    if (!this.newRoleName.trim() || !this.newRoleDesc.trim()) return;
+    
+    const newRole: Role = {
+      id: 'R' + Object.keys(this.roles).length + 1,
+      name: this.newRoleName,
+      description: this.newRoleDesc,
+      userCount: 0,
+      permissions: [],
+      color: this.newRoleColor,
+      icon: 'admin_panel_settings' // Default icon
+    };
+
+    this.roles.push(newRole);
+    this.closeCreateModal();
   }
 }

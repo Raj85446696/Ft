@@ -14,7 +14,7 @@
           <span class="material-icons text-[18px]">arrow_back</span>
           Back to Service Plus
         </a>
-        <h1 class="text-[28px] font-bold text-[#101828]">Create New Service Plus</h1>
+        <h1 class="text-[28px] font-bold text-[#101828]">Edit Service Plus</h1>
       </div>
 
       <!-- Main Form Container -->
@@ -23,10 +23,10 @@
         <!-- SECTION 1: Attach Logo -->
         <div class="space-y-[16px]">
           <h3 class="text-[18px] font-semibold text-[#101828]">Attach Logo for Service *</h3>
-          <div class="border-2 border-dashed border-[#d1d5dc] rounded-[12px] p-[40px] flex flex-col items-center justify-center bg-[#f9fafb] hover:bg-[#f3f4f6] transition-colors cursor-pointer">
-            <span class="material-icons text-[#6b7280] text-[40px] mb-[12px]">cloud_upload</span>
-            <p class="text-[#101828] font-medium text-[15px]">Click to upload or drag and drop</p>
-            <p class="text-[#6b7280] text-[13px] mt-[4px]">PNG, JPG or SVG (max. 2MB)</p>
+          <div class="border-2 border-dashed border-[#d1d5dc] rounded-[12px] p-[24px] flex flex-col items-center justify-center bg-[#f9fafb] hover:bg-[#f3f4f6] transition-colors cursor-pointer text-center relative overflow-hidden">
+            <!-- Show existing file mockup -->
+            <img src="/assets/vaccination_service_icon_1774859915087.png" class="h-[64px] object-contain mb-[12px] opacity-80" alt="Pre-uploaded Logo">
+            <p class="text-[#155dfc] font-medium text-[14px] flex items-center gap-[4px]"><span class="material-icons text-[16px]">cloud_upload</span> Replace Logo</p>
           </div>
         </div>
 
@@ -121,7 +121,7 @@
             </div>
             <div class="space-y-[8px] md:col-span-2">
               <label class="block text-[14px] font-medium text-[#364153]">Secret Key</label>
-              <input type="password" [(ngModel)]="service.secretKey" placeholder="Enter Secret Key" class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]">
+              <input type="text" [(ngModel)]="service.secretKey" placeholder="Enter Secret Key" class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc]">
             </div>
           </div>
         </div>
@@ -179,7 +179,7 @@
           Cancel
         </button>
         <button (click)="onSubmit()" class="h-[44px] px-[32px] text-[14px] font-medium text-white bg-[#155dfc] rounded-[8px] hover:bg-blue-700 shadow-[0px_4px_6px_rgba(21,93,252,0.2)] transition-all">
-          Save
+          Update Service
         </button>
       </div>
 

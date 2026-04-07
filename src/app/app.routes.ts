@@ -36,6 +36,8 @@ import { OnboardRequests } from './pages/onboard-requests/onboard-requests';
 import { EmailGroupPage } from './pages/manage-email/email-group/email-group';
 import { ViewEmailPage } from './pages/manage-email/view-email/view-email';
 import { CustomEmailPage } from './pages/manage-email/custom-email/custom-email';
+import { ViewService } from './pages/view-service/view-service';
+import { EditService } from './pages/edit-service/edit-service';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -75,5 +77,7 @@ export const routes: Routes = [
   { path: 'manage-email/email-group', component: EmailGroupPage },
   { path: 'manage-email/view-email', component: ViewEmailPage },
   { path: 'manage-email/custom-email', component: CustomEmailPage },
+  { path: 'view-service', component: ViewService },
+  { path: 'edit-service', component: EditService },
   { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];

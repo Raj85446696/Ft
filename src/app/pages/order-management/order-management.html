@@ -2,15 +2,15 @@
   <app-navbar></app-navbar>
   <app-sidebar></app-sidebar>
 
-  <main class="transition-all duration-300 pt-[96px] pb-8 pr-12"
-        [ngStyle]="{'margin-left': sidebarService.isCollapsed() ? '80px' : '255px'}">
+  <main class="transition-all duration-300 pt-[96px] pb-8 px-[32px]"
+        [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[260px]': !sidebarService.isCollapsed()}">
     
-    <div class="max-w-[1450px] mx-auto space-y-8">
+    <div class="max-w-[1450px] mx-auto space-y-6">
       
       <!-- Header -->
       <div class="space-y-1">
-        <h1 class="text-[30px] font-bold text-[#101828]">Order Management</h1>
-        <p class="text-[16px] text-[#4a5565]">View and manage service orders and transactions</p>
+        <h1 class="text-[28px] font-bold text-[#212529]">Order Management</h1>
+        <p class="text-[14px] text-[#6C757D]">View and manage service orders and transactions</p>
       </div>
 
       <!-- Stats Grid -->

@@ -1,21 +1,21 @@
-<div class="min-h-screen bg-[#f9fafb]">
+<div class="min-h-screen bg-[#F8F9FA]">
   <app-navbar></app-navbar>
   <app-sidebar></app-sidebar>
 
-  <main class="transition-all duration-300 pt-[96px] pb-8 pr-12"
-        [ngStyle]="{'margin-left': sidebarService.isCollapsed() ? '80px' : '255px'}">
+  <main class="transition-all duration-300 pt-[96px] pb-8 px-[32px]"
+        [ngStyle]="{'margin-left': sidebarService.isCollapsed() ? '80px' : '260px'}">
     
-    <div class="max-w-[1450px] mx-auto space-y-8">
+    <div class="max-w-[1450px] mx-auto space-y-6">
       
       <!-- Header -->
       <div class="flex items-center justify-between">
         <div class="space-y-1">
-          <h1 class="text-[30px] font-bold text-[#101828]">Manage Banner</h1>
-          <p class="text-[16px] text-[#4a5565]">Upload and manage promotional banners for the admin system</p>
+          <h1 class="text-[28px] font-bold text-[#212529]">Manage Banner</h1>
+          <p class="text-[14px] text-[#6C757D]">Upload and manage promotional banners for the admin system</p>
         </div>
         <button (click)="onUpload()"
-                class="bg-[#155dfc] text-white px-6 py-2.5 rounded-[10px] flex items-center gap-2 text-[16px] font-medium hover:bg-[#155dfc]/90 transition-all shadow-md">
-          <img [src]="imgIcon" class="w-4 h-4 invert brightness-200" alt="Upload">
+                class="bg-blue-600 text-white px-5 py-2.5 rounded-[8px] flex items-center gap-2 text-[14px] font-semibold hover:bg-blue-700 transition-colors shadow-sm">
+          <span class="material-icons text-[18px]">cloud_upload</span>
           Upload Banner
         </button>
       </div>
@@ -23,91 +23,80 @@
       <!-- Stats Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Active -->
-        <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] flex items-center gap-3">
-          <div class="w-12 h-12 bg-[#00c950] rounded-[10px] flex items-center justify-center p-3 relative text-white">
-            <span class="material-icons text-[24px]">check_circle</span>
-          </div>
+        <div class="bg-white p-6 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] flex justify-between items-start hover:shadow-md transition-shadow">
           <div>
-            <p class="text-[14px] text-[#4a5565]">Active</p>
-            <p class="text-[24px] font-bold text-[#101828]">2</p>
+            <p class="text-[14px] text-[#6C757D] font-medium mb-1">Active Banners</p>
+            <h3 class="text-[24px] font-bold text-[#212529]">2</h3>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600">
+            <span class="material-icons text-[24px]">check_circle</span>
           </div>
         </div>
 
         <!-- Scheduled -->
-        <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] flex items-center gap-3">
-          <div class="w-12 h-12 bg-[#eff6ff] rounded-[10px] flex items-center justify-center p-3 relative text-[#1447e6]">
-            <span class="material-icons text-[24px]">event</span>
-          </div>
+        <div class="bg-white p-6 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] flex justify-between items-start hover:shadow-md transition-shadow">
           <div>
-            <p class="text-[14px] text-[#4a5565]">Scheduled</p>
-            <p class="text-[24px] font-bold text-[#101828]">1</p>
+             <p class="text-[14px] text-[#6C757D] font-medium mb-1">Scheduled</p>
+             <h3 class="text-[24px] font-bold text-[#212529]">1</h3>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+            <span class="material-icons text-[24px]">event</span>
           </div>
         </div>
 
         <!-- Inactive/Expired -->
-        <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] flex items-center gap-3">
-          <div class="w-12 h-12 bg-[#f3f4f6] rounded-[10px] flex items-center justify-center p-3 relative text-[#4a5565]">
-            <span class="material-icons text-[24px]">highlight_off</span>
-          </div>
-          <div>
-            <p class="text-[14px] text-[#4a5565]">Inactive/Expired</p>
-            <p class="text-[24px] font-bold text-[#101828]">1</p>
+        <div class="bg-white p-6 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] flex justify-between items-start hover:shadow-md transition-shadow">
+           <div>
+             <p class="text-[14px] text-[#6C757D] font-medium mb-1">Inactive/Expired</p>
+             <h3 class="text-[24px] font-bold text-[#212529]">1</h3>
+           </div>
+          <div class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-500">
+            <span class="material-icons text-[24px]">block</span>
           </div>
         </div>
 
         <!-- Total Clicks -->
-        <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] flex items-center gap-3">
-          <div class="w-12 h-12 bg-[#faf5ff] rounded-[10px] flex items-center justify-center p-3 relative text-[#8200db]">
+        <div class="bg-white p-6 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] flex justify-between items-start hover:shadow-md transition-shadow">
+           <div>
+             <p class="text-[14px] text-[#6C757D] font-medium mb-1">Total Clicks</p>
+             <h3 class="text-[24px] font-bold text-[#212529]">5,526</h3>
+           </div>
+          <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
             <span class="material-icons text-[24px]">touch_app</span>
-          </div>
-          <div>
-            <p class="text-[14px] text-[#4a5565]">Total Clicks</p>
-            <p class="text-[24px] font-bold text-[#101828]">5,526</p>
           </div>
         </div>
       </div>
 
       <!-- Upload Section -->
-      <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] space-y-6">
-        <h2 class="text-[20px] font-bold text-[#101828]">Upload New Banner</h2>
-        <div class="flex flex-col items-center justify-center border-[1.6px] border-dashed border-[#d1d5dc] rounded-[10px] py-12 bg-gray-50/50 hover:bg-gray-50 transition-all cursor-pointer group">
-          <div class="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <img [src]="imgIcon1" class="w-6 h-6" alt="Upload">
+      <div class="bg-white p-6 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb]">
+        <h2 class="text-[16px] font-bold text-[#212529] mb-4">Upload New Banner</h2>
+        <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-[12px] py-10 bg-[#F8F9FA]/50 hover:bg-[#F8F9FA] transition-colors cursor-pointer group">
+          <div class="w-12 h-12 bg-white rounded-full shadow-sm border border-[#e5e7eb] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform text-blue-600">
+            <span class="material-icons text-[24px]">cloud_upload</span>
           </div>
-          <p class="text-[16px] font-medium text-[#101828]">Click to upload or drag and drop</p>
-          <p class="text-[14px] text-[#6a7282] mt-1">PNG, JPG up to 2MB (Recommended: 1200x400px)</p>
-          <div class="flex gap-6 mt-6">
-            <div class="flex items-center gap-1.5 text-[12px] text-[#4a5565]">
-              <span class="font-medium">Max Size:</span> 2 MB
-            </div>
-            <div class="flex items-center gap-1.5 text-[12px] text-[#4a5565]">
-              <span class="font-medium">Formats:</span> JPG, PNG, GIF
-            </div>
-            <div class="flex items-center gap-1.5 text-[12px] text-[#4a5565]">
-              <span class="font-medium">Dimensions:</span> 1200 x 400 px
-            </div>
-          </div>
+          <p class="text-[14px] font-bold text-[#212529]">Click to upload or drag and drop</p>
+          <p class="text-[12px] text-[#6C757D] mt-1 font-medium">PNG, JPG up to 2MB (Recommended: 1200x400px)</p>
         </div>
 
-        <div class="space-y-4 pt-4">
-          <p class="text-[14px] font-semibold text-[#364153]">Example Banner Sizes</p>
+        <div class="space-y-3 pt-6 border-t border-[#e5e7eb] mt-6">
+          <p class="text-[13px] font-bold text-[#212529]">Example Banner Sizes</p>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="relative h-[96px] rounded-[10px] overflow-hidden border border-[#e5e7eb]">
-              <img [src]="imgSt" class="w-full h-full object-cover" alt="Desktop">
+            <div class="relative h-[100px] rounded-[8px] overflow-hidden border border-[#e5e7eb] group">
+              <img [src]="imgSt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Desktop">
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <span class="text-white text-[14px] font-medium">Desktop (1200x400)</span>
+                <span class="text-white text-[13px] font-semibold tracking-wide">Desktop (1200x400)</span>
               </div>
             </div>
-            <div class="relative h-[96px] rounded-[10px] overflow-hidden border border-[#e5e7eb]">
-              <img [src]="imgSt1" class="w-full h-full object-cover" alt="Tablet">
+            <div class="relative h-[100px] rounded-[8px] overflow-hidden border border-[#e5e7eb] group">
+              <img [src]="imgSt1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Tablet">
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <span class="text-white text-[14px] font-medium">Tablet (800x300)</span>
+                <span class="text-white text-[13px] font-semibold tracking-wide">Tablet (800x300)</span>
               </div>
             </div>
-            <div class="relative h-[96px] rounded-[10px] overflow-hidden border border-[#e5e7eb]">
-              <img [src]="imgSt2" class="w-full h-full object-cover" alt="Mobile">
+            <div class="relative h-[100px] rounded-[8px] overflow-hidden border border-[#e5e7eb] group">
+              <img [src]="imgSt2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Mobile">
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <span class="text-white text-[14px] font-medium">Mobile (600x200)</span>
+                <span class="text-white text-[13px] font-semibold tracking-wide">Mobile (600x200)</span>
               </div>
             </div>
           </div>
@@ -115,66 +104,73 @@
       </div>
 
       <!-- Banner List Container -->
-      <div class="bg-white p-6 rounded-[10px] shadow-sm border border-[#e5e7eb] space-y-6">
-        <h2 class="text-[20px] font-bold text-[#101828]">All Banners</h2>
+      <div class="bg-white rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] overflow-hidden">
+        <div class="p-6 border-b border-[#e5e7eb] flex justify-between items-center bg-white">
+           <h2 class="text-[16px] font-bold text-[#212529]">Banner Statistics</h2>
+           <span class="text-[13px] font-medium text-[#6C757D]">Active Banners: <span class="font-bold text-[#212529]">2 / 4</span></span>
+        </div>
         
-        <div class="grid grid-cols-1 gap-6">
+        <div class="p-6 space-y-6">
           <div *ngFor="let banner of banners" 
-               class="border border-[#e5e7eb] rounded-[10px] overflow-hidden flex flex-col md:flex-row hover:border-[#155dfc]/30 hover:shadow-md transition-all group">
+               class="border border-[#e5e7eb] rounded-[12px] bg-white overflow-hidden flex flex-col md:flex-row hover:border-[#155dfc]/30 hover:shadow-md transition-all group">
             
-            <div class="md:w-[320px] h-[200px] relative">
+            <div class="md:w-[280px] h-[180px] relative">
               <img [src]="banner.image" class="w-full h-full object-cover" alt="Banner">
-              <div class="absolute top-3 right-3">
-                <span class="px-3 py-1 rounded-full text-[12px] font-medium shadow-[0_4_6_-1_rgba(0,0,0,0.1)]"
+              <div class="absolute top-3 left-3">
+                <span class="px-2.5 py-1 rounded-[20px] text-[11px] font-bold uppercase tracking-wider"
                       [ngClass]="{
-                        'bg-[#00c950] text-white': banner.status === 'Active',
-                        'bg-[#2b7fff] text-white': banner.status === 'Scheduled'
+                        'bg-green-500 text-white': banner.status === 'Active',
+                        'bg-blue-500 text-white': banner.status === 'Scheduled',
+                        'bg-gray-500 text-white': banner.status === 'Inactive'
                       }">
                   {{banner.status}}
                 </span>
               </div>
-              <div class="absolute bottom-3 left-3 px-3 py-1 bg-black/70 text-white text-[12px] rounded-full">
-                Order: #{{banner.order}}
+              <div class="absolute bottom-3 left-3 px-2.5 py-1 bg-[#212529]/80 text-white text-[11px] font-bold rounded-[20px] backdrop-blur-sm shadow-sm">
+                ORDER: #{{banner.order}}
               </div>
             </div>
 
-            <div class="flex-1 p-6 flex flex-col justify-between">
-              <div class="space-y-4">
-                <div class="flex justify-between items-start">
-                  <h3 class="text-[18px] font-semibold text-[#101828]">{{banner.title}}</h3>
-                </div>
+            <div class="flex-1 p-5 flex flex-col justify-between">
+              <div>
+                <h3 class="text-[18px] font-bold text-[#212529] mb-3">{{banner.title}}</h3>
                 
-                <div class="flex flex-wrap gap-6 items-center">
-                  <div class="flex items-center gap-2 text-[14px] text-[#4a5565]">
-                    <img [src]="imgIcon2" class="w-4 h-4" alt="Position">
-                    <span>Position: <span class="font-medium text-[#101828]">{{banner.position}}</span></span>
+                <div class="space-y-3">
+                  <div class="flex flex-wrap gap-4 items-center">
+                    <div class="flex items-center gap-1.5 text-[13px] font-medium text-[#6C757D] bg-[#F8F9FA] px-2.5 py-1.5 rounded-[6px] border border-[#e5e7eb]">
+                      <span class="material-icons text-[16px]">desktop_windows</span>
+                      <span>Position: <span class="font-bold text-[#212529]">{{banner.position}}</span></span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[13px] font-medium text-[#6C757D] bg-[#F8F9FA] px-2.5 py-1.5 rounded-[6px] border border-[#e5e7eb]">
+                      <span class="material-icons text-[16px]">calendar_today</span>
+                      <span>{{banner.dateRange}}</span>
+                    </div>
                   </div>
-                  <div class="flex items-center gap-2 text-[14px] text-[#4a5565]">
-                    <img [src]="imgIcon3" class="w-4 h-4" alt="Date">
-                    <span>{{banner.dateRange}}</span>
-                  </div>
-                </div>
-
-                <div class="flex gap-6 items-center pt-2 border-t border-[#e5e7eb]/50">
-                  <div class="text-[14px] text-[#4a5565]">
-                    Clicks: <span class="font-bold text-[#155dfc]">{{banner.clicks}}</span>
-                  </div>
-                  <div class="text-[14px] text-[#4a5565]">
-                    CTR: <span class="font-bold text-[#00a63e]">{{banner.ctr}}</span>
+                  
+                  <div class="flex gap-6 items-center">
+                    <div class="flex items-center gap-1.5 text-[13px] font-medium text-[#6C757D]">
+                      Clicks: <span class="font-bold text-blue-600">{{banner.clicks}}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[13px] font-medium text-[#6C757D]">
+                      CTR: <span class="font-bold text-green-600">{{banner.ctr}}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <!-- Actions Area -->
-              <div class="flex items-center gap-2 mt-6 pt-4 border-t border-[#e5e7eb]/50">
-                <button (click)="editBanner(banner)" class="p-2 hover:bg-gray-100 rounded-[10px] transition-colors relative">
-                  <img [src]="imgVector" class="w-4 h-4" alt="Edit">
+              <div class="flex items-center gap-2 mt-4 pt-4 border-t border-[#e5e7eb]">
+                <button (click)="toggleBannerStatus(banner)" class="w-9 h-9 flex items-center justify-center text-[#6C757D] hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-100" title="Toggle Status">
+                  <span class="material-icons text-[18px]">visibility</span>
                 </button>
-                <button (click)="deleteBanner(banner)" class="p-2 hover:bg-red-50 rounded-[10px] transition-colors relative">
-                  <img [src]="imgVector2" class="w-4 h-4" alt="Delete">
+                <button (click)="editBanner(banner)" class="w-9 h-9 flex items-center justify-center text-[#6C757D] hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-100" title="Edit">
+                  <span class="material-icons text-[18px]">edit</span>
                 </button>
-                <button (click)="toggleBannerStatus(banner)" class="p-2 hover:bg-gray-100 rounded-[10px] transition-colors relative">
-                  <img [src]="imgVector4" class="w-4 h-4" alt="Status">
+                <button (click)="toggleBannerStatus(banner)" class="w-9 h-9 flex items-center justify-center text-[#6C757D] hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-100" title="Schedule / Swap">
+                  <span class="material-icons text-[18px]">swap_horiz</span>
+                </button>
+                <button (click)="deleteBanner(banner)" class="w-9 h-9 flex items-center justify-center text-[#6C757D] hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100 ml-auto" title="Delete">
+                  <span class="material-icons text-[18px]">delete</span>
                 </button>
               </div>
             </div>

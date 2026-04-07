@@ -47,7 +47,7 @@
     </div>
 
     <!-- Services Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
       <div *ngFor="let service of services" 
            class="bg-white rounded-[14px] overflow-hidden border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all flex flex-col group">
         
@@ -58,39 +58,45 @@
         </div>
 
         <!-- Content Area -->
-        <div class="p-6 flex flex-col flex-1 space-y-4">
-          <div class="space-y-1">
-            <h3 class="text-[18px] font-bold text-[#101828] leading-tight group-hover:text-[#155dfc] transition-colors line-clamp-1">{{service.name}}</h3>
-            <p class="text-[14px] text-[#6a7282] font-medium">{{service.category}}</p>
-          </div>
+        <div class="p-[20px] flex flex-col flex-1">
+          <h3 class="font-semibold text-[16px] text-[#101828] leading-[24px] mb-[12px] line-clamp-1 min-h-[24px]">
+            {{ service.name }}
+          </h3>
 
-          <div class="border-b border-[#f3f4f6] pb-4">
-            <p class="text-[12px] text-[#99a1af] uppercase font-bold tracking-wider mb-1">Department</p>
-            <p class="text-[14px] font-medium text-[#364153]">{{service.department}}</p>
-          </div>
-
-          <div class="flex items-center justify-between mt-auto">
+          <!-- Category & Status badges -->
+          <div class="flex items-center justify-between mb-[16px]">
+            <span class="bg-[#eff6ff] border border-[#bedbff] text-[#1447e6] text-[12px] font-medium px-[10px] py-[4px] rounded-[8px]">
+              {{ service.category }}
+            </span>
             <span [ngClass]="{
               'bg-[#dcfce7] text-[#008236] border-[#bbf7d0]': service.status === 'Active',
               'bg-[#f3f4f6] text-[#364153] border-[#e5e7eb]': service.status === 'Inactive',
               'bg-[#fef9c2] text-[#a65f00] border-[#fef08a]': service.status === 'Draft'
-            }" class="px-3 py-1 rounded-full text-[12px] font-bold border">
+            }" class="text-[12px] font-medium px-[12px] py-[4px] rounded-full border">
               {{service.status}}
             </span>
-            
-            <div class="flex items-center gap-2">
-              <button (click)="onView(service)" 
-                      class="bg-[#eff6ff] text-[#155dfc] h-[36px] px-4 rounded-[10px] text-[14px] font-medium hover:bg-blue-100 transition-colors">
-                View
-              </button>
-              <button (click)="onEdit(service)" 
-                      class="bg-[#f0fdf4] text-[#00a63e] h-[36px] px-4 rounded-[10px] text-[14px] font-medium hover:bg-green-100 transition-colors">
-                Edit
-              </button>
-              <button class="bg-[#f9fafb] text-[#6a7282] h-[36px] w-[36px] flex items-center justify-center rounded-[10px] hover:bg-gray-100 transition-colors">
-                <span class="material-icons text-[18px]">more_vert</span>
-              </button>
-            </div>
+          </div>
+
+          <!-- Department info -->
+          <p class="text-[14px] text-[#101828] mb-[20px]">
+            <span class="font-medium">{{ service.department }}</span>
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-[8px] mt-auto">
+            <button (click)="onView(service)" class="flex-1 bg-[#eff6ff] text-[#155dfc] text-[14px] font-medium h-[36px] rounded-[10px] flex items-center justify-center gap-[6px] hover:bg-[#dbeafe] transition-colors cursor-pointer">
+              <img [src]="imgView" alt="" class="w-[14px] h-[14px]" />
+              View
+            </button>
+            <button (click)="onEdit(service)" class="flex-1 bg-[#f0fdf4] text-[#00a63e] text-[14px] font-medium h-[36px] rounded-[10px] flex items-center justify-center gap-[6px] hover:bg-[#dcfce7] transition-colors cursor-pointer">
+              <img [src]="imgEdit" alt="" class="w-[14px] h-[14px]" />
+              Edit
+            </button>
+            <!-- Active/Inactive Toggle -->
+            <label class="relative inline-flex items-center cursor-pointer ml-auto mr-[8px]">
+              <input type="checkbox" [checked]="service.status === 'Active'" class="sr-only peer">
+              <div class="w-[36px] h-[20px] bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#155dfc] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[16px] after:w-[16px] after:transition-all peer-checked:bg-[#00c950]"></div>
+            </label>
           </div>
         </div>
       </div>

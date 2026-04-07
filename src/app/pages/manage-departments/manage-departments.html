@@ -56,7 +56,7 @@
     </div>
 
     <!-- Department Cards Grid -->
-    <div class="grid grid-cols-4 gap-[24px]">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[24px]">
       <div *ngFor="let dept of filtered"
         class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] overflow-hidden hover:shadow-md transition-shadow">
 
@@ -108,7 +108,7 @@
       </div>
 
       <!-- Empty state -->
-      <div *ngIf="filtered.length === 0" class="col-span-4 text-center py-[64px] text-[#4a5565]">
+      <div *ngIf="filtered.length === 0" class="col-span-full text-center py-[64px] text-[#4a5565]">
         <p class="text-[20px] font-medium">No departments found</p>
         <p class="text-[14px] mt-[8px]">Try adjusting your search or filters</p>
       </div>

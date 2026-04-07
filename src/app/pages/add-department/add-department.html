@@ -249,11 +249,25 @@
         <button type="button" routerLink="/manage-departments" class="text-[#4a5565] border border-[#d1d5dc] bg-white h-[44px] px-[24px] rounded-[10px] shadow-sm hover:bg-[#f3f4f6] font-medium text-[16px] transition-colors cursor-pointer">
           Cancel
         </button>
-        <button type="button" class="bg-[#155dfc] text-white h-[44px] px-[24px] rounded-[10px] shadow-sm hover:bg-[#1447e6] font-medium text-[16px] transition-colors cursor-pointer">
+        <button type="button" (click)="submitForm()" class="bg-[#155dfc] text-white h-[44px] px-[24px] rounded-[10px] shadow-sm hover:bg-[#1447e6] font-medium text-[16px] transition-colors cursor-pointer">
           Save Department
         </button>
       </div>
     </form>
 
+  </div>
+
+  <!-- Material Design Success Snackbar -->
+  <div *ngIf="showSuccessToast" 
+       class="fixed bottom-[24px] left-1/2 -translate-x-1/2 z-[100] min-w-[344px] bg-[#323232] rounded-[4px] shadow-[0_3px_5px_-1px_rgba(0,0,0,0.2),_0_6px_10px_0_rgba(0,0,0,0.14),_0_1px_18px_0_rgba(0,0,0,0.12)] px-[16px] py-[14px] flex items-center justify-between animate-in slide-in-from-bottom-8 fade-in duration-300">
+       
+    <div class="flex items-center gap-[12px]">
+      <span class="material-icons text-[#4caf50] text-[20px]">check_circle</span>
+      <span class="text-[#ffffff] text-[14px] font-['Roboto',sans-serif] tracking-[0.25px]">Department saved successfully.</span>
+    </div>
+    
+    <button (click)="showSuccessToast = false" class="ml-[24px] text-[#4caf50] hover:bg-[#4caf50]/10 px-[8px] py-[6px] rounded-[4px] text-[14px] font-bold uppercase tracking-[1.25px] transition-colors cursor-pointer outline-none">
+      DISMISS
+    </button>
   </div>
 </div>

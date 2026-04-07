@@ -4,7 +4,7 @@ import { Navbar } from '../../components/navbar/navbar';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-department',
@@ -15,6 +15,17 @@ import { RouterLink } from '@angular/router';
 })
 export class AddDepartment {
   sidebarService = inject(SidebarService);
+  private router = inject(Router);
+
+  showSuccessToast = false;
+
+  submitForm() {
+    this.showSuccessToast = true;
+    setTimeout(() => {
+      this.showSuccessToast = false;
+      this.router.navigate(['/manage-departments']);
+    }, 3000);
+  }
 
   // Form Model
   department = {

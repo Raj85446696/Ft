@@ -2,13 +2,13 @@
   <app-navbar></app-navbar>
   <app-sidebar></app-sidebar>
 
-  <main class="transition-all duration-300 pt-[96px] pb-8 pr-12"
-    [ngStyle]="{'margin-left': sidebarService.isCollapsed() ? '80px' : '255px'}">
+  <main class="transition-all duration-300 pt-[96px] pb-8 px-[32px]"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[260px]': !sidebarService.isCollapsed()}">
 
     <div class="max-w-[1450px] mx-auto space-y-6">
 
       <!-- Header -->
-      <div class="ml-5 space-y-1">
+      <div class="space-y-1">
         <h1 class="text-[24px] font-bold text-[#101828]">Partner Onboarding</h1>
         <p class="text-[14px] text-[#4a5565]">Manage partner registration and token generation</p>
       </div>
@@ -240,8 +240,8 @@
       </div>
 
       <!-- Partners Table Listing -->
-      <div class="bg-white border border-[#e5e7eb] rounded-[10px] shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-[#e5e7eb] flex items-center justify-between">
+      <div class="bg-white p-6 border border-[#e5e7eb] rounded-[10px] shadow-sm space-y-6">
+        <div class="flex items-center justify-between">
           <div class="relative w-[448px]">
             <img [src]="imgSearch" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" alt="Search">
             <input type="text" [(ngModel)]="searchTerm" placeholder="Search By Partner Name..."
@@ -254,7 +254,7 @@
           </button>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="border border-[#e5e7eb] rounded-[10px] overflow-hidden">
           <table class="w-full text-left">
             <thead>
               <tr class="bg-[#f9fafb] border-b border-[#e5e7eb]">
@@ -314,10 +314,9 @@
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <div class="bg-[#f9fafb] border-t border-[#e5e7eb] px-6 py-3">
-          <p class="text-[14px] text-[#4a5565]">Showing {{filteredPartners.length}} of {{partners.length}} partners</p>
+          <div class="bg-[#f9fafb] border-t border-[#e5e7eb] p-6">
+            <p class="text-[14px] text-[#4a5565] font-medium">Showing {{filteredPartners.length}} of {{partners.length}} partners</p>
+          </div>
         </div>
       </div>
 

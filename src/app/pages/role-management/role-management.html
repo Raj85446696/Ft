@@ -1,138 +1,205 @@
 <div class="min-h-screen bg-[#f9fafb]">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
+   <app-navbar></app-navbar>
+   <app-sidebar></app-sidebar>
 
-  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
-    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
-    
-    <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+   <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+      [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+
+      <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+         <!-- Header Area -->
+         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-1">
+               <h1 class="text-[32px] font-bold text-[#101828]">Role Management</h1>
+               <p class="text-[16px] text-[#4a5565]">Configure role-based access control and system permissions</p>
+            </div>
+            <button (click)="openCreateModal()"
+               class="bg-[#155dfc] text-white px-6 py-3 rounded-[12px] flex items-center gap-2 text-[16px] font-bold shadow-lg shadow-blue-500/20 hover:bg-[#0047e0] transition-all active:scale-95">
+               <span class="material-icons text-[20px]">add</span>
+               Create Role
+            </button>
+         </div>
+
+         <!-- Summary Row -->
+         <div class="grid grid-cols-1 md:grid-cols-4 gap-[24px]">
+            <div
+               class="bg-white p-[24px] rounded-[14px] border border-[#e5e7eb] shadow-sm flex items-center gap-[16px]">
+               <div class="w-[48px] h-[48px] rounded-full bg-blue-50 flex items-center justify-center text-[#155dfc]">
+                  <span class="material-icons text-[24px]">admin_panel_settings</span>
+               </div>
+               <div>
+                  <p class="text-[13px] font-bold text-[#6a7282] uppercase tracking-wide">Total Roles</p>
+                  <h3 class="text-[24px] font-bold text-[#101828]">{{roles.length}}</h3>
+               </div>
+            </div>
+            <div
+               class="bg-white p-[24px] rounded-[14px] border border-[#e5e7eb] shadow-sm flex items-center gap-[16px]">
+               <div class="w-[48px] h-[48px] rounded-full bg-green-50 flex items-center justify-center text-[#15803d]">
+                  <span class="material-icons text-[24px]">verified_user</span>
+               </div>
+               <div>
+                  <p class="text-[13px] font-bold text-[#6a7282] uppercase tracking-wide">Active Roles</p>
+                  <h3 class="text-[24px] font-bold text-[#101828]">{{roles.length}}</h3>
+               </div>
+            </div>
+            <div
+               class="bg-white p-[24px] rounded-[14px] border border-[#e5e7eb] shadow-sm flex items-center gap-[16px]">
+               <div class="w-[48px] h-[48px] rounded-full bg-purple-50 flex items-center justify-center text-[#7c3aed]">
+                  <span class="material-icons text-[24px]">people</span>
+               </div>
+               <div>
+                  <p class="text-[13px] font-bold text-[#6a7282] uppercase tracking-wide">Total Users</p>
+                  <h3 class="text-[24px] font-bold text-[#101828]">172</h3>
+               </div>
+            </div>
+            <div
+               class="bg-white p-[24px] rounded-[14px] border border-[#e5e7eb] shadow-sm flex items-center gap-[16px]">
+               <div class="w-[48px] h-[48px] rounded-full bg-orange-50 flex items-center justify-center text-[#d97706]">
+                  <span class="material-icons text-[24px]">key</span>
+               </div>
+               <div>
+                  <p class="text-[13px] font-bold text-[#6a7282] uppercase tracking-wide">Permissions</p>
+                  <h3 class="text-[24px] font-bold text-[#101828]">{{allPermissions.length}}</h3>
+               </div>
+            </div>
+         </div>
+
+         <!-- Search Interface -->
+         <div class="relative w-full max-w-[600px]">
+            <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]">search</span>
+            <input type="text" placeholder="Search roles by name or description..."
+               class="w-full h-[50px] pl-12 pr-4 bg-white border border-[#e5e7eb] rounded-[14px] text-[15px] focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all shadow-sm">
+         </div>
+
+         <!-- Roles Grid Container -->
+         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-[24px]">
+
+            <div *ngFor="let role of roles"
+               class="bg-white rounded-[14px] border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all group overflow-hidden flex flex-col h-full relative">
+
+               <!-- Role Header -->
+               <div class="p-[20px] flex items-start justify-between border-b border-[#f3f4f6]">
+                  <div class="flex items-center gap-[12px]">
+                     <div
+                        class="w-[42px] h-[42px] rounded-[10px] flex items-center justify-center text-white flex-shrink-0"
+                        [style.backgroundColor]="role.color">
+                        <span class="material-icons text-[22px]">{{role.icon}}</span>
+                     </div>
+                     <div>
+                        <h3
+                           class="text-[16px] font-bold text-[#101828] group-hover:text-[#155dfc] transition-colors line-clamp-1">
+                           {{role.name}}</h3>
+                        <span
+                           class="inline-flex px-[8px] py-[2px] rounded-full text-[10px] font-bold bg-[#dcfce7] text-[#166534]">
+                           ACTIVE
+                        </span>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Body -->
+               <div class="p-[20px] flex flex-col flex-1 space-y-[16px] bg-[#f9fafb]">
+                  <div class="flex flex-col gap-[12px]">
+                     <div class="flex items-center justify-between">
+                        <p class="text-[13px] font-medium text-[#6a7282]">Assigned Users</p>
+                        <span class="text-[14px] font-bold text-[#101828]">{{role.userCount}} Users</span>
+                     </div>
+
+                     <div class="flex items-center justify-between">
+                        <p class="text-[13px] font-medium text-[#6a7282]">Total Permissions</p>
+                        <span class="text-[14px] font-bold text-[#101828]">{{role.permissions.length}} Policies</span>
+                     </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex items-center gap-[8px] mt-auto pt-[8px]">
+                     <button
+                        class="flex-1 bg-[#eff6ff] text-[#155dfc] text-[13px] font-bold h-[36px] rounded-[8px] flex items-center justify-center gap-[6px] hover:bg-[#dbeafe] transition-colors border border-[#bedbff]">
+                        <span class="material-icons text-[16px]">key</span>
+                        Permissions
+                     </button>
+                     <button
+                        class="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-white border border-[#e5e7eb] hover:bg-gray-50 text-[#4a5565] transition-colors"
+                        title="Edit">
+                        <span class="material-icons text-[18px]">edit</span>
+                     </button>
+                     <button
+                        class="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-white border border-[#fecaca] hover:bg-[#fef2f2] text-[#b91c1c] transition-colors"
+                        title="Delete">
+                        <span class="material-icons text-[18px]">delete</span>
+                     </button>
+                  </div>
+               </div>
+
+            </div>
+
+         </div>
+
+      </div>
+   </div>
+
+   <!-- Create Role Modal Overlay -->
+   <div *ngIf="isCreateModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-[20px]">
+      <!-- Backdrop -->
+      <div class="absolute inset-0 bg-[#101828]/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-200" (click)="closeCreateModal()"></div>
       
-      <!-- Header Area -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div class="space-y-1">
-          <h1 class="text-[32px] font-bold text-[#101828]">Role Management</h1>
-          <p class="text-[16px] text-[#4a5565]">Configure role-based access control and system permissions</p>
-        </div>
-        <button class="bg-[#155dfc] text-white px-6 py-3 rounded-[12px] flex items-center gap-2 text-[16px] font-bold shadow-lg shadow-blue-500/20 hover:bg-[#0047e0] transition-all active:scale-95">
-          <span class="material-icons text-[20px]">add_moderator</span>
-          Create New Role
-        </button>
-      </div>
+      <!-- Modal Container -->
+      <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-[480px] animate-in zoom-in-95 duration-300">
+         
+         <!-- Header -->
+         <div class="flex items-center justify-between px-[24px] py-[20px]">
+            <h2 class="text-[20px] font-bold text-[#101828]">Create New Role</h2>
+            <button (click)="closeCreateModal()" class="w-[32px] h-[32px] flex items-center justify-center rounded-full text-[#6a7282] hover:bg-[#f3f4f6] hover:text-[#101828] transition-colors">
+               <span class="material-icons text-[20px]">close</span>
+            </button>
+         </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
-        <!-- Roles List Sidebar -->
-        <div class="lg:col-span-1 space-y-4">
-           <h3 class="text-[14px] font-bold text-[#6a7282] uppercase tracking-widest px-1">Available System Roles</h3>
-           <div *ngFor="let role of roles" 
-                (click)="selectRole(role)"
-                class="p-5 rounded-[20px] cursor-pointer border transition-all duration-300 relative overflow-hidden group"
-                [ngClass]="selectedRole?.id === role.id ? 'bg-white border-[#155dfc] shadow-md' : 'bg-white/50 border-transparent hover:border-gray-300'">
-              
-              <div *ngIf="selectedRole?.id === role.id" class="absolute left-0 top-0 bottom-0 w-1 bg-[#155dfc]"></div>
-              
-              <div class="flex items-center gap-4 relative">
-                 <div class="w-10 h-10 rounded-full flex items-center justify-center text-white" [style.backgroundColor]="role.color">
-                    <span class="material-icons text-[20px]">{{role.icon}}</span>
-                 </div>
-                 <div>
-                    <h4 class="text-[16px] font-bold text-[#101828]">{{role.name}}</h4>
-                    <p class="text-[12px] text-[#6a7282]">{{role.userCount}} Active Users</p>
-                 </div>
-              </div>
-           </div>
-        </div>
+         <!-- Body -->
+         <div class="px-[24px] py-[8px] space-y-[20px]">
+            
+            <!-- Role Name -->
+            <div class="space-y-[8px]">
+               <label class="block text-[14px] font-bold text-[#374151]">Role Name <span class="text-red-500">*</span></label>
+               <input type="text" [(ngModel)]="newRoleName" placeholder="e.g. Finance Manager"
+                      class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
+            </div>
 
-        <!-- Role Configuration HUB -->
-        <div class="lg:col-span-3 space-y-6">
-           <div *ngIf="selectedRole" class="bg-white rounded-[24px] border border-[#e5e7eb] shadow-sm p-8 animate-in delay-200">
-              <div class="flex items-center justify-between border-b border-[#f3f4f6] pb-8 mb-8">
-                 <div class="space-y-1">
-                    <div class="flex items-center gap-3">
-                       <h2 class="text-[24px] font-bold text-[#101828]">{{selectedRole.name}}</h2>
-                       <span class="px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-widest" [style.backgroundColor]="selectedRole.color">
-                          ID: {{selectedRole.id}}
-                       </span>
-                    </div>
-                    <p class="text-[15px] text-[#6a7282]">{{selectedRole.description}}</p>
-                 </div>
-                 <div class="flex items-center gap-3">
-                    <button class="w-10 h-10 rounded-full border border-[#e5e7eb] text-[#6a7282] flex items-center justify-center hover:bg-gray-50 transition-colors">
-                       <span class="material-icons text-[20px]">edit</span>
-                    </button>
-                    <button class="bg-[#fdf2f2] text-[#b91c1c] h-[40px] px-4 rounded-[10px] text-[13px] font-bold flex items-center gap-2 hover:bg-[#fee2e2] transition-all">
-                       <span class="material-icons text-[18px]">delete</span>
-                       Remove Role
-                    </button>
-                 </div>
-              </div>
+            <!-- Description -->
+            <div class="space-y-[8px]">
+               <label class="block text-[14px] font-bold text-[#374151]">Description <span class="text-red-500">*</span></label>
+               <textarea [(ngModel)]="newRoleDesc" rows="4" placeholder="Briefly describe what this role does..."
+                         class="w-full p-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[15px] resize-none focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all"></textarea>
+            </div>
 
-              <!-- Permissions Matrix -->
-              <div class="space-y-6">
-                 <div class="flex items-center justify-between">
-                    <h3 class="text-[18px] font-bold text-[#101828]">Functional Permissions</h3>
-                    <div class="flex items-center gap-4 text-[13px] font-medium text-[#6a7282]">
-                       <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#155dfc]"></span> Enabled</span>
-                       <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-gray-200"></span> Disabled</span>
-                    </div>
-                 </div>
+            <!-- Color Theme Selector -->
+            <div class="space-y-[12px] pt-[8px]">
+               <label class="block text-[14px] font-bold text-[#374151]">Color Theme</label>
+               <div class="flex items-center gap-[12px]">
+                  <button *ngFor="let color of themeColors" 
+                          (click)="selectThemeColor(color)"
+                          [style.backgroundColor]="color"
+                          class="w-[36px] h-[36px] rounded-[10px] flex items-center justify-center transition-all focus:outline-none shadow-sm"
+                          [ngClass]="newRoleColor === color ? 'ring-2 ring-offset-2 ring-gray-800 scale-110' : 'hover:scale-105 border border-black/5'">
+                     <span *ngIf="newRoleColor === color" class="material-icons text-white text-[18px]">check</span>
+                  </button>
+               </div>
+            </div>
 
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div *ngFor="let perm of allPermissions" 
-                         (click)="togglePermission(perm.id)"
-                         class="p-6 rounded-[20px] border cursor-pointer transition-all duration-300 relative group overflow-hidden"
-                         [ngClass]="selectedRole.permissions.includes(perm.id) ? 'bg-[#f0f6ff]/40 border-[#155dfc] shadow-sm' : 'bg-white border-[#e5e7eb] hover:border-gray-300'">
-                       
-                       <div class="flex items-start justify-between relative">
-                          <div class="space-y-1">
-                             <h4 class="text-[15px] font-bold text-[#101828]">{{perm.name}}</h4>
-                             <p class="text-[12px] text-[#6a7282] leading-relaxed">{{perm.description}}</p>
-                          </div>
-                          <div class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0"
-                               [ngClass]="selectedRole.permissions.includes(perm.id) ? 'bg-[#155dfc]' : 'bg-[#e5e7eb]'">
-                             <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                                   [ngClass]="selectedRole.permissions.includes(perm.id) ? 'translate-x-6' : 'translate-x-1'"></span>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-              </div>
+         </div>
 
-              <!-- Footer Actions -->
-              <div class="mt-12 pt-8 border-t border-[#f3f4f6] flex items-center justify-between">
-                 <div class="flex items-center gap-2 text-[13px] text-[#6a7282]">
-                    <span class="material-icons text-[18px]">verified</span>
-                    Policy changes are applied to all {{selectedRole.userCount}} users instantly.
-                 </div>
-                 <button class="bg-[#101828] text-white h-[46px] px-8 rounded-[12px] text-[14px] font-bold hover:bg-[#202937] transition-all shadow-lg active:scale-95">
-                    Update Security Policy
-                 </button>
-              </div>
-           </div>
-
-           <!-- Multi-Layer Authorization Hint -->
-           <div class="bg-blue-900 rounded-[28px] p-8 text-white relative overflow-hidden group">
-              <div class="absolute -right-12 -top-12 w-48 h-48 bg-white/5 rounded-full blur-[60px] group-hover:scale-125 transition-transform duration-700"></div>
-              <div class="relative flex items-center gap-8">
-                 <div class="w-16 h-16 rounded-[18px] bg-white/10 flex items-center justify-center border border-white/5 shadow-2xl">
-                    <span class="material-icons text-[36px] text-blue-300">security_update_good</span>
-                 </div>
-                 <div class="space-y-1 flex-1">
-                    <h4 class="text-[18px] font-bold uppercase tracking-wider">MFA Enforcement Policy</h4>
-                    <p class="text-[13px] text-blue-200/70 leading-relaxed italic">
-                       "System Admins" are currently required to use Multi-Factor Authentication via Gov-Shield App.
-                    </p>
-                 </div>
-                 <button class="text-[14px] font-bold text-blue-300 hover:text-white transition-colors underline flex items-center gap-1">
-                    Manage MFA
-                    <span class="material-icons text-[18px]">open_in_new</span>
-                 </button>
-              </div>
-           </div>
-        </div>
+         <!-- Footer Actions -->
+         <div class="flex items-center justify-end gap-[12px] px-[24px] py-[24px] mt-[12px]">
+            <button (click)="closeCreateModal()" class="px-[20px] h-[40px] rounded-[8px] text-[14px] font-bold text-[#4b5563] border border-[#d1d5dc] hover:bg-[#f9fafb] transition-colors">
+               Cancel
+            </button>
+            <button (click)="createRole()" 
+                    [disabled]="!newRoleName || !newRoleDesc"
+                    class="px-[24px] h-[40px] rounded-[8px] text-[14px] font-bold text-white transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    [ngClass]="(!newRoleName || !newRoleDesc) ? 'bg-[#9ca3af]' : 'bg-[#155dfc] hover:bg-[#0047e0]'">
+               Create Role
+            </button>
+         </div>
 
       </div>
-
-    </div>
-  </div>
+   </div>
 </div>

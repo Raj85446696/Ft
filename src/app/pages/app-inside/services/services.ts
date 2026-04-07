@@ -18,6 +18,9 @@ export class Services {
   router = inject(Router);
 
   searchQuery: string = '';
+
+  imgView = '/assets/f03e3621df553b3f14c17e1733a426079b8bdf08.svg';
+  imgEdit = '/assets/dd968e829f828a8be9698cb9373f53984669759b.svg';
   
   services = [
     {
@@ -91,9 +94,11 @@ export class Services {
 
   onView(service: any) {
     console.log('Viewing service:', service.name);
+    this.router.navigate(['/view-service']);
   }
 
   onEdit(service: any) {
     console.log('Editing service:', service.name);
+    this.router.navigate(['/edit-service']);
   }
 }

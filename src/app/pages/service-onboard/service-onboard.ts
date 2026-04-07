@@ -17,47 +17,30 @@ export class ServiceOnboard {
   sidebarService = inject(SidebarService);
   router = inject(Router);
 
-  currentStep: number = 1;
   service = {
-    name: '',
-    category: '',
     department: '',
+    title: '',
     description: '',
-    slug: '',
-    ownerName: '',
-    ownerEmail: '',
-    languages: [] as string[],
-    type: 'External',
-    authMethod: 'API Key',
-    responseFormat: 'JSON',
-    endpoints: {
-      dev: '',
-      prod: ''
-    },
-    privacyPolicy: '',
-    termsInfo: ''
+    serviceId: '',
+    ownerCode: '',
+    category: '',
+    keywords: '',
+    address1: '',
+    address2: '',
+    faq: '',
+    tinyUrl: '',
+    secretKey: '',
+    language: 'English',
+    redirectApi: '',
+    instanceId: '',
+    dynamicPath: '',
+    versionCode: '',
+    isActive: true
   };
 
   categories = ['Health', 'Education', 'Finance', 'Social Welfare', 'Agriculture', 'IT & Telecom'];
   departments = ['Ministry of Health', 'Digital India', 'NITI Aayog', 'Dept of Agriculture'];
-  availableLanguages = ['English', 'Hindi', 'Bengali', 'Marathi', 'Gujarati', 'Tamil', 'Telugu'];
-
-  toggleLanguage(lang: string) {
-    const index = this.service.languages.indexOf(lang);
-    if (index === -1) {
-      this.service.languages.push(lang);
-    } else {
-      this.service.languages.splice(index, 1);
-    }
-  }
-
-  nextStep() {
-    if (this.currentStep < 3) this.currentStep++;
-  }
-
-  prevStep() {
-    if (this.currentStep > 1) this.currentStep--;
-  }
+  languages = ['English', 'Hindi', 'Bengali', 'Marathi', 'Gujarati', 'Tamil', 'Telugu'];
 
   onSubmit() {
     console.log('Service Onboarded:', this.service);
