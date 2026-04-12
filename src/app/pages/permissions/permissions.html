@@ -10,14 +10,14 @@
       <!-- Header Area -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-[16px]">
         <div class="space-y-[4px]">
-          <h1 class="text-[28px] font-bold text-[#101828]">Permissions for Department Admin</h1>
+          <h1 class="text-[28px] font-bold text-[#101828]">Permissions for {{roleName}}</h1>
           <p class="text-[15px] text-[#4a5565]">Configure role-based access control and permissions</p>
         </div>
         <div class="flex items-center gap-[12px]">
           <button routerLink="/role-management" class="px-[24px] h-[46px] rounded-[8px] flex items-center justify-center text-[14px] font-bold text-[#6a7282] border border-[#e5e7eb] bg-white hover:bg-[#f9fafb] transition-colors shadow-sm">
             Cancel
           </button>
-          <button class="bg-[#155dfc] text-white px-[24px] h-[46px] rounded-[8px] flex items-center gap-[8px] text-[14px] font-bold hover:bg-[#0047e0] transition-colors shadow-sm">
+          <button (click)="savePermissions()" class="bg-[#155dfc] text-white px-[24px] h-[46px] rounded-[8px] flex items-center gap-[8px] text-[14px] font-bold hover:bg-[#0047e0] transition-colors shadow-sm">
             <span class="material-icons text-[18px]">save</span>
             Save Changes
           </button>
@@ -60,7 +60,7 @@
         <span class="material-icons text-[#155dfc] mt-[2px]">info</span>
         <div>
           <h4 class="text-[15px] font-bold text-[#1e3a8a]">Permission Management</h4>
-          <p class="text-[14px] text-[#1e3a8a]/80 mt-[2px]">Toggle permissions on or off to control what users with this <span class="font-bold">Department Admin</span> role can access. Changes will take effect immediately after saving.</p>
+          <p class="text-[14px] text-[#1e3a8a]/80 mt-[2px]">Toggle permissions on or off to control what users with the <span class="font-bold">{{roleName}}</span> role can access. Changes will take effect immediately after saving.</p>
         </div>
       </div>
 

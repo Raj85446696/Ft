@@ -29,7 +29,7 @@
             </div>
             <div>
               <p class="text-[14px] font-bold text-[#6a7282] uppercase tracking-wide">Total Users</p>
-              <h3 class="text-[28px] font-bold text-[#101828]">{{users.length}}</h3>
+              <h3 class="text-[28px] font-bold text-[#101828]">{{totalUsers}}</h3>
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
             </div>
             <div>
               <p class="text-[14px] font-bold text-[#6a7282] uppercase tracking-wide">Administrators</p>
-              <h3 class="text-[28px] font-bold text-[#101828]">2</h3>
+              <h3 class="text-[28px] font-bold text-[#101828]">{{adminCount}}</h3>
             </div>
           </div>
         </div>
@@ -53,7 +53,7 @@
             </div>
             <div>
               <p class="text-[14px] font-bold text-[#6a7282] uppercase tracking-wide">Inactive Users</p>
-              <h3 class="text-[28px] font-bold text-[#101828]">1</h3>
+              <h3 class="text-[28px] font-bold text-[#101828]">{{inactiveCount}}</h3>
             </div>
           </div>
         </div>
@@ -72,11 +72,29 @@
         </button>
       </div>
 
+      <!-- Loading State -->
+      <div *ngIf="loading" class="flex flex-col items-center justify-center py-[64px] text-[#6a7282]">
+        <div class="w-10 h-10 border-4 border-[#155dfc] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-[16px] font-medium">Loading users...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="errorMessage && !loading" class="bg-red-50 border border-red-200 rounded-[14px] p-6 flex items-center gap-4">
+        <span class="material-icons text-red-500 text-[28px]">error_outline</span>
+        <div>
+          <p class="text-[16px] font-bold text-red-700">Failed to load users</p>
+          <p class="text-[14px] text-red-600 mt-1">{{ errorMessage }}</p>
+        </div>
+        <button (click)="loadUsers()" class="ml-auto bg-red-600 text-white px-4 py-2 rounded-[8px] text-[14px] font-bold hover:bg-red-700 transition-colors">
+          Retry
+        </button>
+      </div>
+
       <!-- Users Grid Container -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-[24px] animate-in delay-300">
-        
+      <div *ngIf="!loading && !errorMessage" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-[24px] animate-in delay-300">
+
         <!-- User Card -->
-        <div *ngFor="let user of filteredUsers()" class="bg-white rounded-[14px] border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all group overflow-hidden flex flex-col h-full relative cursor-pointer hover:border-[#bedbff]">
+        <div *ngFor="let user of paginatedUsers()" class="bg-white rounded-[14px] border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all group overflow-hidden flex flex-col h-full relative cursor-pointer hover:border-[#bedbff]">
           
           <!-- Avatar Header -->
           <div class="p-[20px] flex flex-col items-center bg-[#f9fafb] border-b border-[#f3f4f6] relative">
@@ -98,9 +116,9 @@
             <div class="flex items-center justify-between">
                <span class="border text-[12px] font-semibold px-[10px] py-[4px] rounded-[6px]"
                  [ngClass]="{
-                   'bg-[#eff6ff] border-[#bedbff] text-[#1447e6]': user.role === 'Admin',
+                   'bg-[#eff6ff] border-[#bedbff] text-[#1447e6]': user.role.toLowerCase().includes('admin'),
                    'bg-[#fdf4ff] border-[#fbcfe8] text-[#c026d3]': user.role === 'Manager',
-                   'bg-[#f8fafc] border-[#e2e8f0] text-[#475569]': user.role === 'User'
+                   'bg-[#f8fafc] border-[#e2e8f0] text-[#475569]': !user.role.toLowerCase().includes('admin') && user.role !== 'Manager'
                  }">
                    {{ user.role }}
                </span>
@@ -109,9 +127,17 @@
                </span>
             </div>
 
-            <p class="text-[14px] font-medium text-[#364153] flex-1">
-               {{user.jobTitle}}
-            </p>
+            <div class="text-[13px] text-[#6a7282] space-y-[4px]">
+              <p *ngIf="user.mobile" class="flex items-center gap-[6px]">
+                <span class="material-icons text-[14px]">phone</span> {{ user.mobile }}
+              </p>
+              <p *ngIf="user.state !== '-'" class="flex items-center gap-[6px]">
+                <span class="material-icons text-[14px]">location_on</span> {{ user.state }}
+              </p>
+              <p *ngIf="user.createdDate" class="flex items-center gap-[6px]">
+                <span class="material-icons text-[14px]">calendar_today</span> {{ user.createdDate }}
+              </p>
+            </div>
 
             <!-- Actions -->
             <div class="flex items-center gap-[8px] mt-auto">
@@ -119,29 +145,37 @@
                 <span class="material-icons text-[16px]">manage_accounts</span>
                 Manage
               </button>
-              <button (click)="onDelete(user)" class="flex-1 bg-[#fef2f2] text-[#b91c1c] text-[13px] font-bold h-[36px] rounded-[8px] flex items-center justify-center gap-[6px] hover:bg-[#fecaca] transition-colors">
-                <span class="material-icons text-[16px]">person_remove</span>
-                Remove
-              </button>
             </div>
           </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="filteredUsers().length === 0" class="col-span-full flex flex-col items-center justify-center py-[64px] text-[#6a7282]">
+          <span class="material-icons text-[48px] mb-3 opacity-30">person_search</span>
+          <p class="text-[18px] font-bold text-[#364153]">No users found</p>
+          <p class="text-[14px] mt-1">Try adjusting your search</p>
         </div>
 
       </div>
 
       <!-- Pagination -->
-      <div class="p-6 bg-white border border-[#e5e7eb] rounded-[14px] shadow-sm flex items-center justify-between mt-[24px]">
-         <p class="text-[14px] font-medium text-[#6a7282]">Displaying filtered system users</p>
+      <div *ngIf="!loading && !errorMessage && filteredUsers().length > 0" class="p-6 bg-white border border-[#e5e7eb] rounded-[14px] shadow-sm flex items-center justify-between mt-[24px]">
+         <p class="text-[14px] font-medium text-[#6a7282]">Showing {{paginatedUsers().length}} of {{filteredUsers().length}} users</p>
          <div class="flex items-center gap-[4px]">
-            <button class="text-[14px] font-bold text-[#6a7282] hover:text-[#155dfc] transition-colors flex items-center gap-[4px] mr-[16px]">
+            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
+               class="text-[14px] font-bold text-[#6a7282] hover:text-[#155dfc] transition-colors flex items-center gap-[4px] mr-[16px] disabled:opacity-40 disabled:cursor-not-allowed">
                <span class="material-icons text-[18px]">chevron_left</span>
                Previous
             </button>
             <div class="flex items-center gap-[4px]">
-               <button class="w-[32px] h-[32px] rounded-[8px] bg-[#155dfc] text-white flex items-center justify-center text-[13px] font-bold hover:shadow-md transition-all">1</button>
-               <button class="w-[32px] h-[32px] rounded-[8px] text-[#6a7282] bg-white border border-[#e5e7eb] flex items-center justify-center text-[13px] font-bold hover:bg-[#f3f4f6] hover:text-[#101828] transition-all">2</button>
+               <button *ngFor="let page of pageNumbers" (click)="goToPage(page)"
+                 class="w-[32px] h-[32px] rounded-[8px] flex items-center justify-center text-[13px] font-bold transition-all"
+                 [ngClass]="page === currentPage ? 'bg-[#155dfc] text-white hover:shadow-md' : 'text-[#6a7282] bg-white border border-[#e5e7eb] hover:bg-[#f3f4f6] hover:text-[#101828]'">
+                 {{page}}
+               </button>
             </div>
-            <button class="text-[14px] font-bold text-[#6a7282] hover:text-[#155dfc] transition-colors flex items-center gap-[4px] ml-[16px]">
+            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
+               class="text-[14px] font-bold text-[#6a7282] hover:text-[#155dfc] transition-colors flex items-center gap-[4px] ml-[16px] disabled:opacity-40 disabled:cursor-not-allowed">
                Next
                <span class="material-icons text-[18px]">chevron_right</span>
             </button>

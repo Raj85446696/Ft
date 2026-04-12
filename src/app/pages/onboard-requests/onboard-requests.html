@@ -20,7 +20,10 @@
               class="pb-4 text-[15px] font-bold border-b-2 transition-all relative cursor-pointer"
               [ngClass]="activeTab === tab ? 'text-[#155dfc] border-[#155dfc] active-tab-indicator' : 'text-[#6a7282] border-transparent hover:text-[#101828]'">
             {{tab}} Requests
-            <span *ngIf="tab === 'Pending'" class="absolute -top-1 -right-6 inline-flex items-center justify-center w-5 h-5 bg-[#155dfc] text-white text-[10px] rounded-full">2</span>
+            <span class="absolute -top-1 -right-6 inline-flex items-center justify-center w-5 h-5 bg-[#155dfc] text-white text-[10px] rounded-full"
+                  *ngIf="(tab === 'Pending' && pendingCount > 0) || (tab === 'Approved' && approvedCount > 0) || (tab === 'Rejected' && rejectedCount > 0)">
+              {{ tab === 'Pending' ? pendingCount : tab === 'Approved' ? approvedCount : rejectedCount }}
+            </span>
          </div>
       </div>
 
@@ -34,7 +37,13 @@
            </div>
         </div>
 
-        <div class="overflow-x-auto">
+        <!-- Loading State -->
+        <div *ngIf="loading" class="flex flex-col items-center justify-center py-[64px] text-[#6a7282]">
+          <div class="w-10 h-10 border-4 border-[#155dfc] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p class="text-[16px] font-medium">Loading requests...</p>
+        </div>
+
+        <div *ngIf="!loading" class="overflow-x-auto">
           <table class="w-full">
             <thead>
               <tr class="bg-[#fcfdfe] border-b border-[#e5e7eb]">
@@ -93,6 +102,14 @@
                          <span class="material-icons text-[20px]">visibility</span>
                       </button>
                    </div>
+                </td>
+              </tr>
+              <!-- Empty State -->
+              <tr *ngIf="filteredRequests().length === 0">
+                <td colspan="5" class="px-8 py-16 text-center">
+                  <span class="material-icons text-[48px] text-[#d1d5dc] mb-3 block">inbox</span>
+                  <p class="text-[16px] font-bold text-[#364153]">No {{ activeTab.toLowerCase() }} requests</p>
+                  <p class="text-[14px] text-[#6a7282] mt-1">There are no requests matching your search</p>
                 </td>
               </tr>
             </tbody>

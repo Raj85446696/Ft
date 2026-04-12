@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
+import { IdentityService } from '../../services/identity.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -15,6 +16,7 @@ interface MenuItem {
   path?: string;
   section?: string;
   subItems?: SubItem[];
+  adminOnly?: boolean;
 }
 
 @Component({
@@ -26,6 +28,7 @@ interface MenuItem {
 })
 export class Sidebar {
   sidebarService = inject(SidebarService);
+  identityService = inject(IdentityService);
   
   // State for expanded sections
   expandedSections = signal<Set<string>>(new Set());
@@ -99,6 +102,7 @@ export class Sidebar {
       title: "User & Access Control",
       icon: "admin_panel_settings",
       section: "user-access",
+      adminOnly: true,
       subItems: [
         {
           title: "User Management",
@@ -109,11 +113,6 @@ export class Sidebar {
           title: "Role Management",
           icon: "verified_user",
           path: "/role-management",
-        },
-        {
-          title: "Permissions",
-          icon: "lock",
-          path: "/permissions",
         },
         {
           title: "Onboard Requests",

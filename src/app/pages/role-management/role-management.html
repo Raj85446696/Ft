@@ -71,8 +71,21 @@
                class="w-full h-[50px] pl-12 pr-4 bg-white border border-[#e5e7eb] rounded-[14px] text-[15px] focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all shadow-sm">
          </div>
 
+         <!-- Loading State -->
+         <div *ngIf="loading" class="flex flex-col items-center justify-center py-[64px] text-[#6a7282]">
+           <div class="w-10 h-10 border-4 border-[#155dfc] border-t-transparent rounded-full animate-spin mb-4"></div>
+           <p class="text-[16px] font-medium">Loading roles and permissions...</p>
+         </div>
+
          <!-- Roles Grid Container -->
-         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-[24px]">
+         <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-[24px]">
+
+            <!-- Empty State -->
+            <div *ngIf="roles.length === 0" class="col-span-full flex flex-col items-center justify-center py-[64px] text-[#6a7282]">
+              <span class="material-icons text-[48px] mb-3 opacity-30">admin_panel_settings</span>
+              <p class="text-[18px] font-bold text-[#364153]">No roles defined</p>
+              <p class="text-[14px] mt-1">Create a role to get started</p>
+            </div>
 
             <div *ngFor="let role of roles"
                class="bg-white rounded-[14px] border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all group overflow-hidden flex flex-col h-full relative">
@@ -113,17 +126,12 @@
 
                   <!-- Actions -->
                   <div class="flex items-center gap-[8px] mt-auto pt-[8px]">
-                     <button
+                     <button (click)="navigateToPermissions(role)"
                         class="flex-1 bg-[#eff6ff] text-[#155dfc] text-[13px] font-bold h-[36px] rounded-[8px] flex items-center justify-center gap-[6px] hover:bg-[#dbeafe] transition-colors border border-[#bedbff]">
                         <span class="material-icons text-[16px]">key</span>
                         Permissions
                      </button>
-                     <button
-                        class="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-white border border-[#e5e7eb] hover:bg-gray-50 text-[#4a5565] transition-colors"
-                        title="Edit">
-                        <span class="material-icons text-[18px]">edit</span>
-                     </button>
-                     <button
+                     <button (click)="selectRole(role); deleteSelectedRole()"
                         class="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-white border border-[#fecaca] hover:bg-[#fef2f2] text-[#b91c1c] transition-colors"
                         title="Delete">
                         <span class="material-icons text-[18px]">delete</span>
@@ -144,7 +152,7 @@
       <div class="absolute inset-0 bg-[#101828]/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-200" (click)="closeCreateModal()"></div>
       
       <!-- Modal Container -->
-      <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-[480px] animate-in zoom-in-95 duration-300">
+      <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-[640px] animate-in zoom-in-95 duration-300">
          
          <!-- Header -->
          <div class="flex items-center justify-between px-[24px] py-[20px]">
@@ -164,25 +172,18 @@
                       class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all">
             </div>
 
-            <!-- Description -->
+            <!-- Permissions Selection -->
             <div class="space-y-[8px]">
-               <label class="block text-[14px] font-bold text-[#374151]">Description <span class="text-red-500">*</span></label>
-               <textarea [(ngModel)]="newRoleDesc" rows="4" placeholder="Briefly describe what this role does..."
-                         class="w-full p-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[15px] resize-none focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#155dfc]/10 focus:border-[#155dfc] transition-all"></textarea>
-            </div>
-
-            <!-- Color Theme Selector -->
-            <div class="space-y-[12px] pt-[8px]">
-               <label class="block text-[14px] font-bold text-[#374151]">Color Theme</label>
-               <div class="flex items-center gap-[12px]">
-                  <button *ngFor="let color of themeColors" 
-                          (click)="selectThemeColor(color)"
-                          [style.backgroundColor]="color"
-                          class="w-[36px] h-[36px] rounded-[10px] flex items-center justify-center transition-all focus:outline-none shadow-sm"
-                          [ngClass]="newRoleColor === color ? 'ring-2 ring-offset-2 ring-gray-800 scale-110' : 'hover:scale-105 border border-black/5'">
-                     <span *ngIf="newRoleColor === color" class="material-icons text-white text-[18px]">check</span>
-                  </button>
+               <label class="block text-[14px] font-bold text-[#374151]">Permissions <span class="text-red-500">*</span></label>
+               <div class="max-h-[180px] overflow-y-auto border border-[#e5e7eb] rounded-[8px] bg-[#f9fafb] p-[12px] space-y-[8px]">
+                  <label *ngFor="let p of allPermissions" class="flex items-center gap-[10px] cursor-pointer hover:bg-white p-[6px] rounded-[6px] transition-colors">
+                     <input type="checkbox" [checked]="newRoleRights.includes(p.id)" (change)="toggleNewRoleRight(p.id)"
+                            class="w-4 h-4 text-[#155dfc] border-[#d1d5dc] rounded focus:ring-[#155dfc]">
+                     <span class="text-[14px] text-[#374151]">{{p.name}}</span>
+                  </label>
+                  <p *ngIf="allPermissions.length === 0" class="text-[13px] text-[#9ca3af] text-center py-2">No permissions available</p>
                </div>
+               <p class="text-[12px] text-[#6a7282]">Selected: {{newRoleRights.length}} permission(s)</p>
             </div>
 
          </div>
@@ -193,9 +194,9 @@
                Cancel
             </button>
             <button (click)="createRole()" 
-                    [disabled]="!newRoleName || !newRoleDesc"
+                    [disabled]="!newRoleName || newRoleRights.length === 0"
                     class="px-[24px] h-[40px] rounded-[8px] text-[14px] font-bold text-white transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                    [ngClass]="(!newRoleName || !newRoleDesc) ? 'bg-[#9ca3af]' : 'bg-[#155dfc] hover:bg-[#0047e0]'">
+                    [ngClass]="(!newRoleName || newRoleRights.length === 0) ? 'bg-[#9ca3af]' : 'bg-[#155dfc] hover:bg-[#0047e0]'">
                Create Role
             </button>
          </div>

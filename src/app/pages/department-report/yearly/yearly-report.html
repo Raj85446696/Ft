@@ -5,9 +5,9 @@
 <app-sidebar></app-sidebar>
 
 <div class="min-h-screen bg-slate-50 transition-all duration-300" 
-     [style.margin-left]="sidebarService.isCollapsed() ? '80px' : '280px'">
+     [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
   
-  <div class="p-8 pt-24">
+  <div class="p-8 pt-[96px]">
     <div class="flex justify-between items-center mb-8">
       <div>
         <h1 class="text-3xl font-bold text-gray-900">Yearly Department Report</h1>

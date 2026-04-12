@@ -15,6 +15,18 @@
       <p class="text-[#6b7280] text-[14px] mt-[4px]">Manage your account settings and assigned applications</p>
     </div>
 
+    <!-- Success / Error Messages -->
+    <div class="max-w-[1200px] mb-[16px]" *ngIf="successMessage">
+      <div class="bg-[#f0fdf4] border border-[#bbf7d0] text-[#166534] px-[16px] py-[12px] rounded-[12px] text-[14px] font-medium">
+        {{ successMessage }}
+      </div>
+    </div>
+    <div class="max-w-[1200px] mb-[16px]" *ngIf="errorMessage && !showPasswordModal && !editingField">
+      <div class="bg-[#fef2f2] border border-[#fecaca] text-[#991b1b] px-[16px] py-[12px] rounded-[12px] text-[14px] font-medium">
+        {{ errorMessage }}
+      </div>
+    </div>
+
     <!-- Content Cards -->
     <div class="max-w-[1200px] flex flex-col gap-[24px]">
       
@@ -24,102 +36,140 @@
         
         <div class="grid grid-cols-2 gap-y-[32px] gap-x-[64px]">
           
-          <!-- L1: User ID -->
+          <!-- L1: User ID (read-only) -->
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-[16px]">
               <div class="w-[48px] h-[48px] rounded-[12px] bg-[#eff6ff] text-[#155dfc] flex items-center justify-center">
-                <svg xmlns="http://www.w-images.com/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" ry="2"></rect><polyline points="3 7 12 13 21 7"></polyline></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" ry="2"></rect><polyline points="3 7 12 13 21 7"></polyline></svg>
               </div>
               <div class="flex flex-col">
                  <span class="text-[12px] font-medium text-[#6b7280] mb-[2px]">User ID (Email)</span>
-                 <span class="text-[15px] font-medium text-[#101828]">{{ userInfo.email }}</span>
+                 <span class="text-[15px] font-medium text-[#101828]">{{ userInfo.email || '—' }}</span>
               </div>
             </div>
-            <button class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center hover:bg-[#f3f4f6] text-[#4a5565] transition-colors" title="Edit User ID">
-              <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-            </button>
+            <div class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center text-[#d1d5db]" title="Email cannot be changed">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
           </div>
 
           <!-- R1: Password -->
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-[16px]">
               <div class="w-[48px] h-[48px] rounded-[12px] bg-[#fef2f2] text-[#ef4444] flex items-center justify-center">
-                <svg xmlns="http://www.w-images.com/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
               </div>
               <div class="flex flex-col">
                  <span class="text-[12px] font-medium text-[#6b7280] mb-[2px]">Password</span>
                  <span class="text-[15px] font-medium text-[#101828]">{{ userInfo.password }}</span>
               </div>
             </div>
-            <button class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center hover:bg-[#f3f4f6] text-[#4a5565] transition-colors" title="Edit Password">
-              <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            <button (click)="openPasswordModal()" class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center hover:bg-[#f3f4f6] text-[#4a5565] transition-colors cursor-pointer" title="Change Password">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
             </button>
           </div>
 
-          <!-- L2: Mobile Number -->
+          <!-- L2: Mobile Number (editable) -->
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-[16px]">
               <div class="w-[48px] h-[48px] rounded-[12px] bg-[#f0fdf4] text-[#22c55e] flex items-center justify-center">
-                <svg xmlns="http://www.w-images.com/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
               </div>
               <div class="flex flex-col">
                  <span class="text-[12px] font-medium text-[#6b7280] mb-[2px]">Mobile Number</span>
-                 <span class="text-[15px] font-medium text-[#101828]">{{ userInfo.mobile }}</span>
-              </div>
-            </div>
-            <button class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center hover:bg-[#f3f4f6] text-[#4a5565] transition-colors" title="Edit Mobile Number">
-              <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-            </button>
-          </div>
-
-          <!-- R2: Signature -->
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-[16px]">
-              <div class="w-[48px] h-[48px] rounded-[12px] bg-[#fff7ed] text-[#f97316] flex items-center justify-center">
-                <svg xmlns="http://www.w-images.com/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
-              </div>
-              <div class="flex flex-col">
-                 <span class="text-[12px] font-medium text-[#6b7280] mb-[2px]">Signature</span>
-                 <span class="text-[15px] font-medium text-[#101828]">{{ userInfo.signature }}</span>
-              </div>
-            </div>
-            <button class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center hover:bg-[#f3f4f6] text-[#4a5565] transition-colors" title="Edit Signature">
-              <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-            </button>
-          </div>
-
-          <!-- L3: Admin Mobile No. -->
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-[16px]">
-              <div class="w-[48px] h-[48px] rounded-[12px] bg-[#faf5ff] text-[#a855f7] flex items-center justify-center">
-                <svg xmlns="http://www.w-images.com/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-              </div>
-              <div class="flex flex-col">
-                 <span class="text-[12px] font-medium text-[#6b7280] mb-[2px]">Admin Mobile No.</span>
-                 <span class="text-[15px] font-medium text-[#101828]">{{ userInfo.adminMobile }}</span>
-              </div>
-            </div>
-            <button class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center hover:bg-[#f3f4f6] text-[#4a5565] transition-colors" title="Edit Admin Mobile">
-              <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-            </button>
-          </div>
-
-          <!-- R3: Admin Email ID -->
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-[16px]">
-              <div class="w-[48px] h-[48px] rounded-[12px] bg-[#faf5ff] text-[#a855f7] flex items-center justify-center">
-                 <svg xmlns="http://www.w-images.com/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-              </div>
-              <div class="flex flex-col">
-                 <span class="text-[12px] font-medium text-[#6b7280] mb-[6px]">Admin Email ID</span>
-                 <div class="bg-[#f3f4f6] px-[12px] py-[6px] rounded-[6px] max-w-[280px]">
-                    <p class="text-[12px] font-mono text-[#4a5565] truncate ... text-ellipsis overflow-hidden">{{ userInfo.adminEmail }}</p>
+                 <span *ngIf="editingField !== 'mobile'" class="text-[15px] font-medium text-[#101828]">{{ userInfo.mobile || '—' }}</span>
+                 <div *ngIf="editingField === 'mobile'" class="flex items-center gap-[8px]">
+                   <input [(ngModel)]="editMobile" type="text" maxlength="15"
+                     class="border border-[#d1d5db] rounded-[8px] px-[12px] py-[6px] text-[14px] w-[180px] focus:outline-none focus:ring-2 focus:ring-[#155dfc] focus:border-transparent" placeholder="Enter mobile number" />
+                   <button (click)="saveField()" [disabled]="saving"
+                     class="bg-[#155dfc] text-white px-[12px] py-[6px] rounded-[8px] text-[13px] font-medium hover:bg-[#1249d6] disabled:opacity-50 cursor-pointer">
+                     {{ saving ? 'Saving...' : 'Save' }}
+                   </button>
+                   <button (click)="cancelEdit()" class="text-[#6b7280] text-[13px] font-medium hover:text-[#101828] cursor-pointer">Cancel</button>
                  </div>
               </div>
             </div>
-            <button class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center hover:bg-[#f3f4f6] text-[#4a5565] transition-colors" title="Edit Admin Email">
-               <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            <button *ngIf="editingField !== 'mobile'" (click)="startEdit('mobile')" class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center hover:bg-[#f3f4f6] text-[#4a5565] transition-colors cursor-pointer" title="Edit Mobile Number">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
             </button>
+          </div>
+
+          <!-- R2: Signature (editable) -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-[16px]">
+              <div class="w-[48px] h-[48px] rounded-[12px] bg-[#fff7ed] text-[#f97316] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
+              </div>
+              <div class="flex flex-col">
+                 <span class="text-[12px] font-medium text-[#6b7280] mb-[2px]">Signature</span>
+                 <span *ngIf="editingField !== 'signature'" class="text-[15px] font-medium text-[#101828]">{{ userInfo.signature || '—' }}</span>
+                 <div *ngIf="editingField === 'signature'" class="flex items-center gap-[8px]">
+                   <input [(ngModel)]="editSignature" type="text" maxlength="128"
+                     class="border border-[#d1d5db] rounded-[8px] px-[12px] py-[6px] text-[14px] w-[200px] focus:outline-none focus:ring-2 focus:ring-[#155dfc] focus:border-transparent" placeholder="Enter signature" />
+                   <button (click)="saveField()" [disabled]="saving"
+                     class="bg-[#155dfc] text-white px-[12px] py-[6px] rounded-[8px] text-[13px] font-medium hover:bg-[#1249d6] disabled:opacity-50 cursor-pointer">
+                     {{ saving ? 'Saving...' : 'Save' }}
+                   </button>
+                   <button (click)="cancelEdit()" class="text-[#6b7280] text-[13px] font-medium hover:text-[#101828] cursor-pointer">Cancel</button>
+                 </div>
+              </div>
+            </div>
+            <button *ngIf="editingField !== 'signature'" (click)="startEdit('signature')" class="w-[36px] h-[36px] rounded-[8px] bg-[#f9fafb] flex items-center justify-center hover:bg-[#f3f4f6] text-[#4a5565] transition-colors cursor-pointer" title="Edit Signature">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            </button>
+          </div>
+
+          <!-- L3: Organization (read-only) -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-[16px]">
+              <div class="w-[48px] h-[48px] rounded-[12px] bg-[#faf5ff] text-[#a855f7] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              </div>
+              <div class="flex flex-col">
+                 <span class="text-[12px] font-medium text-[#6b7280] mb-[2px]">Organization</span>
+                 <span class="text-[15px] font-medium text-[#101828]">{{ userInfo.organization || '—' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- R3: User Type (read-only) -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-[16px]">
+              <div class="w-[48px] h-[48px] rounded-[12px] bg-[#faf5ff] text-[#a855f7] flex items-center justify-center">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </div>
+              <div class="flex flex-col">
+                 <span class="text-[12px] font-medium text-[#6b7280] mb-[2px]">User Type</span>
+                 <span class="text-[15px] font-medium text-[#101828] capitalize">{{ userInfo.utype || '—' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- L4: Account Created (read-only) -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-[16px]">
+              <div class="w-[48px] h-[48px] rounded-[12px] bg-[#eff6ff] text-[#155dfc] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              </div>
+              <div class="flex flex-col">
+                 <span class="text-[12px] font-medium text-[#6b7280] mb-[2px]">Account Created</span>
+                 <span class="text-[15px] font-medium text-[#101828]">{{ userInfo.creationDate || '—' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- R4: Parent Admin Email (read-only) -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-[16px]">
+              <div class="w-[48px] h-[48px] rounded-[12px] bg-[#faf5ff] text-[#a855f7] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </div>
+              <div class="flex flex-col">
+                 <span class="text-[12px] font-medium text-[#6b7280] mb-[6px]">Parent Admin</span>
+                 <div class="bg-[#f3f4f6] px-[12px] py-[6px] rounded-[6px] max-w-[280px]">
+                    <p class="text-[12px] font-mono text-[#4a5565] truncate text-ellipsis overflow-hidden">{{ userInfo.adminEmail || '—' }}</p>
+                 </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -128,11 +178,14 @@
       <div class="bg-white border text-left border-[#e5e7eb] rounded-[16px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[32px]">
          <h2 class="font-semibold text-[18px] text-[#101828] mb-[20px]">Assigned Apps</h2>
          
-         <div class="flex flex-col border-t border-[#f3f4f6]">
-            <!-- List of Apps -->
-            <div *ngFor="let app of assignedApps" class="flex justify-between items-center py-[16px] border-b border-[#f3f4f6] hover:bg-[#f9fafb] px-[8px] -mx-[8px] rounded-[8px] cursor-pointer transition-colors group">
+         <div *ngIf="assignedApps.length === 0" class="text-[#6b7280] text-[14px] py-[16px]">
+           No apps assigned yet.
+         </div>
+
+         <div class="flex flex-col border-t border-[#f3f4f6]" *ngIf="assignedApps.length > 0">
+            <div *ngFor="let app of assignedApps" class="flex justify-between items-center py-[16px] border-b border-[#f3f4f6] hover:bg-[#f9fafb] px-[8px] -mx-[8px] rounded-[8px] transition-colors group">
                <span class="text-[#101828] text-[15px] font-medium">{{ app }}</span>
-               <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:stroke-[#155dfc] transition-colors"><polyline points="9 18 15 12 9 6"></polyline></svg>
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:stroke-[#155dfc] transition-colors"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </div>
          </div>
 
@@ -141,6 +194,46 @@
          </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div *ngIf="showPasswordModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]" (click)="closePasswordModal()">
+  <div class="bg-white rounded-[16px] shadow-xl w-[440px] p-[32px]" (click)="$event.stopPropagation()">
+    <h3 class="font-semibold text-[20px] text-[#101828] mb-[24px]">Change Password</h3>
+
+    <div *ngIf="errorMessage" class="bg-[#fef2f2] border border-[#fecaca] text-[#991b1b] px-[12px] py-[8px] rounded-[8px] text-[13px] mb-[16px]">
+      {{ errorMessage }}
+    </div>
+
+    <div class="flex flex-col gap-[16px]">
+      <div>
+        <label class="block text-[13px] font-medium text-[#374151] mb-[4px]">Current Password</label>
+        <input [(ngModel)]="oldPassword" type="password"
+          class="w-full border border-[#d1d5db] rounded-[8px] px-[12px] py-[10px] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#155dfc] focus:border-transparent" placeholder="Enter current password" />
+      </div>
+      <div>
+        <label class="block text-[13px] font-medium text-[#374151] mb-[4px]">New Password</label>
+        <input [(ngModel)]="newPassword" type="password"
+          class="w-full border border-[#d1d5db] rounded-[8px] px-[12px] py-[10px] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#155dfc] focus:border-transparent" placeholder="Enter new password" />
+      </div>
+      <div>
+        <label class="block text-[13px] font-medium text-[#374151] mb-[4px]">Confirm New Password</label>
+        <input [(ngModel)]="confirmPassword" type="password"
+          class="w-full border border-[#d1d5db] rounded-[8px] px-[12px] py-[10px] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#155dfc] focus:border-transparent" placeholder="Confirm new password" />
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-[12px] mt-[24px]">
+      <button (click)="closePasswordModal()"
+        class="px-[20px] py-[10px] rounded-[8px] border border-[#d1d5db] text-[14px] font-medium text-[#374151] hover:bg-[#f3f4f6] cursor-pointer">
+        Cancel
+      </button>
+      <button (click)="changePassword()" [disabled]="saving"
+        class="px-[20px] py-[10px] rounded-[8px] bg-[#155dfc] text-white text-[14px] font-medium hover:bg-[#1249d6] disabled:opacity-50 cursor-pointer">
+        {{ saving ? 'Changing...' : 'Change Password' }}
+      </button>
     </div>
   </div>
 </div>

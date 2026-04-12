@@ -5,9 +5,9 @@
 <app-sidebar></app-sidebar>
 
 <div class="min-h-screen bg-[#f9fafb] transition-all duration-300 pb-12" 
-     [style.margin-left]="sidebarService.isCollapsed() ? '80px' : '280px'">
+     [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
   
-  <div class="px-10 pt-24 max-w-[1400px] mx-auto space-y-8 animate-in fade-in duration-500">
+  <div class="px-10 pt-[96px] max-w-[1400px] mx-auto space-y-8 animate-in fade-in duration-500">
     
     <!-- Header Section -->
     <div class="flex items-center justify-between">

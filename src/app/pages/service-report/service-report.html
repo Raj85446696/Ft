@@ -2,8 +2,8 @@
   <app-navbar></app-navbar>
   <app-sidebar></app-sidebar>
 
-  <main class="transition-all duration-300 pt-[106px] pb-10 pr-12 min-h-screen"
-        [ngStyle]="{'margin-left': sidebarService.isCollapsed() ? '88px' : '285px'}">
+  <main class="transition-all duration-300 pt-[96px] pb-10 pr-12 pl-[32px] min-h-screen"
+        [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
     
     <div class="max-w-[1450px] mx-auto space-y-8 animate-in fade-in duration-500">
       

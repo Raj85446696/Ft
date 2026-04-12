@@ -24,7 +24,8 @@
     <nav class="px-2 py-4">
       <div *ngFor="let item of menuItems" class="mb-1">
         
-        <!-- Standard Link Item -->
+        <!-- Skip admin-only items for non-admin users -->
+        <ng-container *ngIf="!item.adminOnly || identityService.isAdmin()">
         <a *ngIf="item.path"
            [routerLink]="item.path"
            routerLinkActive="bg-blue-50 text-blue-600 shadow-sm"
@@ -61,6 +62,7 @@
             </a>
           </div>
         </div>
+        </ng-container>
 
       </div>
     </nav>

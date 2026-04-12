@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 import { Login } from './pages/login/login';
 import { Onboard } from './pages/onboard/onboard';
 import { Dashboard } from './pages/dashboard/dashboard';
@@ -40,44 +42,49 @@ import { ViewService } from './pages/view-service/view-service';
 import { EditService } from './pages/edit-service/edit-service';
 
 export const routes: Routes = [
+  // Public routes
   { path: 'login', component: Login },
   { path: 'onboard', component: Onboard },
-  { path: 'dashboard', component: Dashboard },
-  { path: 'manage-departments', component: ManageDepartments },
-  { path: 'add-department', component: AddDepartment },
-  { path: 'view-department', component: ViewDepartment },
-  { path: 'edit-department', component: EditDepartment },
-  { path: 'department-settings', component: DepartmentSettings },
-  { path: 'my-account', component: MyAccount },
-  { path: 'rating-feedback', component: RatingFeedback },
-  { path: 'partner-onboarding', component: PartnerOnboarding },
-  { path: 'cache-refresh', component: CacheRefresh },
-  { path: 'order-management', component: OrderManagement },
-  { path: 'manage-banner', component: ManageBanner },
-  { path: 'user-report', component: UserReport },
-  { path: 'service-report', component: ServiceReport },
-  { path: 'partner-report', component: PartnerReport },
-  { path: 'dept-report/monthly', component: MonthlyReport },
-  { path: 'dept-report/yearly', component: YearlyReport },
-  { path: 'dept-report/top-search', component: TopDepartmentSearch },
-  { path: 'app-inside/services', component: Services },
-  { path: 'app-inside/bi-token', component: BiTokenPage },
-  { path: 'app-inside/bi-token/create', component: CreateBiToken },
-  { path: 'app-inside/upload-translation', component: UploadTranslation },
-  { path: 'app-inside/manage-group', component: ManageGroup },
-  { path: 'app-inside/manage-group/create', component: CreateGroup },
-  { path: 'service-onboard', component: ServiceOnboard },
-  { path: 'services-plus/manage-scheme', component: ManageScheme },
-  { path: 'services-plus/create-scheme', component: CreateScheme },
-  { path: 'user-management', component: UserManagement },
-  { path: 'user-management/create', component: CreateUser },
-  { path: 'role-management', component: RoleManagement },
-  { path: 'permissions', component: PermissionsPage },
-  { path: 'onboard-requests', component: OnboardRequests },
-  { path: 'manage-email/email-group', component: EmailGroupPage },
-  { path: 'manage-email/view-email', component: ViewEmailPage },
-  { path: 'manage-email/custom-email', component: CustomEmailPage },
-  { path: 'view-service', component: ViewService },
-  { path: 'edit-service', component: EditService },
+  
+  // Protected routes - require authentication
+  { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
+  { path: 'manage-departments', component: ManageDepartments, canActivate: [authGuard] },
+  { path: 'add-department', component: AddDepartment, canActivate: [authGuard] },
+  { path: 'view-department', component: ViewDepartment, canActivate: [authGuard] },
+  { path: 'edit-department', component: EditDepartment, canActivate: [authGuard] },
+  { path: 'department-settings', component: DepartmentSettings, canActivate: [authGuard] },
+  { path: 'my-account', component: MyAccount, canActivate: [authGuard] },
+  { path: 'rating-feedback', component: RatingFeedback, canActivate: [authGuard] },
+  { path: 'partner-onboarding', component: PartnerOnboarding, canActivate: [authGuard] },
+  { path: 'cache-refresh', component: CacheRefresh, canActivate: [authGuard] },
+  { path: 'order-management', component: OrderManagement, canActivate: [authGuard] },
+  { path: 'manage-banner', component: ManageBanner, canActivate: [authGuard] },
+  { path: 'user-report', component: UserReport, canActivate: [authGuard] },
+  { path: 'service-report', component: ServiceReport, canActivate: [authGuard] },
+  { path: 'partner-report', component: PartnerReport, canActivate: [authGuard] },
+  { path: 'dept-report/monthly', component: MonthlyReport, canActivate: [authGuard] },
+  { path: 'dept-report/yearly', component: YearlyReport, canActivate: [authGuard] },
+  { path: 'dept-report/top-search', component: TopDepartmentSearch, canActivate: [authGuard] },
+  { path: 'app-inside/services', component: Services, canActivate: [authGuard] },
+  { path: 'app-inside/bi-token', component: BiTokenPage, canActivate: [authGuard] },
+  { path: 'app-inside/bi-token/create', component: CreateBiToken, canActivate: [authGuard] },
+  { path: 'app-inside/upload-translation', component: UploadTranslation, canActivate: [authGuard] },
+  { path: 'app-inside/manage-group', component: ManageGroup, canActivate: [authGuard] },
+  { path: 'app-inside/manage-group/create', component: CreateGroup, canActivate: [authGuard] },
+  { path: 'service-onboard', component: ServiceOnboard, canActivate: [authGuard] },
+  { path: 'services-plus/manage-scheme', component: ManageScheme, canActivate: [authGuard] },
+  { path: 'services-plus/create-scheme', component: CreateScheme, canActivate: [authGuard] },
+  { path: 'user-management', component: UserManagement, canActivate: [adminGuard] },
+  { path: 'user-management/create', component: CreateUser, canActivate: [adminGuard] },
+  { path: 'role-management', component: RoleManagement, canActivate: [adminGuard] },
+  { path: 'permissions', component: PermissionsPage, canActivate: [adminGuard] },
+  { path: 'onboard-requests', component: OnboardRequests, canActivate: [adminGuard] },
+  { path: 'manage-email/email-group', component: EmailGroupPage, canActivate: [authGuard] },
+  { path: 'manage-email/view-email', component: ViewEmailPage, canActivate: [authGuard] },
+  { path: 'manage-email/custom-email', component: CustomEmailPage, canActivate: [authGuard] },
+  { path: 'view-service', component: ViewService, canActivate: [authGuard] },
+  { path: 'edit-service', component: EditService, canActivate: [authGuard] },
+  
+  // Default route
   { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
