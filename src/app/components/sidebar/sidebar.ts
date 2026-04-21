@@ -96,6 +96,11 @@ export class Sidebar {
           icon: "assignment",
           path: "/services-plus/manage-scheme",
         },
+        {
+          title: "Scheme Mapping",
+          icon: "link",
+          path: "/services-plus/scheme-mapping",
+        },
       ],
     },
     {

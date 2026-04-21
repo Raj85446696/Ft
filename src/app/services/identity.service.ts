@@ -175,6 +175,30 @@ export interface FetchedRole {
   rights: string; // comma-separated right IDs
 }
 
+export interface FetchUserResponse {
+  rs: string;
+  rc: string;
+  rd: string;
+  pd?: {
+    app: FetchUserApp[];
+  };
+}
+
+export interface FetchUserApp {
+  uid: string;
+  userId: string;
+  email: string;
+  rights: string | null; // comma-separated right IDs
+  status: string;
+  utype: string;
+  orgnztn: string;
+  mno: string | null;
+  puser: string | null;
+  cdate: string | null;
+  ldate: string | null;
+  estate: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -473,6 +497,58 @@ export class IdentityService {
   }
 
   /**
+   * Initiate OTP for password reset or verification
+   */
+  initOtp(userId: string, mno: string = ''): Observable<ApiResponse> {
+    const request = {
+      userId,
+      mno,
+      lang: 'en',
+      trkr: this.generateTracker()
+    };
+    return this.http.post<ApiResponse>(`${this.apiUrl}/ws1/slfinitotp`, request)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Reset password using OTP (forgot password flow)
+   */
+  forgotPassword(userId: string, newpwd: string, otp: string): Observable<ApiResponse> {
+    const request = {
+      userId,
+      newpwd,
+      otp,
+      lang: 'en',
+      trkr: this.generateTracker()
+    };
+    return this.http.post<ApiResponse>(`${this.apiUrl}/ws1/slffp`, request)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Register organization / self-onboarding request
+   */
+  registerOrg(data: {
+    name: string;
+    email: string;
+    mno: string;
+    organization: string;
+    stateCentral: string;
+    emailOtp: string;
+    mobileOtp?: string;
+  }): Observable<ApiResponse> {
+    const request = {
+      ...data,
+      mobileOrt: '',
+      emailOrt: '',
+      lang: 'en',
+      trkr: this.generateTracker()
+    };
+    return this.http.post<ApiResponse>(`${this.apiUrl}/ws1/slfrgt`, request)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
    * Reset password
    */
   resetPassword(uname: string, oldpwd: string, newpwd: string): Observable<ApiResponse> {
@@ -519,17 +595,16 @@ export class IdentityService {
    */
   private setUserProfile(profile: any): void {
     if (this.isBrowser()) {
-      sessionStorage.setItem('userProfile', JSON.stringify(profile));
-      localStorage.setItem('userId', profile.mailId);
+      const serialized = JSON.stringify(profile);
+      sessionStorage.setItem('userProfile', serialized);
+      localStorage.setItem('userProfile', serialized);
+      localStorage.setItem('userId', profile.mailId || '');
     }
   }
 
-  /**
-   * Get user profile
-   */
   getUserProfile(): any | null {
     if (this.isBrowser()) {
-      const profile = sessionStorage.getItem('userProfile');
+      const profile = sessionStorage.getItem('userProfile') || localStorage.getItem('userProfile');
       return profile ? JSON.parse(profile) : null;
     }
     return null;
@@ -582,10 +657,60 @@ export class IdentityService {
     if (this.isBrowser()) {
       localStorage.removeItem('authToken');
       localStorage.removeItem('userId');
+      localStorage.removeItem('userProfile');
       sessionStorage.removeItem('userProfile');
     }
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+  }
+
+  /**
+   * Fetch a specific user's details (uid, rights, etc.)
+   */
+  fetchUserDetails(userId: string): Observable<FetchUserResponse> {
+    const request = {
+      userId,
+      token: this.getToken(),
+      lang: 'en',
+      trkr: this.generateTracker()
+    };
+    return this.http.post<FetchUserResponse>(`${this.apiUrl}/ws1/slffetch`, request)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Edit user rights (replaces all existing rights)
+   * uid: numeric user ID, commonRights: comma-separated right IDs
+   */
+  editUserRights(uid: string, commonRights: string): Observable<ApiResponse> {
+    const request = {
+      uId: uid,
+      appRights: [],
+      commonRights,
+      token: this.getToken(),
+      lang: 'en',
+      trkr: this.generateTracker()
+    };
+    return this.http.post<ApiResponse>(`${this.apiUrl}/ws1/slfEditUserRightsV3`, request)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Assign app-level rights to a user for a specific department/application.
+   * Sends appRights + existing commonRights together (V3 replaces both atomically).
+   */
+  assignAppRights(userId: string, appId: string, rightIds: string[], commonRights: string): Observable<ApiResponse> {
+    const appRights = rightIds.map(rightId => ({ appid: appId, rightid: rightId }));
+    const request = {
+      uId: userId,
+      appRights,
+      commonRights,
+      token: this.getToken(),
+      lang: 'en',
+      trkr: this.generateTracker()
+    };
+    return this.http.post<ApiResponse>(`${this.apiUrl}/ws1/slfEditUserRightsV3`, request)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -603,24 +728,15 @@ export class IdentityService {
       .pipe(catchError(this.handleError));
   }
 
-  /**
-   * Handle HTTP errors
-   */
-  private handleError(error: HttpErrorResponse) {
+  private handleError = (error: HttpErrorResponse) => {
     let errorMessage = 'An error occurred';
-    
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Server-side error
-      if (error.error && error.error.rd) {
-        errorMessage = error.error.rd;
-      } else {
-        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      }
+      errorMessage = (error.error && error.error.rd)
+        ? error.error.rd
+        : `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    
     console.error('Identity Service Error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }

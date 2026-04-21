@@ -1,6 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Sidebar } from '../../components/sidebar/sidebar';
-import { Navbar } from '../../components/navbar/navbar';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-partner-onboarding',
   standalone: true,
-  imports: [Sidebar, Navbar, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './partner-onboarding.html',
   styleUrl: './partner-onboarding.css',
 })
@@ -116,10 +114,10 @@ export class PartnerOnboarding {
   }
 
   generateToken() {
-    console.log('Generating token for', this.existingPartner.name);
+    // Token generation endpoint to be integrated when available
   }
 
   saveAndGenerateToken() {
-    console.log('Saving and generating token for', this.newPartner.name);
+    // Save partner and generate token when endpoint is available
   }
 }

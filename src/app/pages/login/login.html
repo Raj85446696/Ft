@@ -1,456 +1,333 @@
-<div class="bg-white relative w-full min-h-screen flex flex-col lg:flex-row-reverse overflow-x-hidden" data-name="Admin Panel Dashboard UI" data-node-id="1:2">
-      <div class="bg-[#f9fafb] content-stretch flex min-h-screen items-center justify-center px-4 md:px-8 2xl:px-[155.8px] py-8 lg:py-0 w-full lg:w-1/2" data-name="Container" data-node-id="1:3">
-        <div class="relative shrink-0 w-full max-w-[448px]" data-name="Container" data-node-id="1:4">
-          <div class="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col gap-[24px] items-start relative size-full">
-            <div class="bg-white content-stretch flex flex-col gap-[32px] items-start pt-[32px] px-[32px] pb-[32px] relative rounded-[16px] shadow-[0px_20px_25px_0px_rgba(0,0,0,0.1),0px_8px_10px_0px_rgba(0,0,0,0.1)] shrink-0 w-full" data-name="Container" data-node-id="1:5">
-              <div class="bg-[#f3f4f6] content-stretch flex gap-[8px] h-[56px] items-start pt-[4px] px-[4px] relative rounded-[14px] shrink-0 w-full" data-name="Container" data-node-id="1:6">
-                <div routerLink="/login" class="cursor-pointer bg-[#155dfc] flex-[184_0_0] h-[48px] min-h-px min-w-px relative rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)]" data-name="Button" data-node-id="1:7">
-                  <div class="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
-                    <p class="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[24px] left-[92.22px] not-italic text-[16px] text-center text-white top-[9.8px] whitespace-nowrap" data-node-id="1:8">
-                      Login
-                    </p>
+<div class="relative w-full min-h-screen flex flex-col lg:flex-row overflow-x-hidden bg-white">
+
+  <!-- ── Left Panel: Process Flow Image ── -->
+  <div class="hidden lg:flex flex-col relative w-full lg:w-[62%] min-h-screen overflow-hidden"
+       style="background-color: #eceff6;">
+    <!-- Subtle polygon mesh background -->
+    <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg"
+         preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="tri-grid-l" x="0" y="0" width="80" height="70" patternUnits="userSpaceOnUse">
+          <polygon points="40,0 80,70 0,70" fill="none" stroke="#cdd3de" stroke-width="0.6"/>
+          <polygon points="0,0 80,0 40,70"  fill="none" stroke="#cdd3de" stroke-width="0.6"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#tri-grid-l)"/>
+    </svg>
+    <!-- Diagram -->
+    <div class="relative z-10 flex-1 flex items-center justify-center p-10">
+      <img [src]="imgImageDigitalGovernance"
+           class="max-w-[85%] max-h-[76vh] object-contain"
+           alt="SelfCare Process Flow" />
+    </div>
+    <!-- Footer -->
+    <div class="relative z-10 pb-8 text-center shrink-0">
+      <p class="font-bold text-[#374151] text-[14px]">UMANG Selfcare Version (1.0.0)</p>
+      <p class="text-[#6b7280] text-[12px] mt-1">&#9670; NeGD 2026 | Last reviewed and updated on : April 20, 2026</p>
+    </div>
+  </div>
+
+  <!-- ── Right Panel: Login Form ── -->
+  <div class="flex min-h-screen items-center justify-center px-6 py-10 w-full lg:w-[38%]"
+       style="background: linear-gradient(135deg, #e8eeff 0%, #f5f7ff 50%, #eef4ff 100%);">
+    <div class="w-full max-w-[400px] flex flex-col">
+
+      <!-- White Card -->
+      <div class="bg-white rounded-3xl shadow-[0_8px_40px_rgba(26,86,219,0.13)] overflow-hidden">
+
+        <!-- Card accent stripe -->
+        <div class="h-1.5" style="background: linear-gradient(90deg, #1a56db 0%, #6366f1 100%);"></div>
+
+        <div class="px-8 py-9">
+
+          <!-- Logo + Welcome Heading -->
+          <div class="flex flex-col items-center mb-8">
+            <img [src]="imgLogo" class="h-14 object-contain mb-5" alt="UMANG SelfCare" />
+            <h1 class="font-bold text-[22px] text-[#1e293b] tracking-tight">Welcome Back</h1>
+            <p class="text-[#64748b] text-[13px] mt-1.5">Sign in to your account to continue</p>
+          </div>
+
+          <!-- Tab Switcher — pill style -->
+          <div class="flex bg-[#f1f5f9] rounded-full p-1 mb-7">
+            <div routerLink="/login"
+                 class="cursor-pointer flex-1 text-center py-[9px] rounded-full bg-white shadow text-[#1a56db] font-semibold text-[14px] transition-all">
+              LOGIN
+            </div>
+            <div routerLink="/onboard"
+                 class="cursor-pointer flex-1 text-center py-[9px] rounded-full text-[#94a3b8] font-medium text-[14px] transition-all hover:text-[#64748b]">
+              ONBOARD
+            </div>
+          </div>
+
+          <!-- Form Fields -->
+          <div class="flex flex-col gap-[14px]">
+
+            <!-- User ID -->
+            <div class="group flex items-center h-[50px] rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 gap-3 transition-all focus-within:border-[#3b82f6] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]">
+              <div class="shrink-0 size-[18px] opacity-40 group-focus-within:opacity-70 transition-opacity">
+                <img alt="" class="size-full object-contain" [src]="imgIcon" />
+              </div>
+              <input type="email"
+                     [(ngModel)]="userId"
+                     [disabled]="isLoading"
+                     class="flex-1 text-[14px] text-[#1e293b] placeholder-[#94a3b8] bg-transparent outline-none border-none h-full"
+                     placeholder="User ID or Email" />
+            </div>
+
+            <!-- Password -->
+            <div class="group flex items-center h-[50px] rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 gap-3 transition-all focus-within:border-[#3b82f6] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]">
+              <div class="shrink-0 size-[18px] opacity-40 group-focus-within:opacity-70 transition-opacity">
+                <img alt="" class="size-full object-contain" [src]="imgIcon1" />
+              </div>
+              <input [type]="showPassword ? 'text' : 'password'"
+                     [(ngModel)]="password"
+                     [disabled]="isLoading"
+                     class="flex-1 text-[14px] text-[#1e293b] placeholder-[#94a3b8] bg-transparent outline-none border-none h-full"
+                     placeholder="Password" />
+              <div (click)="togglePasswordVisibility()"
+                   class="shrink-0 size-[18px] cursor-pointer relative overflow-clip opacity-40 hover:opacity-70 transition-opacity">
+                <div class="absolute inset-[20.84%_8.33%]">
+                  <div class="absolute inset-[-7.14%_-5%]">
+                    <img alt="" class="block max-w-none size-full" [src]="imgVector" />
                   </div>
                 </div>
-                <div routerLink="/onboard" class="cursor-pointer flex-[184_0_0] h-[48px] min-h-px min-w-px relative rounded-[10px]" data-name="Button" data-node-id="1:9">
-                  <div class="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
-                    <p class="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[24px] left-[92.39px] not-italic text-[#4a5565] text-[16px] text-center top-[9.8px] whitespace-nowrap" data-node-id="1:10">
-                      Onboard
-                    </p>
+                <div class="absolute inset-[37.5%]">
+                  <div class="absolute inset-[-16.67%]">
+                    <img alt="" class="block max-w-none size-full" [src]="imgVector1" />
                   </div>
                 </div>
               </div>
-              <div class="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="1:11">
-                <div class="content-stretch flex flex-col gap-[4px] h-[55.987px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="1:12">
-                  <div class="content-stretch flex h-[31.988px] items-start relative shrink-0 w-full" data-name="Heading 2" data-node-id="1:13">
-                    <p class="flex-[1_0_0] font-['Inter:Bold',sans-serif] font-bold leading-[32px] min-h-px min-w-px not-italic relative text-[#101828] text-[24px]" data-node-id="1:14">
-                      Welcome Back
-                    </p>
-                  </div>
-                  <div class="h-[20px] relative shrink-0 w-full" data-name="Paragraph" data-node-id="1:15">
-                    <p class="absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-0 not-italic text-[#4a5565] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="1:16">
-                      Sign in to access your dashboard
-                    </p>
-                  </div>
-                </div>
-                <div class="content-stretch flex flex-col gap-[20px] items-start relative shrink-0 w-full" data-name="Form" data-node-id="1:17">
-                  <div class="content-stretch flex flex-col gap-[8px] h-[77.6px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="1:18">
-                    <div class="h-[20px] relative shrink-0 w-full" data-name="Label" data-node-id="1:19">
-                      <p class="absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-0 not-italic text-[#364153] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="1:20">
-                        Username / Email
-                      </p>
-                    </div>
-                    <div class="h-[49.6px] relative shrink-0 w-full" data-name="Container" data-node-id="1:21">
-                      <div class="absolute border-[#d1d5dc] border-[0.8px] border-solid content-stretch flex h-[49.6px] items-center left-0 overflow-clip pl-[40px] pr-[16px] py-[12px] rounded-[10px] top-0 w-full" data-name="Text Input" data-node-id="1:22">
-                        <input 
-                          type="email" 
-                          [(ngModel)]="userId"
-                          [disabled]="isLoading"
-                          class="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[16px] text-black placeholder-gray-500 w-full bg-transparent outline-none h-full border-none whitespace-nowrap" 
-                          placeholder="Enter your username or email" 
-                        />
-                      </div>
-                      <div class="absolute left-[12px] size-[20px] top-[14.8px]" data-name="Icon" data-node-id="1:24">
-                        <img alt="" class="absolute block max-w-none size-full" [src]="imgIcon" />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="content-stretch flex flex-col gap-[8px] h-[77.6px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="1:27">
-                    <div class="h-[20px] relative shrink-0 w-full" data-name="Label" data-node-id="1:28">
-                      <p class="absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-0 not-italic text-[#364153] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="1:29">
-                        Password
-                      </p>
-                    </div>
-                    <div class="h-[49.6px] relative shrink-0 w-full" data-name="Container" data-node-id="1:30">
-                      <div class="absolute border-[#d1d5dc] border-[0.8px] border-solid content-stretch flex h-[49.6px] items-center left-0 overflow-clip pl-[40px] pr-[48px] py-[12px] rounded-[10px] top-0 w-full" data-name="Password Input" data-node-id="1:31">
-                        <input 
-                          [type]="showPassword ? 'text' : 'password'" 
-                          [(ngModel)]="password"
-                          [disabled]="isLoading"
-                          class="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[16px] text-black placeholder-gray-500 w-full bg-transparent outline-none h-full border-none whitespace-nowrap" 
-                          placeholder="Enter your password" 
-                        />
-                      </div>
-                      <div class="absolute left-[12px] size-[20px] top-[14.8px]" data-name="Icon" data-node-id="1:33">
-                        <img alt="" class="absolute block max-w-none size-full" [src]="imgIcon1" />
-                      </div>
-                      <div 
-                        (click)="togglePasswordVisibility()"
-                        class="absolute content-stretch flex flex-col items-start right-[12px] size-[20px] top-[14.8px] cursor-pointer" 
-                        data-name="Button" 
-                        data-node-id="1:36">
-                        <div class="h-[20px] overflow-clip relative shrink-0 w-full" data-name="Icon" data-node-id="1:37">
-                          <div class="absolute inset-[20.84%_8.33%]" data-name="Vector" data-node-id="1:38">
-                            <div class="absolute inset-[-7.14%_-5%]">
-                              <img alt="" class="block max-w-none size-full" [src]="imgVector" />
-                            </div>
-                          </div>
-                          <div class="absolute inset-[37.5%]" data-name="Vector" data-node-id="1:39">
-                            <div class="absolute inset-[-16.67%]">
-                              <img alt="" class="block max-w-none size-full" [src]="imgVector1" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="content-stretch flex h-[20px] items-center justify-between relative shrink-0 w-full" data-name="Container" data-node-id="1:40">
-                    <div class="h-[20px] relative shrink-0 w-[114.363px]" data-name="Label" data-node-id="1:41">
-                      <div class="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[8px] items-center relative size-full">
-                        <input 
-                          type="checkbox" 
-                          [(ngModel)]="rememberMe"
-                          class="shrink-0 size-[16px]" 
-                          data-name="Checkbox" 
-                          data-node-id="1:42" 
-                        />
-                        <div class="flex-[1_0_0] h-[20px] min-h-px min-w-px relative" data-name="Text" data-node-id="1:43">
-                          <div class="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
-                            <p class="absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-0 not-italic text-[#364153] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="1:44">
-                              Remember me
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div (click)="navigateToForgotPassword()" class="h-[20px] relative shrink-0 w-[109.013px] cursor-pointer hover:opacity-80 transition-opacity" data-name="Link" data-node-id="1:45">
-                      <div class="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
-                        <p class="absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-0 not-italic text-[#155dfc] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="1:46">
-                          Forgot Password?
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  @if (errorMessage) {
-                    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4" role="alert">
-                      <p class="text-sm">{{ errorMessage }}</p>
-                    </div>
-                  }
-                  
-                  <button 
-                    (click)="onLogin($event)"
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="flex justify-end -mt-0.5">
+              <div (click)="navigateToForgotPassword()" class="cursor-pointer hover:opacity-75 transition-opacity">
+                <span class="text-[12.5px] text-[#3b82f6] font-medium">Forgot password?</span>
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            @if (errorMessage) {
+              <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-[13px]" role="alert">
+                {{ errorMessage }}
+              </div>
+            }
+
+            <!-- Login Button -->
+            <button (click)="onLogin($event)"
                     [disabled]="isLoading"
-                    [class.opacity-50]="isLoading"
+                    [class.opacity-60]="isLoading"
                     [class.cursor-not-allowed]="isLoading"
-                    class="bg-[#155dfc] content-stretch flex h-[48px] items-center justify-center relative rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] shrink-0 w-full cursor-pointer hover:bg-[#1347d6] transition-colors" 
-                    data-name="Button" 
-                    data-node-id="1:47">
-                    <div class="h-[24px] relative shrink-0 w-[50.275px]" data-name="Text" data-node-id="1:48">
-                      <div class="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
-                        <p class="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[24px] left-[25px] not-italic text-[16px] text-center text-white top-[-2.2px] whitespace-nowrap" data-node-id="1:49">
-                          @if (isLoading) {
-                            <span>Signing In...</span>
-                          } @else {
-                            <span>Login</span>
-                          }
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="content-stretch flex h-[15.988px] items-start relative shrink-0 w-full" data-name="Paragraph" data-node-id="1:55">
-              <p class="font-['Inter:Regular',sans-serif] font-normal leading-[16px] not-italic relative shrink-0 text-[#6a7282] text-[12px] text-center whitespace-nowrap" data-node-id="1:56">
-                © 2024 UMANG SelfCare. All rights reserved. Powered by Government of India
-              </p>
-            </div>
+                    class="h-[50px] rounded-xl text-white font-semibold text-[15px] w-full cursor-pointer transition-all shadow-[0_4px_16px_rgba(26,86,219,0.35)] hover:shadow-[0_6px_22px_rgba(26,86,219,0.45)] hover:scale-[1.01] active:scale-[0.99] mt-1"
+                    style="background: linear-gradient(135deg, #1a56db 0%, #6366f1 100%);">
+              @if (isLoading) {
+                <span>Signing In...</span>
+              } @else {
+                <span>Login</span>
+              }
+            </button>
+
           </div>
         </div>
       </div>
-      <div class="hidden lg:block relative h-[806px] overflow-clip w-full lg:w-1/2" data-name="Container" data-node-id="1:57" style="background-image: linear-gradient(133.302deg, rgb(21, 93, 252) 0%, rgb(20, 71, 230) 50%, rgb(55, 42, 172) 100%)">
-        <div class="absolute bg-black inset-0" data-name="Container" data-node-id="1:58" ></div>
-        <div class="absolute bg-white blur-[64px] left-[80px] rounded-[26843500px] size-[256px] top-[80px]" data-name="Container" data-node-id="1:59" ></div>
-        <div class="absolute bg-[#51a2ff] blur-[64px] left-[295.6px] rounded-[26843500px] size-[384px] top-[342px]" data-name="Container" data-node-id="1:60" ></div>
-        <div class="absolute inset-0" data-name="Container" data-node-id="1:61">
-          <div class="absolute content-stretch flex flex-col gap-[48px] h-[254px] items-start left-[48px] top-[48px] w-[663.6px]" data-name="Container" data-node-id="1:62">
-            <div class="content-stretch flex gap-[12px] h-[72px] items-center relative shrink-0 w-full" data-name="Container" data-node-id="1:63">
-              <div class="bg-white h-[72px] relative rounded-[14px] shrink-0 w-[88px]" data-name="Container" data-node-id="1:64">
-                <div class="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start pt-[12px] px-[12px] relative size-full">
-                  <img [src]="imgLogo" class="h-[48px] w-full object-contain" alt="Umang Logo" />
+
+      <!-- Footer below card -->
+      <p class="text-center text-[#94a3b8] text-[11px] mt-5">
+        © 2024 UMANG SelfCare. All rights reserved. Powered by Government of India
+      </p>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Forgot Password Modal (logic unchanged) ── -->
+@if (showForgotPasswordModal) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" (click)="closeForgotPasswordModal()">
+    <div class="bg-white rounded-[16px] shadow-[0px_20px_25px_0px_rgba(0,0,0,0.1)] w-full max-w-[480px] max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+      <div class="p-8">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h2 class="font-['Inter:Bold',sans-serif] font-bold text-[24px] text-[#101828]">
+              Forgot Password
+            </h2>
+            <p class="font-['Inter:Regular',sans-serif] text-[14px] text-[#4a5565] mt-1">
+              Reset your password using OTP
+            </p>
+          </div>
+          <button (click)="closeForgotPasswordModal()" class="text-[#6a7282] hover:text-[#101828] text-[24px] leading-none">
+            ×
+          </button>
+        </div>
+
+        <!-- Modal Form -->
+        <div class="flex flex-col gap-[20px]">
+
+          <!-- User ID Field -->
+          <div class="flex flex-col gap-[8px]">
+            <label class="font-['Inter:Medium',sans-serif] font-medium text-[14px] text-[#364153]">
+              User ID <span class="text-[#fb2c36]">*</span>
+            </label>
+            <div class="relative">
+              <input type="text"
+                     [(ngModel)]="fpUserId"
+                     [disabled]="fpIsLoading"
+                     maxlength="50"
+                     class="w-full h-[49.6px] pl-[40px] pr-[16px] border-[#d1d5dc] border-[0.8px] rounded-[10px] font-['Inter:Regular',sans-serif] text-[16px] text-black placeholder-gray-500 outline-none focus:border-[#155dfc]"
+                     placeholder="Enter your username or email" />
+              <div class="absolute left-[12px] top-[14.8px] size-[20px]">
+                <img alt="" class="size-full" [src]="imgIcon" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Request OTP Button & Timer -->
+          @if (fpUserId) {
+            <div class="flex flex-col gap-[8px] items-center">
+              <button (click)="requestOTP()"
+                      [disabled]="!fpCanRequestOTP() || fpIsLoading"
+                      [class.opacity-50]="!fpCanRequestOTP() || fpIsLoading"
+                      [class.cursor-not-allowed]="!fpCanRequestOTP() || fpIsLoading"
+                      class="bg-[#155dfc] h-[48px] px-[24px] rounded-[10px] text-white font-['Inter:Medium',sans-serif] font-medium text-[16px] hover:bg-[#1348d4] transition-colors">
+                {{ fpOtpRequested() ? 'Resend OTP' : 'Request OTP' }}
+              </button>
+              @if (!fpCanRequestOTP()) {
+                <p class="text-[#6a7282] text-[12px] font-['Inter:Regular',sans-serif]">
+                  Didn't get OTP? You can re-request in {{ fpTimeLeft() }} seconds.
+                </p>
+              }
+            </div>
+          }
+
+          <!-- OTP Field -->
+          @if (fpOtpRequested()) {
+            <div class="flex flex-col gap-[8px]">
+              <label class="font-['Inter:Medium',sans-serif] font-medium text-[14px] text-[#364153]">
+                OTP <span class="text-[#fb2c36]">*</span>
+              </label>
+              <div class="relative">
+                <input type="text"
+                       [(ngModel)]="fpOtp"
+                       [disabled]="fpIsLoading"
+                       maxlength="6"
+                       class="w-full h-[49.6px] pl-[40px] pr-[16px] border-[#d1d5dc] border-[0.8px] rounded-[10px] font-['Inter:Regular',sans-serif] text-[16px] text-black placeholder-gray-500 outline-none focus:border-[#155dfc]"
+                       placeholder="Enter 6-digit OTP" />
+                <div class="absolute left-[12px] top-[14.8px] size-[20px]">
+                  <img alt="" class="size-full" [src]="imgIcon1" />
                 </div>
               </div>
-              <div class="h-[56px] relative shrink-0 w-[142.7px]" data-name="Container" data-node-id="1:66">
-                <div class="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start relative size-full">
-                  <div class="h-[36px] relative shrink-0 w-full" data-name="Heading 1" data-node-id="1:67">
-                    <p class="absolute font-['Inter:Bold',sans-serif] font-bold leading-[36px] left-0 not-italic text-[30px] text-white top-[-1.6px] whitespace-nowrap" data-node-id="1:68">
-                      UMANG
-                    </p>
+            </div>
+          }
+
+          <!-- New Password Field -->
+          @if (fpOtp || fpOtpRequested()) {
+            <div class="flex flex-col gap-[8px]">
+              <label class="font-['Inter:Medium',sans-serif] font-medium text-[14px] text-[#364153]">
+                New Password <span class="text-[#fb2c36]">*</span>
+              </label>
+              <div class="relative">
+                <input [type]="fpShowNewPassword ? 'text' : 'password'"
+                       [(ngModel)]="fpNewPassword"
+                       [disabled]="fpIsLoading"
+                       [attr.minlength]="fpMinPasswordLen"
+                       [attr.maxlength]="fpMaxPasswordLen"
+                       class="w-full h-[49.6px] pl-[40px] pr-[48px] border-[#d1d5dc] border-[0.8px] rounded-[10px] font-['Inter:Regular',sans-serif] text-[16px] text-black placeholder-gray-500 outline-none focus:border-[#155dfc]"
+                       placeholder="Enter new password" />
+                <div class="absolute left-[12px] top-[14.8px] size-[20px]">
+                  <img alt="" class="size-full" [src]="imgIcon2" />
+                </div>
+                <div (click)="toggleFPNewPasswordVisibility()"
+                     class="absolute right-[16px] top-[14.8px] size-[20px] cursor-pointer">
+                  <div class="size-full overflow-clip">
+                    <div class="absolute inset-[20.84%_8.33%]">
+                      <div class="absolute inset-[-7.14%_-5%]">
+                        <img alt="" class="size-full" [src]="imgVector" />
+                      </div>
+                    </div>
+                    <div class="absolute inset-[37.5%]">
+                      <div class="absolute inset-[-16.67%]">
+                        <img alt="" class="size-full" [src]="imgVector1" />
+                      </div>
+                    </div>
                   </div>
-                  <div class="h-[20px] relative shrink-0 w-full" data-name="Paragraph" data-node-id="1:69">
-                    <p class="absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-0 not-italic text-[#dbeafe] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="1:70">
-                      SelfCare Admin System
-                    </p>
+                </div>
+              </div>
+              <p class="text-[#6a7282] text-[12px] font-['Inter:Regular',sans-serif]">
+                Password should be at least {{ fpMinPasswordLen }} characters long.
+              </p>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="flex flex-col gap-[8px]">
+              <label class="font-['Inter:Medium',sans-serif] font-medium text-[14px] text-[#364153]">
+                Confirm Password <span class="text-[#fb2c36]">*</span>
+              </label>
+              <div class="relative">
+                <input [type]="fpShowConfirmPassword ? 'text' : 'password'"
+                       [(ngModel)]="fpConfirmPassword"
+                       [disabled]="fpIsLoading"
+                       [attr.maxlength]="fpMaxPasswordLen"
+                       class="w-full h-[49.6px] pl-[40px] pr-[48px] border-[#d1d5dc] border-[0.8px] rounded-[10px] font-['Inter:Regular',sans-serif] text-[16px] text-black placeholder-gray-500 outline-none focus:border-[#155dfc]"
+                       placeholder="Confirm your password" />
+                <div class="absolute left-[12px] top-[14.8px] size-[20px]">
+                  <img alt="" class="size-full" [src]="imgIcon2" />
+                </div>
+                <div (click)="toggleFPConfirmPasswordVisibility()"
+                     class="absolute right-[16px] top-[14.8px] size-[20px] cursor-pointer">
+                  <div class="size-full overflow-clip">
+                    <div class="absolute inset-[20.84%_8.33%]">
+                      <div class="absolute inset-[-7.14%_-5%]">
+                        <img alt="" class="size-full" [src]="imgVector" />
+                      </div>
+                    </div>
+                    <div class="absolute inset-[37.5%]">
+                      <div class="absolute inset-[-16.67%]">
+                        <img alt="" class="size-full" [src]="imgVector1" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="content-stretch flex flex-col gap-[16px] h-[134px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="1:71">
-              <div class="font-['Inter:Bold',sans-serif] font-bold h-[90px] leading-[45px] not-italic relative shrink-0 text-[36px] text-white w-full whitespace-nowrap" data-name="Heading 2" data-node-id="1:72">
-                <p class="absolute left-0 top-[-2.6px]" data-node-id="1:73">
-                  Unified Mobile Application
-                </p>
-                <p class="absolute left-0 top-[42.4px]" data-node-id="1:74">
-                  for New-age Governance
-                </p>
-              </div>
-              <div class="h-[28px] relative shrink-0 w-full" data-name="Paragraph" data-node-id="1:75">
-                <p class="absolute font-['Inter:Regular',sans-serif] font-normal leading-[28px] left-0 not-italic text-[#dbeafe] text-[18px] top-[-1.4px] whitespace-nowrap" data-node-id="1:76">
-                  Empowering government services through digital transformation
-                </p>
-              </div>
+          }
+
+          <!-- Error Message -->
+          @if (fpErrorMessage) {
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg" role="alert">
+              <span class="block text-sm">{{ fpErrorMessage }}</span>
             </div>
+          }
+
+          <!-- Success Message -->
+          @if (fpSuccessMessage) {
+            <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg" role="alert">
+              <span class="block text-sm">{{ fpSuccessMessage }}</span>
+            </div>
+          }
+
+          <!-- Action Buttons -->
+          <div class="flex gap-[12px] pt-[16px]">
+            <button (click)="closeForgotPasswordModal()"
+                    [disabled]="fpIsLoading"
+                    class="bg-[#f3f4f6] flex-1 h-[48px] rounded-[10px] font-['Inter:Medium',sans-serif] font-medium text-[#364153] text-[16px] hover:bg-[#e5e7eb] transition-colors">
+              Cancel
+            </button>
+            <button (click)="changeForgotPassword()"
+                    [disabled]="fpIsLoading || !fpUserId || !fpOtp || !fpNewPassword || !fpConfirmPassword"
+                    [class.opacity-50]="fpIsLoading || !fpUserId || !fpOtp || !fpNewPassword || !fpConfirmPassword"
+                    [class.cursor-not-allowed]="fpIsLoading || !fpUserId || !fpOtp || !fpNewPassword || !fpConfirmPassword"
+                    class="bg-[#155dfc] flex-1 h-[48px] rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] text-white font-['Inter:Medium',sans-serif] font-medium text-[16px] hover:bg-[#1348d4] transition-colors">
+              @if (fpIsLoading) {
+                <span>Saving...</span>
+              } @else {
+                <span>Save</span>
+              }
+            </button>
           </div>
-          <div class="absolute border-4 border-solid border-white h-[320px] left-[48px] rounded-[16px] shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)] top-[350px] w-[663.6px]" data-name="Image (Digital Governance)" data-node-id="1:77">
-            <div aria-hidden="true" class="absolute inset-0 pointer-events-none rounded-[16px]">
-              <div class="absolute bg-[rgba(255,255,255,0)] inset-0 rounded-[16px]" ></div>
-              <img alt="" class="absolute max-w-none object-cover rounded-[16px] size-full" [src]="imgImageDigitalGovernance" />
-            </div>
-          </div>
-          <div class="absolute h-[56px] left-[48px] top-[702px] w-[663.6px]" data-name="Container" data-node-id="1:78">
-            <div class="absolute content-stretch flex flex-col h-[56px] items-start left-0 top-0 w-[210.525px]" data-name="Container" data-node-id="1:79">
-              <div class="h-[36px] relative shrink-0 w-full" data-name="Container" data-node-id="1:80">
-                <p class="-translate-x-1/2 absolute font-['Inter:Bold',sans-serif] font-bold leading-[36px] left-[105.14px] not-italic text-[30px] text-center text-white top-[-1.6px] whitespace-nowrap" data-node-id="1:81">
-                  1000+
-                </p>
-              </div>
-              <div class="h-[20px] relative shrink-0 w-full" data-name="Container" data-node-id="1:82">
-                <p class="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-[106.03px] not-italic text-[#bedbff] text-[14px] text-center top-[-0.2px] whitespace-nowrap" data-node-id="1:83">
-                  Services
-                </p>
-              </div>
-            </div>
-            <div class="absolute content-stretch flex flex-col h-[56px] items-start left-[226.52px] top-0 w-[210.538px]" data-name="Container" data-node-id="1:84">
-              <div class="h-[36px] relative shrink-0 w-full" data-name="Container" data-node-id="1:85">
-                <p class="-translate-x-1/2 absolute font-['Inter:Bold',sans-serif] font-bold leading-[36px] left-[105.9px] not-italic text-[30px] text-center text-white top-[-1.6px] whitespace-nowrap" data-node-id="1:86">
-                  50+
-                </p>
-              </div>
-              <div class="h-[20px] relative shrink-0 w-full" data-name="Container" data-node-id="1:87">
-                <p class="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-[105.71px] not-italic text-[#bedbff] text-[14px] text-center top-[-0.2px] whitespace-nowrap" data-node-id="1:88">
-                  Departments
-                </p>
-              </div>
-            </div>
-            <div class="absolute content-stretch flex flex-col h-[56px] items-start left-[453.06px] top-0 w-[210.525px]" data-name="Container" data-node-id="1:89">
-              <div class="h-[36px] relative shrink-0 w-full" data-name="Container" data-node-id="1:90">
-                <p class="-translate-x-1/2 absolute font-['Inter:Bold',sans-serif] font-bold leading-[36px] left-[106.23px] not-italic text-[30px] text-center text-white top-[-1.6px] whitespace-nowrap" data-node-id="1:91">
-                  24/7
-                </p>
-              </div>
-              <div class="h-[20px] relative shrink-0 w-full" data-name="Container" data-node-id="1:92">
-                <p class="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-[105.44px] not-italic text-[#bedbff] text-[14px] text-center top-[-0.2px] whitespace-nowrap" data-node-id="1:93">
-                  Support
-                </p>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
-
-    <!-- Forgot Password Modal -->
-    @if (showForgotPasswordModal) {
-      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" (click)="closeForgotPasswordModal()">
-        <div class="bg-white rounded-[16px] shadow-[0px_20px_25px_0px_rgba(0,0,0,0.1)] w-full max-w-[480px] max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-          <div class="p-8">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center mb-6">
-              <div>
-                <h2 class="font-['Inter:Bold',sans-serif] font-bold text-[24px] text-[#101828]">
-                  Forgot Password
-                </h2>
-                <p class="font-['Inter:Regular',sans-serif] text-[14px] text-[#4a5565] mt-1">
-                  Reset your password using OTP
-                </p>
-              </div>
-              <button (click)="closeForgotPasswordModal()" class="text-[#6a7282] hover:text-[#101828] text-[24px] leading-none">
-                ×
-              </button>
-            </div>
-
-            <!-- Modal Form -->
-            <div class="flex flex-col gap-[20px]">
-              
-              <!-- User ID Field -->
-              <div class="flex flex-col gap-[8px]">
-                <label class="font-['Inter:Medium',sans-serif] font-medium text-[14px] text-[#364153]">
-                  User ID <span class="text-[#fb2c36]">*</span>
-                </label>
-                <div class="relative">
-                  <input 
-                    type="text" 
-                    [(ngModel)]="fpUserId"
-                    [disabled]="fpIsLoading"
-                    maxlength="50"
-                    class="w-full h-[49.6px] pl-[40px] pr-[16px] border-[#d1d5dc] border-[0.8px] rounded-[10px] font-['Inter:Regular',sans-serif] text-[16px] text-black placeholder-gray-500 outline-none focus:border-[#155dfc]" 
-                    placeholder="Enter your username or email" 
-                  />
-                  <div class="absolute left-[12px] top-[14.8px] size-[20px]">
-                    <img alt="" class="size-full" [src]="imgIcon" />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Request OTP Button & Timer -->
-              @if (fpUserId) {
-                <div class="flex flex-col gap-[8px] items-center">
-                  <button 
-                    (click)="requestOTP()"
-                    [disabled]="!fpCanRequestOTP() || fpIsLoading"
-                    [class.opacity-50]="!fpCanRequestOTP() || fpIsLoading"
-                    [class.cursor-not-allowed]="!fpCanRequestOTP() || fpIsLoading"
-                    class="bg-[#155dfc] h-[48px] px-[24px] rounded-[10px] text-white font-['Inter:Medium',sans-serif] font-medium text-[16px] hover:bg-[#1348d4] transition-colors">
-                    {{ fpOtpRequested() ? 'Resend OTP' : 'Request OTP' }}
-                  </button>
-                  
-                  @if (!fpCanRequestOTP()) {
-                    <p class="text-[#6a7282] text-[12px] font-['Inter:Regular',sans-serif]">
-                      Didn't get OTP? You can re-request in {{ fpTimeLeft() }} seconds.
-                    </p>
-                  }
-                </div>
-              }
-
-              <!-- OTP Field -->
-              @if (fpOtpRequested()) {
-                <div class="flex flex-col gap-[8px]">
-                  <label class="font-['Inter:Medium',sans-serif] font-medium text-[14px] text-[#364153]">
-                    OTP <span class="text-[#fb2c36]">*</span>
-                  </label>
-                  <div class="relative">
-                    <input 
-                      type="text" 
-                      [(ngModel)]="fpOtp"
-                      [disabled]="fpIsLoading"
-                      maxlength="6"
-                      class="w-full h-[49.6px] pl-[40px] pr-[16px] border-[#d1d5dc] border-[0.8px] rounded-[10px] font-['Inter:Regular',sans-serif] text-[16px] text-black placeholder-gray-500 outline-none focus:border-[#155dfc]" 
-                      placeholder="Enter 6-digit OTP" 
-                    />
-                    <div class="absolute left-[12px] top-[14.8px] size-[20px]">
-                      <img alt="" class="size-full" [src]="imgIcon1" />
-                    </div>
-                  </div>
-                </div>
-              }
-
-              <!-- New Password Field -->
-              @if (fpOtp || fpOtpRequested()) {
-                <div class="flex flex-col gap-[8px]">
-                  <label class="font-['Inter:Medium',sans-serif] font-medium text-[14px] text-[#364153]">
-                    New Password <span class="text-[#fb2c36]">*</span>
-                  </label>
-                  <div class="relative">
-                    <input 
-                      [type]="fpShowNewPassword ? 'text' : 'password'" 
-                      [(ngModel)]="fpNewPassword"
-                      [disabled]="fpIsLoading"
-                      [attr.minlength]="fpMinPasswordLen"
-                      [attr.maxlength]="fpMaxPasswordLen"
-                      class="w-full h-[49.6px] pl-[40px] pr-[48px] border-[#d1d5dc] border-[0.8px] rounded-[10px] font-['Inter:Regular',sans-serif] text-[16px] text-black placeholder-gray-500 outline-none focus:border-[#155dfc]" 
-                      placeholder="Enter new password" 
-                    />
-                    <div class="absolute left-[12px] top-[14.8px] size-[20px]">
-                      <img alt="" class="size-full" [src]="imgIcon2" />
-                    </div>
-                    <div 
-                      (click)="toggleFPNewPasswordVisibility()"
-                      class="absolute right-[16px] top-[14.8px] size-[20px] cursor-pointer">
-                      <div class="size-full overflow-clip">
-                        <div class="absolute inset-[20.84%_8.33%]">
-                          <div class="absolute inset-[-7.14%_-5%]">
-                            <img alt="" class="size-full" [src]="imgVector" />
-                          </div>
-                        </div>
-                        <div class="absolute inset-[37.5%]">
-                          <div class="absolute inset-[-16.67%]">
-                            <img alt="" class="size-full" [src]="imgVector1" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="text-[#6a7282] text-[12px] font-['Inter:Regular',sans-serif]">
-                    Password should be at least {{ fpMinPasswordLen }} characters long.
-                  </p>
-                </div>
-
-                <!-- Confirm Password Field -->
-                <div class="flex flex-col gap-[8px]">
-                  <label class="font-['Inter:Medium',sans-serif] font-medium text-[14px] text-[#364153]">
-                    Confirm Password <span class="text-[#fb2c36]">*</span>
-                  </label>
-                  <div class="relative">
-                    <input 
-                      [type]="fpShowConfirmPassword ? 'text' : 'password'" 
-                      [(ngModel)]="fpConfirmPassword"
-                      [disabled]="fpIsLoading"
-                      [attr.maxlength]="fpMaxPasswordLen"
-                      class="w-full h-[49.6px] pl-[40px] pr-[48px] border-[#d1d5dc] border-[0.8px] rounded-[10px] font-['Inter:Regular',sans-serif] text-[16px] text-black placeholder-gray-500 outline-none focus:border-[#155dfc]" 
-                      placeholder="Confirm your password" 
-                    />
-                    <div class="absolute left-[12px] top-[14.8px] size-[20px]">
-                      <img alt="" class="size-full" [src]="imgIcon2" />
-                    </div>
-                    <div 
-                      (click)="toggleFPConfirmPasswordVisibility()"
-                      class="absolute right-[16px] top-[14.8px] size-[20px] cursor-pointer">
-                      <div class="size-full overflow-clip">
-                        <div class="absolute inset-[20.84%_8.33%]">
-                          <div class="absolute inset-[-7.14%_-5%]">
-                            <img alt="" class="size-full" [src]="imgVector" />
-                          </div>
-                        </div>
-                        <div class="absolute inset-[37.5%]">
-                          <div class="absolute inset-[-16.67%]">
-                            <img alt="" class="size-full" [src]="imgVector1" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              }
-
-              <!-- Error Message -->
-              @if (fpErrorMessage) {
-                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg" role="alert">
-                  <span class="block text-sm">{{ fpErrorMessage }}</span>
-                </div>
-              }
-
-              <!-- Success Message -->
-              @if (fpSuccessMessage) {
-                <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg" role="alert">
-                  <span class="block text-sm">{{ fpSuccessMessage }}</span>
-                </div>
-              }
-
-              <!-- Action Buttons -->
-              <div class="flex gap-[12px] pt-[16px]">
-                <button
-                  (click)="closeForgotPasswordModal()"
-                  [disabled]="fpIsLoading"
-                  class="bg-[#f3f4f6] flex-1 h-[48px] rounded-[10px] font-['Inter:Medium',sans-serif] font-medium text-[#364153] text-[16px] hover:bg-[#e5e7eb] transition-colors">
-                  Cancel
-                </button>
-                <button
-                  (click)="changeForgotPassword()"
-                  [disabled]="fpIsLoading || !fpUserId || !fpOtp || !fpNewPassword || !fpConfirmPassword"
-                  [class.opacity-50]="fpIsLoading || !fpUserId || !fpOtp || !fpNewPassword || !fpConfirmPassword"
-                  [class.cursor-not-allowed]="fpIsLoading || !fpUserId || !fpOtp || !fpNewPassword || !fpConfirmPassword"
-                  class="bg-[#155dfc] flex-1 h-[48px] rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] text-white font-['Inter:Medium',sans-serif] font-medium text-[16px] hover:bg-[#1348d4] transition-colors">
-                  @if (fpIsLoading) {
-                    <span>Saving...</span>
-                  } @else {
-                    <span>Save</span>
-                  }
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    }
+  </div>
+}

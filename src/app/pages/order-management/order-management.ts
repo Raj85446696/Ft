@@ -1,21 +1,21 @@
-import { Component, inject } from '@angular/core';
-import { Sidebar } from '../../components/sidebar/sidebar';
-import { Navbar } from '../../components/navbar/navbar';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CoreService } from '../../services/core.service';
 
 @Component({
   selector: 'app-order-management',
   standalone: true,
-  imports: [Sidebar, Navbar, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './order-management.html',
   styleUrl: './order-management.css',
 })
-export class OrderManagement {
+export class OrderManagement implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
+  private coreService = inject(CoreService);
 
-  // Figma Icons from context (hashes)
   imgVector = '/assets/11710ca4e7873c954d84697b570f7ed2ae9d60a8.svg';
   imgVector1 = '/assets/a415eeb836d0017e90dddd03c63e9d5328589781.svg';
   imgVector2 = '/assets/161a5848b06a669e7bc863144c6518b6130f5d0c.svg';
@@ -26,15 +26,39 @@ export class OrderManagement {
   imgVector7 = '/assets/d3bc99cf950ec394c85737ca10fb904244fbe734.svg';
   imgIcon = '/assets/dd968e829f828a8be9698cb9373f53984669759b.svg';
 
-  orders = [
-    { id: 'ORD-1001', user: 'Rahul Sharma', service: 'Certificate', amount: '₹100', status: 'Completed', date: '2024-02-10' },
-    { id: 'ORD-1002', user: 'Priya Patel', service: 'License Application', amount: '₹500', status: 'Processing', date: '2024-02-12' },
-    { id: 'ORD-1003', user: 'Amit Kumar', service: 'Document Verification', amount: '₹250', status: 'Pending', date: '2024-02-13' },
-    { id: 'ORD-1004', user: 'Sneha Reddy', service: 'Registration', amount: '₹300', status: 'Completed', date: '2024-02-11' },
-    { id: 'ORD-1005', user: 'Vikram Singh', service: 'Certificate', amount: '₹100', status: 'Failed', date: '2024-02-09' },
-  ];
+  isLoading = true;
+  orders: any[] = [];
+
+  ngOnInit() {
+    this.loadOrders();
+  }
+
+  loadOrders() {
+    this.isLoading = true;
+    this.coreService.fetchGroupMaster().subscribe({
+      next: (res) => {
+        if (res.rs === 'S' && res.pd) {
+          const groups = Array.isArray(res.pd) ? res.pd : [res.pd];
+          this.orders = groups.map((g: any, i: number) => ({
+            id: `GRP-${g.groupId || (i + 1)}`,
+            user: g.groupName || '',
+            service: g.groupType || 'Service Group',
+            amount: '',
+            status: g.status === 'active' ? 'Active' : 'Inactive',
+            date: g.ldate || ''
+          }));
+        }
+        this.isLoading = false;
+            this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoading = false;
+          this.cdr.detectChanges();
+      }
+    });
+  }
 
   viewDetails(order: any) {
-    console.log('Viewing details for:', order.id);
+    // Navigate to order detail when route is available
   }
 }

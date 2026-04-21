@@ -1,83 +1,114 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SidebarService } from '../../../services/sidebar.service';
-import { Navbar } from '../../../components/navbar/navbar';
-import { Sidebar } from '../../../components/sidebar/sidebar';
-
-interface Scheme {
-  id: string;
-  name: string;
-  code: string;
-  department: string;
-  description: string;
-  status: 'Active' | 'Draft' | 'Archived';
-  lastUpdated: string;
-}
+import { CoreService, SchemeItem } from '../../../services/core.service';
+import { IdentityService } from '../../../services/identity.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage-scheme',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './manage-scheme.html',
   styleUrl: './manage-scheme.css'
 })
-export class ManageScheme {
+export class ManageScheme implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
   router = inject(Router);
+  private coreService = inject(CoreService);
+  private identityService = inject(IdentityService);
 
   searchQuery = '';
-  
-  schemes: Scheme[] = [
-    {
-      id: 'S001',
-      name: 'Direct Benefit Transfer (DBT)',
-      code: 'DBT-GOI-2024',
-      department: 'Finance Ministry',
-      description: 'Transferring subsidies directly to the bank accounts of beneficiaries.',
-      status: 'Active',
-      lastUpdated: '2024-03-20'
-    },
-    {
-      id: 'S002',
-      name: 'Ayushman Bharat',
-      code: 'AB-PMJAY-01',
-      department: 'Ministry of Health',
-      description: 'India\'s flagship scheme for healthcare coverage.',
-      status: 'Active',
-      lastUpdated: '2024-03-15'
-    },
-    {
-      id: 'S003',
-      name: 'Skill India Mission',
-      code: 'SIM-MSDE-2023',
-      department: 'Ministry of Skill Development',
-      description: 'Program to train over 40 crore people in India in different skills.',
-      status: 'Draft',
-      lastUpdated: '2024-03-10'
-    },
-    {
-      id: 'S004',
-      name: 'Post-Matric Scholarship',
-      code: 'PMS-SJE-2024',
-      department: 'Social Justice & Empowerment',
-      description: 'Financial assistance to students belonging to SC/ST categories.',
-      status: 'Archived',
-      lastUpdated: '2023-12-05'
-    }
-  ];
+  isLoading = true;
+  schemes: SchemeItem[] = [];
+
+  ngOnInit() {
+    this.loadSchemes();
+  }
+
+  loadSchemes() {
+    this.isLoading = true;
+    this.coreService.fetchSchemeList().subscribe({
+      next: (res) => {
+        if (res.rs === 'S' && res.pd) {
+          this.schemes = Array.isArray(res.pd) ? res.pd : [res.pd];
+        } else {
+          this.schemes = [];
+        }
+        this.isLoading = false;
+            this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoading = false;
+        Swal.fire('Error', 'Failed to load schemes', 'error');
+          this.cdr.detectChanges();
+      }
+    });
+  }
 
   filteredSchemes() {
-    return this.schemes.filter(s => 
-      s.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      s.code.toLowerCase().includes(this.searchQuery.toLowerCase())
+    const q = this.searchQuery.toLowerCase();
+    if (!q) return this.schemes;
+    return this.schemes.filter(s =>
+      (s.schemeName || '').toLowerCase().includes(q) ||
+      (s.schemeId || '').toLowerCase().includes(q)
     );
   }
 
-  onDelete(scheme: Scheme) {
-    if (confirm(`Remove scheme "${scheme.name}"?`)) {
-      this.schemes = this.schemes.filter(s => s.id !== scheme.id);
-    }
+  getStatusClass(status: string): string {
+    if (status === 'active') return 'bg-[#dcfce7] text-[#008236]';
+    if (status === 'deactive') return 'bg-[#ffe2e2] text-[#c10007]';
+    return 'bg-[#fef9c2] text-[#a65f00]';
+  }
+
+  getStatusLabel(status: string): string {
+    if (status === 'active') return 'Active';
+    if (status === 'deactive') return 'Inactive';
+    return status || 'Unknown';
+  }
+
+  get activeCount(): number {
+    return this.schemes.filter(s => s.status === 'active').length;
+  }
+
+  get inactiveCount(): number {
+    return this.schemes.filter(s => s.status !== 'active').length;
+  }
+
+  onEdit(scheme: SchemeItem) {
+    this.router.navigate(['/services-plus/create-scheme'], { state: { scheme } });
+  }
+
+  onDelete(scheme: SchemeItem) {
+    Swal.fire({
+      title: 'Delete Scheme?',
+      text: `Remove "${scheme.schemeName}"? This cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      confirmButtonText: 'Delete'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const userId = this.identityService.getUserProfile()?.info?.[0]?.userId || '';
+        this.coreService.deleteScheme(scheme, userId).subscribe({
+          next: (res) => {
+            if (res.rs === 'S') {
+              Swal.fire('Done', 'Scheme removed successfully', 'success');
+              this.loadSchemes();
+            } else {
+              Swal.fire('Error', res.rd || 'Failed to remove scheme', 'error');
+            }
+                this.cdr.detectChanges();
+          },
+          error: () => {
+            Swal.fire('Error', 'Failed to remove scheme', 'error');
+            this.cdr.detectChanges();
+          }
+        });
+      }
+    });
   }
 }

@@ -1,0 +1,241 @@
+<div class="min-h-screen bg-[#f9fafb]">
+
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+    <div class="max-w-[960px] mx-auto">
+
+      <!-- Header -->
+      <div class="flex items-center gap-[12px] mb-[24px]">
+        <a routerLink="/user-management" class="text-[#6a7282] hover:text-[#1a1a2e] transition-colors">
+          <span class="material-icons text-[20px]">arrow_back</span>
+        </a>
+        <div>
+          <h1 class="text-[22px] font-bold text-[#1a1a2e]">Manage Permissions</h1>
+          <p *ngIf="userDetails" class="text-[13px] text-[#6a7282] mt-[2px]">
+            {{ userDetails.userId }} &bull; {{ userDetails.email }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-[64px] text-[#6a7282]">
+        <span class="material-icons text-[40px] animate-spin mb-3">refresh</span>
+        <p class="text-[15px]">Loading user data...</p>
+      </div>
+
+      <ng-container *ngIf="!isLoading">
+
+        <!-- User Info Card -->
+        <div *ngIf="userDetails" class="bg-white rounded-[12px] border border-[#e5e7eb] p-[20px] mb-[24px] flex items-center gap-[16px]">
+          <div class="w-[48px] h-[48px] rounded-full bg-[#eff6ff] flex items-center justify-center">
+            <span class="material-icons text-[#155dfc] text-[24px]">person</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-[15px] font-bold text-[#1a1a2e]">{{ userDetails.userId }}</p>
+            <p class="text-[13px] text-[#6a7282]">{{ userDetails.email }} &bull; {{ userDetails.utype }}</p>
+          </div>
+          <span [class]="userDetails.status === 'active'
+            ? 'px-[10px] py-[4px] rounded-full bg-[#dcfce7] text-[#15803d] text-[12px] font-bold'
+            : 'px-[10px] py-[4px] rounded-full bg-[#fee2e2] text-[#dc2626] text-[12px] font-bold'">
+            {{ userDetails.status | titlecase }}
+          </span>
+        </div>
+
+        <!-- Assign Application Section -->
+        <div class="bg-white rounded-[12px] border border-[#e5e7eb] p-[20px] mb-[24px]">
+          <h2 class="text-[16px] font-bold text-[#1a1a2e] mb-[4px]">Assign Application</h2>
+          <p class="text-[13px] text-[#6a7282] mb-[16px]">Select department type, state and department to assign application-level rights.</p>
+
+          <!-- Step 1: Department Type -->
+          <div class="flex gap-[10px] mb-[14px]">
+            <button *ngFor="let t of ['Central','State','Other']"
+              (click)="deptTypeFilter = t; onDeptTypeChange()"
+              [class]="deptTypeFilter === t
+                ? 'h-[36px] px-[16px] rounded-[8px] bg-[#155dfc] text-white text-[13px] font-bold border border-[#155dfc]'
+                : 'h-[36px] px-[16px] rounded-[8px] bg-white text-[#6a7282] text-[13px] font-medium border border-[#d1d5db] hover:border-[#155dfc] hover:text-[#155dfc] transition-colors'">
+              {{ t }}
+            </button>
+            <button *ngIf="deptTypeFilter"
+              (click)="deptTypeFilter = ''; onDeptTypeChange()"
+              class="h-[36px] px-[12px] rounded-[8px] bg-[#fee2e2] text-[#dc2626] text-[13px] font-medium border border-transparent hover:bg-[#fecaca] transition-colors">
+              Clear
+            </button>
+          </div>
+
+          <!-- Step 2: State dropdown (only when State type selected) -->
+          <div *ngIf="deptTypeFilter === 'State'" class="mb-[14px]">
+            <label class="block text-[12px] font-bold text-[#6a7282] uppercase tracking-wider mb-[6px]">State</label>
+            <select [(ngModel)]="selectedState" (ngModelChange)="onStateChange()"
+              class="h-[40px] w-full max-w-[320px] rounded-[8px] border border-[#d1d5db] px-[12px] text-[14px] text-[#1a1a2e] focus:outline-none focus:ring-2 focus:ring-[#155dfc]">
+              <option value="">All States</option>
+              <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+
+          <!-- Step 3: Department list -->
+          <div *ngIf="deptTypeFilter" class="mb-[16px]">
+            <div class="flex items-center gap-[8px] mb-[10px]">
+              <label class="text-[12px] font-bold text-[#6a7282] uppercase tracking-wider">Departments</label>
+              <span *ngIf="isLoadingDepts" class="material-icons text-[16px] animate-spin text-[#6a7282]">refresh</span>
+              <span class="text-[11px] text-[#9ca3af]">({{ filteredDepartments.length }} found)</span>
+            </div>
+            <!-- search -->
+            <div class="flex items-center gap-[8px] h-[36px] rounded-[8px] border border-[#d1d5db] px-[10px] mb-[10px] max-w-[320px] focus-within:ring-2 focus-within:ring-[#155dfc]">
+              <span class="material-icons text-[16px] text-[#9ca3af]">search</span>
+              <input type="text" [(ngModel)]="deptSearchQuery"
+                class="flex-1 text-[13px] text-[#1a1a2e] bg-transparent outline-none border-none placeholder-[#9ca3af]"
+                placeholder="Search departments..." />
+            </div>
+            <!-- dept pills -->
+            <div *ngIf="filteredDepartments.length === 0 && !isLoadingDepts" class="text-[13px] text-[#9ca3af] py-[8px]">
+              No departments found.
+            </div>
+            <div class="flex flex-wrap gap-[8px] max-h-[160px] overflow-y-auto">
+              <button *ngFor="let dept of filteredDepartments"
+                (click)="selectDepartment(dept.deptId)"
+                [class]="selectedDeptId === dept.deptId
+                  ? 'px-[14px] py-[6px] rounded-full bg-[#155dfc] text-white text-[13px] font-semibold border border-[#155dfc] transition-all'
+                  : 'px-[14px] py-[6px] rounded-full bg-[#f3f4f6] text-[#374151] text-[13px] font-medium border border-[#e5e7eb] hover:border-[#155dfc] hover:text-[#155dfc] transition-all'">
+                {{ dept.sname }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 4: Rights + Role panel (shown after dept is selected) -->
+          <div *ngIf="selectedDeptId" class="border border-[#e5e7eb] rounded-[10px] p-[16px]">
+            <!-- Header row -->
+            <div class="flex items-center justify-between mb-[12px]">
+              <div class="flex items-center gap-[10px]">
+                <span class="material-icons text-[#155dfc] text-[20px]">shield</span>
+                <span class="text-[15px] font-bold text-[#1a1a2e]">{{ selectedDept?.sname }}</span>
+              </div>
+              <button (click)="selectAllDeptRights()"
+                class="text-[13px] font-semibold text-[#155dfc] hover:underline">Select All</button>
+            </div>
+
+            <!-- User Role -->
+            <div class="flex items-center gap-[10px] mb-[12px]">
+              <label class="text-[13px] font-bold text-[#6a7282] whitespace-nowrap">User Role</label>
+              <select [(ngModel)]="selectedDeptRoleId" (ngModelChange)="onDeptRoleChange($event)"
+                class="flex-1 max-w-[280px] h-[36px] rounded-[8px] border border-[#d1d5db] px-[10px] text-[13px] text-[#1a1a2e] focus:outline-none focus:ring-2 focus:ring-[#155dfc]">
+                <option value="">Select Role (optional)</option>
+                <option *ngFor="let role of allRoles" [value]="role.roleId">{{ role.roleName }}</option>
+              </select>
+            </div>
+
+            <!-- Rights search -->
+            <div class="flex items-center gap-[8px] h-[36px] rounded-[8px] border border-[#d1d5db] px-[10px] mb-[12px] focus-within:ring-2 focus-within:ring-[#155dfc]">
+              <span class="material-icons text-[16px] text-[#9ca3af]">search</span>
+              <input type="text" [(ngModel)]="deptRightSearch"
+                class="flex-1 text-[13px] text-[#1a1a2e] bg-transparent outline-none border-none placeholder-[#9ca3af]"
+                placeholder="Search Rights..." />
+            </div>
+
+            <!-- Rights pills -->
+            <div *ngIf="filteredDeptRights.length === 0" class="text-[13px] text-[#9ca3af] py-[8px]">No rights found.</div>
+            <div class="flex flex-wrap gap-[8px] max-h-[200px] overflow-y-auto mb-[14px]">
+              <button *ngFor="let right of filteredDeptRights"
+                (click)="toggleDeptRight(right.rightid, !isDeptRightSelected(right.rightid))"
+                [class]="isDeptRightSelected(right.rightid)
+                  ? 'px-[14px] py-[7px] rounded-full bg-[#eff6ff] text-[#155dfc] text-[13px] font-semibold border border-[#155dfc] transition-all'
+                  : 'px-[14px] py-[7px] rounded-full bg-[#f3f4f6] text-[#374151] text-[13px] font-medium border border-[#e5e7eb] hover:border-[#155dfc] hover:text-[#155dfc] transition-all'">
+                {{ right.displayRightName || right.rightnam }}
+              </button>
+            </div>
+
+            <!-- Selection info + save -->
+            <div class="flex items-center justify-between pt-[12px] border-t border-[#f3f4f6]">
+              <p class="text-[12px] text-[#6a7282]">{{ selectedDeptRightIds.size }} right(s) selected</p>
+              <div class="flex gap-[8px]">
+                <button (click)="clearDeptRights()"
+                  class="h-[36px] px-[14px] rounded-[8px] bg-[#f3f4f6] text-[#6a7282] text-[13px] font-medium hover:bg-[#e5e7eb] transition-colors border-none">
+                  Clear
+                </button>
+                <button (click)="saveApplicationAssignment()" [disabled]="isSavingDeptApp"
+                  class="h-[36px] px-[20px] bg-[#155dfc] text-white text-[13px] font-bold rounded-[8px] hover:bg-[#1249cc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-[6px] border-none">
+                  <span *ngIf="isSavingDeptApp" class="material-icons text-[14px] animate-spin">refresh</span>
+                  <span *ngIf="!isSavingDeptApp" class="material-icons text-[14px]">save</span>
+                  Save Assignment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assign Role Section -->
+        <!-- <div class="bg-white rounded-[12px] border border-[#e5e7eb] p-[20px] mb-[24px]">
+          <h2 class="text-[16px] font-bold text-[#1a1a2e] mb-[4px]">Assign Role</h2>
+          <p class="text-[13px] text-[#6a7282] mb-[16px]">Selecting a role will also add its rights to the permissions below.</p>
+          <div class="flex gap-[12px]">
+            <select [(ngModel)]="selectedRoleId" (ngModelChange)="onSelectRole($event)"
+              class="flex-1 h-[40px] rounded-[8px] border border-[#d1d5db] px-[12px] text-[14px] text-[#1a1a2e] focus:outline-none focus:ring-2 focus:ring-[#155dfc]">
+              <option value="">Select a role</option>
+              <option *ngFor="let role of allRoles" [value]="role.roleId">{{ role.roleName }}</option>
+            </select>
+            <button (click)="assignRole()" [disabled]="isAssigningRole || !selectedRoleId"
+              class="h-[40px] px-[20px] bg-[#155dfc] text-white text-[14px] font-bold rounded-[8px] hover:bg-[#1249cc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-[6px]">
+              <span *ngIf="isAssigningRole" class="material-icons text-[16px] animate-spin">refresh</span>
+              <span *ngIf="!isAssigningRole" class="material-icons text-[16px]">assignment_ind</span>
+              Assign Role
+            </button>
+          </div>
+        </div> -->
+
+        <!-- Rights Section -->
+        <div class="">
+          <!-- <div class="flex items-center justify-between mb-[16px]">
+            <div>
+              <h2 class="text-[16px] font-bold text-[#1a1a2e]">Permissions</h2>
+              <p class="text-[13px] text-[#6a7282] mt-[2px]">{{ selectedRightIds.size }} permission(s) selected</p>
+            </div>
+            <button (click)="saveRights()" [disabled]="isSavingRights"
+              class="h-[40px] px-[24px] bg-[#155dfc] text-white text-[14px] font-bold rounded-[8px] hover:bg-[#1249cc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-[6px]">
+              <span *ngIf="isSavingRights" class="material-icons text-[16px] animate-spin">refresh</span>
+              <span *ngIf="!isSavingRights" class="material-icons text-[16px]">save</span>
+              Save Permissions
+            </button>
+          </div> -->
+
+          <div *ngIf="allRights.length === 0" class="text-center py-[32px] text-[#6a7282]">
+            <span class="material-icons text-[36px] opacity-30">lock</span>
+            <p class="mt-2 text-[14px]">No rights available</p>
+          </div>
+
+          <!-- Rights grouped by category -->
+          <!-- <div *ngFor="let group of rightsByCategory" class="mb-[20px]">
+            <h3 class="text-[13px] font-bold text-[#6a7282] uppercase tracking-wider mb-[10px] pb-[6px] border-b border-[#f3f4f6]">
+              {{ group.category }}
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[8px]">
+              <label *ngFor="let right of group.rights"
+                class="flex items-center gap-[10px] p-[10px] rounded-[8px] border cursor-pointer transition-colors"
+                [class.border-[#155dfc]]="isRightSelected(right.rightid)"
+                [class.bg-[#eff6ff]]="isRightSelected(right.rightid)"
+                [class.border-[#e5e7eb]]="!isRightSelected(right.rightid)"
+                [class.hover:bg-[#f9fafb]]="!isRightSelected(right.rightid)">
+                <input type="checkbox"
+                  [checked]="isRightSelected(right.rightid)"
+                  (change)="toggleRight(right.rightid, $any($event.target).checked)"
+                  class="w-[16px] h-[16px] accent-[#155dfc] cursor-pointer" />
+                <span class="text-[13px] text-[#1a1a2e] leading-tight">
+                  {{ right.displayRightName || right.rightnam }}
+                </span>
+              </label>
+            </div>
+          </div> -->
+
+          <!-- Save button (bottom) -->
+          <!-- <div class="flex justify-end mt-[16px] pt-[16px] border-t border-[#f3f4f6]">
+            <button (click)="saveRights()" [disabled]="isSavingRights"
+              class="h-[40px] px-[24px] bg-[#155dfc] text-white text-[14px] font-bold rounded-[8px] hover:bg-[#1249cc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-[6px]">
+              <span *ngIf="isSavingRights" class="material-icons text-[16px] animate-spin">refresh</span>
+              <span *ngIf="!isSavingRights" class="material-icons text-[16px]">save</span>
+              Save Permissions
+            </button>
+          </div> -->
+        </div>
+
+      </ng-container>
+    </div>
+  </div>
+</div>

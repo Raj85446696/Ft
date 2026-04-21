@@ -1,6 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Sidebar } from '../../components/sidebar/sidebar';
-import { Navbar } from '../../components/navbar/navbar';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-service-report',
   standalone: true,
-  imports: [Sidebar, Navbar, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './service-report.html',
   styleUrl: './service-report.css',
 })
@@ -42,6 +40,17 @@ export class ServiceReport {
   ];
 
   exportReport() {
-    console.log('Exporting service report...');
+    const rows = [
+      ['Rank', 'Service Name', 'Users', 'Growth'],
+      ...this.topServices.map(s => [s.rank, s.name, s.users, s.growth])
+    ];
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'service-report.csv';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

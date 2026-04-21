@@ -1,6 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { Sidebar } from '../../components/sidebar/sidebar';
-import { Navbar } from '../../components/navbar/navbar';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-partner-report',
   standalone: true,
-  imports: [Sidebar, Navbar, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './partner-report.html',
   styleUrl: './partner-report.css',
 })
@@ -46,6 +44,17 @@ export class PartnerReport {
   ];
 
   exportReport() {
-    console.log('Exporting Partner Onboarding Report...');
+    const rows = [
+      ['Partner Name', 'Category', 'Date', 'Status', 'Impact'],
+      ...this.partnerList.map(p => [p.name, p.category, p.date, p.status, p.impact])
+    ];
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'partner-report.csv';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

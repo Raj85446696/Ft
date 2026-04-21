@@ -1,6 +1,4 @@
 <div class="min-h-screen bg-[#f9fafb]">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
     [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
@@ -43,7 +41,19 @@
           <p class="text-[16px] font-medium">Loading requests...</p>
         </div>
 
-        <div *ngIf="!loading" class="overflow-x-auto">
+        <!-- Error State -->
+        <div *ngIf="!loading && errorMessage" class="m-6 bg-red-50 border border-red-200 rounded-[14px] p-6 flex items-center gap-4">
+          <span class="material-icons text-red-500 text-[28px]">error_outline</span>
+          <div>
+            <p class="text-[16px] font-bold text-red-700">Failed to load requests</p>
+            <p class="text-[14px] text-red-600 mt-1">{{ errorMessage }}</p>
+          </div>
+          <button (click)="loadRequests()" class="ml-auto bg-red-600 text-white px-4 py-2 rounded-[8px] text-[14px] font-bold hover:bg-red-700 transition-colors cursor-pointer">
+            Retry
+          </button>
+        </div>
+
+        <div *ngIf="!loading && !errorMessage" class="overflow-x-auto">
           <table class="w-full">
             <thead>
               <tr class="bg-[#fcfdfe] border-b border-[#e5e7eb]">

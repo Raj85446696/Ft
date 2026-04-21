@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { IdentityService } from '../../services/identity.service';
 
@@ -10,7 +10,9 @@ import { IdentityService } from '../../services/identity.service';
   styleUrl: './navbar.css',
 })
 export class Navbar {
+    private cdr = inject(ChangeDetectorRef);
   imgLogo = "/assets/umang-logo.png";
+  imgImageDigitalGovernance = "/assets/selfcare_toplogo.png";
   imgIcon15 = "/assets/1d5f81856a034e43390fa905445b462061af4d31.svg";
   imgVector21 = "/assets/1998396d40c1b6fb1a551468bf4274b19e6d335d.svg";
   imgVector22 = "/assets/7548c0ab9f021aff37480c5678c8da2b95582612.svg";
@@ -24,11 +26,13 @@ export class Navbar {
       this.identityService.logout().subscribe({
         next: () => {
           this.router.navigate(['/login']);
+              this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Logout error:', err);
           // Navigate to login even if API call fails (session is cleared in service)
           this.router.navigate(['/login']);
+            this.cdr.detectChanges();
         }
       });
     }

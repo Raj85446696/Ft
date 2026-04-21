@@ -1,7 +1,5 @@
 <!-- Manage Departments Page -->
 <div class="bg-white relative min-h-screen flex flex-col">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <!-- Main Content -->
   <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
@@ -56,16 +54,21 @@
     </div>
 
     <!-- Department Cards Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[24px]">
+    <div *ngIf="isLoading" class="flex items-center justify-center py-[64px]">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#155dfc]"></div>
+    </div>
+
+    <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[24px]">
       <div *ngFor="let dept of filtered"
         class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] overflow-hidden hover:shadow-md transition-shadow">
 
         <!-- Card Header with gradient -->
         <div class="h-[128px] flex items-center justify-center"
           style="background: linear-gradient(155deg, #eff6ff 0%, #eef2ff 100%)">
-          <div class="w-[80px] h-[80px] rounded-[10px] bg-[#dbeafe] flex items-center justify-center text-[#155dfc] text-[28px] font-bold">
+          <div *ngIf="!dept.image" class="w-[80px] h-[80px] rounded-[10px] bg-[#dbeafe] flex items-center justify-center text-[#155dfc] text-[28px] font-bold">
             {{ dept.name.charAt(0) }}
           </div>
+          <img *ngIf="dept.image" [src]="dept.image" [alt]="dept.name" class="w-[80px] h-[80px] rounded-[10px] object-cover" />
         </div>
 
         <!-- Card Body -->
@@ -92,17 +95,25 @@
 
           <!-- Action Buttons -->
           <div class="flex items-center gap-[8px]">
-            <button routerLink="/view-department" class="flex-1 bg-[#eff6ff] text-[#155dfc] text-[14px] font-medium h-[36px] rounded-[10px] flex items-center justify-center gap-[6px] hover:bg-[#dbeafe] transition-colors cursor-pointer">
+            <button [routerLink]="['/view-department', dept.deptId]" class="flex-1 bg-[#eff6ff] text-[#155dfc] text-[14px] font-medium h-[36px] rounded-[10px] flex items-center justify-center gap-[6px] hover:bg-[#dbeafe] transition-colors cursor-pointer">
               <img [src]="imgView" alt="" class="w-[14px] h-[14px]" />
               View
             </button>
-            <button routerLink="/edit-department" class="flex-1 bg-[#f0fdf4] text-[#00a63e] text-[14px] font-medium h-[36px] rounded-[10px] flex items-center justify-center gap-[6px] hover:bg-[#dcfce7] transition-colors cursor-pointer">
+            <button [routerLink]="['/edit-department', dept.deptId]" class="flex-1 bg-[#f0fdf4] text-[#00a63e] text-[14px] font-medium h-[36px] rounded-[10px] flex items-center justify-center gap-[6px] hover:bg-[#dcfce7] transition-colors cursor-pointer">
               <img [src]="imgEdit" alt="" class="w-[14px] h-[14px]" />
               Edit
             </button>
-            <button routerLink="/department-settings" class="w-[36px] h-[36px] bg-[#fdf2f8] text-[#db2777] rounded-[10px] flex items-center justify-center hover:bg-[#fce7f3] transition-colors cursor-pointer" title="Settings">
-              <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <button [routerLink]="['/department-settings', dept.deptId]" class="w-[36px] h-[36px] bg-[#fdf2f8] text-[#db2777] rounded-[10px] flex items-center justify-center hover:bg-[#fce7f3] transition-colors cursor-pointer" title="Settings">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             </button>
+            <button (click)="toggleStatus(dept)" class="w-[36px] h-[36px] rounded-[10px] flex items-center justify-center transition-colors cursor-pointer"
+              [ngClass]="dept.status === 'Active' ? 'bg-[#dcfce7] text-[#008236] hover:bg-[#bbf7d0]' : 'bg-[#ffe2e2] text-[#c10007] hover:bg-[#fecaca]'"
+              [title]="dept.status === 'Active' ? 'Deactivate' : 'Activate'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
+            </button>
+            <!-- <button (click)="deleteDept(dept)" class="w-[36px] h-[36px] bg-[#fff1f2] text-[#e11d48] rounded-[10px] flex items-center justify-center hover:bg-[#ffe4e6] transition-colors cursor-pointer" title="Delete">
+              <img [src]="imgDelete" alt="" class="w-[14px] h-[14px]" />
+            </button> -->
           </div>
         </div>
       </div>

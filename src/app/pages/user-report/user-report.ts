@@ -1,6 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Sidebar } from '../../components/sidebar/sidebar';
-import { Navbar } from '../../components/navbar/navbar';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-user-report',
   standalone: true,
-  imports: [Sidebar, Navbar, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './user-report.html',
   styleUrl: './user-report.css',
 })
@@ -74,7 +72,7 @@ export class UserReport {
   ];
 
   applyFilters() {
-    console.log('Applying filters:', this.filters);
+    // Filters are applied reactively via template bindings
   }
 
   resetFilters() {
@@ -82,6 +80,17 @@ export class UserReport {
   }
 
   exportReport() {
-    console.log('Exporting report...');
+    const rows = [
+      ['State', 'Total Users', 'Active Users', 'Percentage'],
+      ...this.stateData.map(s => [s.name, s.total, s.active, s.percentage])
+    ];
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'user-report.csv';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

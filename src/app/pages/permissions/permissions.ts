@@ -1,11 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
-import { Navbar } from '../../components/navbar/navbar';
-import { Sidebar } from '../../components/sidebar/sidebar';
 import { IdentityService } from '../../services/identity.service';
+import Swal from 'sweetalert2';
 
 interface PermissionEntry {
   id: string;
@@ -19,11 +18,12 @@ interface PermissionEntry {
 @Component({
   selector: 'app-permissions',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './permissions.html',
   styleUrl: './permissions.css'
 })
 export class PermissionsPage implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
   router = inject(Router);
   identityService = inject(IdentityService);
@@ -78,11 +78,12 @@ export class PermissionsPage implements OnInit {
           this.loadPermissionsFromSession();
         }
         this.loading = false;
+            this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Error loading permissions from API, using session fallback:', err);
+      error: () => {
         this.loadPermissionsFromSession();
         this.loading = false;
+          this.cdr.detectChanges();
       }
     });
   }
@@ -177,24 +178,26 @@ export class PermissionsPage implements OnInit {
 
   savePermissions() {
     if (!this.currentRole) {
-      alert('No role selected');
+      Swal.fire('Validation', 'No role selected', 'warning');
       return;
     }
 
     const rightIds = this.rolePermissions.join(',');
-    
+
     this.identityService.editRole(this.currentRole.id, rightIds).subscribe({
       next: (response) => {
         if (response.rs === 'S') {
-          alert('Permissions updated successfully!');
-          this.router.navigate(['/role-management']);
+          Swal.fire('Saved', 'Permissions updated successfully!', 'success').then(() => {
+            this.router.navigate(['/role-management']);
+          });
         } else {
-          alert('Failed to update permissions: ' + response.rd);
+          Swal.fire('Error', response.rd || 'Failed to update permissions', 'error');
         }
+            this.cdr.detectChanges();
       },
-      error: (err) => {
-        alert('Error updating permissions: ' + err.message);
-        console.error('Update permissions error:', err);
+      error: () => {
+        Swal.fire('Error', 'Failed to update permissions', 'error');
+        this.cdr.detectChanges();
       }
     });
   }

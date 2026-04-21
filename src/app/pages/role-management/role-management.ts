@@ -1,11 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
-import { Navbar } from '../../components/navbar/navbar';
-import { Sidebar } from '../../components/sidebar/sidebar';
 import { IdentityService, FetchedRight } from '../../services/identity.service';
+import Swal from 'sweetalert2';
 
 interface Permission {
   id: string;
@@ -27,11 +26,12 @@ interface Role {
 @Component({
   selector: 'app-role-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule],
   templateUrl: './role-management.html',
   styleUrl: './role-management.css'
 })
 export class RoleManagement implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
   router = inject(Router);
   identityService = inject(IdentityService);
@@ -77,8 +77,12 @@ export class RoleManagement implements OnInit {
             this.selectedRole = this.roles[0];
           }
         }
+            this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error loading roles:', err)
+      error: () => {
+        Swal.fire('Error', 'Failed to load roles', 'error');
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -95,10 +99,12 @@ export class RoleManagement implements OnInit {
           }));
         }
         this.loading = false;
+            this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Error loading permissions:', err);
+      error: () => {
+        Swal.fire('Error', 'Failed to load permissions', 'error');
         this.loading = false;
+          this.cdr.detectChanges();
       }
     });
   }
@@ -178,74 +184,86 @@ export class RoleManagement implements OnInit {
 
   createRole() {
     if (!this.newRoleName.trim()) {
-      alert('Please fill role name');
+      Swal.fire('Validation', 'Please fill role name', 'warning');
       return;
     }
-    
+
     if (this.newRoleRights.length === 0) {
-      alert('Please select at least one permission');
+      Swal.fire('Validation', 'Please select at least one permission', 'warning');
       return;
     }
     const rightIds = this.newRoleRights.join(',');
-    
+
     this.identityService.createNewRole(this.newRoleName, rightIds, '').subscribe({
       next: (response) => {
         if (response.rs === 'S') {
-          alert('Role created successfully!');
+          Swal.fire('Success', 'Role created successfully!', 'success');
           this.closeCreateModal();
-          this.loadRoles(); // Reload from backend
+          this.loadRoles();
         } else {
-          alert('Failed to create role: ' + response.rd);
+          Swal.fire('Error', response.rd || 'Failed to create role', 'error');
         }
+            this.cdr.detectChanges();
       },
-      error: (err) => {
-        alert('Error creating role: ' + err.message);
-        console.error('Create role error:', err);
+      error: () => {
+        Swal.fire('Error', 'Failed to create role', 'error');
+        this.cdr.detectChanges();
       }
     });
   }
 
   deleteSelectedRole() {
     if (!this.selectedRole) return;
-    
-    if (confirm(`Are you sure you want to delete role "${this.selectedRole.name}"?`)) {
-      this.identityService.deleteRole(this.selectedRole.id).subscribe({
-        next: (response) => {
-          if (response.rs === 'S') {
-            this.roles = this.roles.filter(r => r.id !== this.selectedRole?.id);
-            this.selectedRole = this.roles[0] || null;
-            alert('Role deleted successfully!');
-          } else {
-            alert('Failed to delete role: ' + response.rd);
+
+    Swal.fire({
+      title: 'Delete Role?',
+      text: `Are you sure you want to delete role "${this.selectedRole.name}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      confirmButtonText: 'Delete'
+    }).then((result) => {
+      if (result.isConfirmed && this.selectedRole) {
+        this.identityService.deleteRole(this.selectedRole.id).subscribe({
+          next: (response) => {
+            if (response.rs === 'S') {
+              this.roles = this.roles.filter(r => r.id !== this.selectedRole?.id);
+              this.selectedRole = this.roles[0] || null;
+              Swal.fire('Deleted', 'Role deleted successfully!', 'success');
+            } else {
+              Swal.fire('Error', response.rd || 'Failed to delete role', 'error');
+            }
+                this.cdr.detectChanges();
+          },
+          error: () => {
+            Swal.fire('Error', 'Failed to delete role', 'error');
+            this.cdr.detectChanges();
           }
-        },
-        error: (err) => {
-          alert('Error deleting role: ' + err.message);
-          console.error('Delete role error:', err);
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   saveRolePermissions() {
     if (!this.selectedRole) return;
-    
+
     const rightIds = this.editingPermissions.join(',');
-    
+
     this.identityService.editRole(this.selectedRole.id, rightIds).subscribe({
       next: (response) => {
         if (response.rs === 'S') {
           this.selectedRole!.permissions = [...this.editingPermissions];
-          alert('Role permissions updated successfully!');
+          Swal.fire('Saved', 'Role permissions updated successfully!', 'success');
           this.closePermissionsModal();
           this.loadRoles();
         } else {
-          alert('Failed to update role: ' + response.rd);
+          Swal.fire('Error', response.rd || 'Failed to update role', 'error');
         }
+            this.cdr.detectChanges();
       },
-      error: (err) => {
-        alert('Error updating role: ' + err.message);
-        console.error('Update role error:', err);
+      error: () => {
+        Swal.fire('Error', 'Failed to update role permissions', 'error');
+        this.cdr.detectChanges();
       }
     });
   }

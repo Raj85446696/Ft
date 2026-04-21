@@ -1,21 +1,22 @@
-import { Component, inject } from '@angular/core';
-import { Sidebar } from '../../components/sidebar/sidebar';
-import { Navbar } from '../../components/navbar/navbar';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CoreService } from '../../services/core.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cache-refresh',
   standalone: true,
-  imports: [Sidebar, Navbar, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './cache-refresh.html',
   styleUrl: './cache-refresh.css',
 })
-export class CacheRefresh {
+export class CacheRefresh implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
+  private coreService = inject(CoreService);
 
-  // Figma Assets (Exact hashes for download script)
   imgIcon = '/assets/493b91390cbe26d016e66da5a1c97145aaa260b0.svg';
   imgVector = '/assets/beab7bbbb9398ee79b88edfea78cb6072c016750.svg';
   imgVector1 = '/assets/89436c7579531b7eb93fe636f1452372ee443255.svg';
@@ -34,28 +35,123 @@ export class CacheRefresh {
   imgIcon4 = '/assets/8202787d99dde4ed1a32fe4a4cecaa739b4c4f99.svg';
   imgIcon5 = '/assets/31ea5593b49963ae7838c851bacf460afb975dd5.svg';
   
-  // Cache Management Data
-  cacheItems = [
-    { name: 'Department List', size: '2.4 MB', lastUpdated: '5 mins ago', status: 'Active' },
-    { name: 'Service Catalog', size: '8.1 MB', lastUpdated: '12 mins ago', status: 'Active' },
-    { name: 'User Sessions', size: '15.6 MB', lastUpdated: '3 mins ago', status: 'Active' },
-    { name: 'API Tokens', size: '512 KB', lastUpdated: '45 mins ago', status: 'Stale' },
-    { name: 'Translation Files', size: '4.2 MB', lastUpdated: '2 hours ago', status: 'Stale' },
-  ];
-
-  // Activity Log
-  activityLogs = [
-    { title: 'Cache refreshed successfully', detail: 'Service Catalog', time: '12 mins ago', status: 'success' },
-    { title: 'Auto refresh completed', detail: 'Department List', time: '5 mins ago', status: 'completed' },
-  ];
-
+  isLoading = true;
+  cacheItems: any[] = [];
+  activityLogs: any[] = [];
   autoRefreshEnabled = true;
 
+  ngOnInit() {
+    this.loadCacheData();
+  }
+
+  loadCacheData() {
+    this.isLoading = true;
+    let loaded = 0;
+    const checkDone = () => {
+      loaded++;
+      if (loaded >= 3) this.isLoading = false;
+    };
+
+    this.coreService.fetchAllDepartments().subscribe({
+      next: (res) => {
+        if (res.rs === 'S' && res.pd) {
+          const depts = Array.isArray(res.pd) ? res.pd : [res.pd];
+          this.cacheItems.push({
+            name: 'Department List',
+            size: `${(JSON.stringify(depts).length / 1024).toFixed(1)} KB`,
+            lastUpdated: 'Just now',
+            status: 'Active',
+            type: 'departments'
+          });
+        }
+        checkDone();
+            this.cdr.detectChanges();
+      },
+      error: () => {
+        checkDone();
+        this.cdr.detectChanges();
+      }
+    });
+
+    this.coreService.searchServices().subscribe({
+      next: (res) => {
+        if (res.rs === 'S' && res.pd) {
+          const services = Array.isArray(res.pd) ? res.pd : [res.pd];
+          this.cacheItems.push({
+            name: 'Service Catalog',
+            size: `${(JSON.stringify(services).length / 1024).toFixed(1)} KB`,
+            lastUpdated: 'Just now',
+            status: 'Active',
+            type: 'services'
+          });
+        }
+        checkDone();
+            this.cdr.detectChanges();
+      },
+      error: () => {
+        checkDone();
+        this.cdr.detectChanges();
+      }
+    });
+
+    this.coreService.fetchGroupMaster().subscribe({
+      next: (res) => {
+        if (res.rs === 'S' && res.pd) {
+          const groups = Array.isArray(res.pd) ? res.pd : [res.pd];
+          this.cacheItems.push({
+            name: 'Group Master',
+            size: `${(JSON.stringify(groups).length / 1024).toFixed(1)} KB`,
+            lastUpdated: 'Just now',
+            status: 'Active',
+            type: 'groups'
+          });
+        }
+        checkDone();
+            this.cdr.detectChanges();
+      },
+      error: () => {
+        checkDone();
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   refreshAll() {
-    console.log('Refreshing all cache...');
+    this.cacheItems = [];
+    this.activityLogs.unshift({
+      title: 'Full cache refresh initiated',
+      detail: 'All caches',
+      time: 'Just now',
+      status: 'success'
+    });
+    this.loadCacheData();
+    Swal.fire('Refreshing', 'All caches are being refreshed...', 'info');
   }
 
   refreshItem(item: any) {
-    console.log(`Refreshing ${item.name}...`);
+    item.lastUpdated = 'Refreshing...';
+    this.activityLogs.unshift({
+      title: `Cache refreshed: ${item.name}`,
+      detail: item.name,
+      time: 'Just now',
+      status: 'success'
+    });
+
+    if (item.type === 'departments') {
+      this.coreService.fetchAllDepartments().subscribe({
+        next: () => { item.lastUpdated = 'Just now';
+              this.cdr.detectChanges(); }
+      });
+    } else if (item.type === 'services') {
+      this.coreService.searchServices().subscribe({
+        next: () => { item.lastUpdated = 'Just now';
+              this.cdr.detectChanges(); }
+      });
+    } else {
+      this.coreService.fetchGroupMaster().subscribe({
+        next: () => { item.lastUpdated = 'Just now';
+              this.cdr.detectChanges(); }
+      });
+    }
   }
 }

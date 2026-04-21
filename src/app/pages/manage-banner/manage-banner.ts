@@ -1,15 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { Sidebar } from '../../components/sidebar/sidebar';
-import { Navbar } from '../../components/navbar/navbar';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UploadBannerModal } from './upload-banner-modal/upload-banner-modal';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage-banner',
   standalone: true,
-  imports: [Sidebar, Navbar, CommonModule, FormsModule, UploadBannerModal],
+  imports: [CommonModule, FormsModule, UploadBannerModal],
   templateUrl: './manage-banner.html',
   styleUrl: './manage-banner.css',
 })
@@ -50,6 +49,13 @@ export class ManageBanner {
 
   isModalOpen = false;
 
+  get activeBannerCount() { return this.banners.filter(b => b.status === 'Active').length; }
+  get scheduledBannerCount() { return this.banners.filter(b => b.status === 'Scheduled').length; }
+  get inactiveBannerCount() { return this.banners.filter(b => b.status === 'Inactive').length; }
+  get totalClickCount() {
+    return this.banners.reduce((sum, b) => sum + (parseInt((b.clicks || '0').replace(/,/g, '')) || 0), 0);
+  }
+
   onUpload() {
     this.isModalOpen = true;
   }
@@ -71,14 +77,38 @@ export class ManageBanner {
   }
 
   editBanner(banner: any) {
-    console.log('Editing banner:', banner.title);
+    Swal.fire({
+      title: 'Edit Banner',
+      html: `<input id="swal-title" class="swal2-input" placeholder="Banner Title" value="${banner.title}">`,
+      showCancelButton: true,
+      confirmButtonText: 'Save',
+      confirmButtonColor: '#155dfc',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const el = document.getElementById('swal-title') as HTMLInputElement;
+        if (el) banner.title = el.value;
+        Swal.fire('Updated', 'Banner updated successfully', 'success');
+      }
+    });
   }
 
   deleteBanner(banner: any) {
-    console.log('Deleting banner:', banner.title);
+    Swal.fire({
+      title: 'Delete Banner?',
+      text: `Delete "${banner.title}"? This cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      confirmButtonText: 'Delete'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.banners = this.banners.filter(b => b !== banner);
+        Swal.fire('Deleted', 'Banner deleted successfully', 'success');
+      }
+    });
   }
 
   toggleBannerStatus(banner: any) {
-    console.log('Toggling banner status:', banner.title);
+    banner.status = banner.status === 'Active' ? 'Inactive' : 'Active';
   }
 }

@@ -2,13 +2,11 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../../services/sidebar.service';
-import { Navbar } from '../../../components/navbar/navbar';
-import { Sidebar } from '../../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-yearly-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule],
   templateUrl: './yearly-report.html',
   styleUrl: './yearly-report.css'
 })

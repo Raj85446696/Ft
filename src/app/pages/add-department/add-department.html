@@ -1,7 +1,5 @@
 <!-- Add Department Page -->
 <div class="bg-white relative min-h-screen flex flex-col">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <!-- Main Content -->
   <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
@@ -34,10 +32,26 @@
           Department Logo
         </h2>
         
-        <div class="border-2 border-dashed border-[#d1d5dc] rounded-[10px] p-[32px] flex flex-col items-center justify-center bg-[#f9fafb] cursor-pointer hover:bg-[#f3f4f6] transition-colors">
-          <svg xmlns="http://www.w-images.com/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-[12px]"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-          <div class="text-[#101828] font-medium text-[14px] mb-[4px]">Upload department logo *</div>
+        <input type="file" #fileInput accept="image/png,image/jpeg,image/jpg" (change)="onFileSelected($event)" class="hidden" />
+
+        <!-- Upload area (no image selected) -->
+        <div *ngIf="!imagePreview" (click)="fileInput.click()" class="border-2 border-dashed border-[#d1d5dc] rounded-[10px] p-[32px] flex flex-col items-center justify-center bg-[#f9fafb] cursor-pointer hover:bg-[#f3f4f6] hover:border-[#155dfc] transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-[12px]"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          <div class="text-[#101828] font-medium text-[14px] mb-[4px]">Click to upload department logo *</div>
           <div class="text-[#6b7280] text-[12px]">Supported format: PNG, JPG, JPEG (Max 2MB)</div>
+        </div>
+
+        <!-- Preview (image selected) -->
+        <div *ngIf="imagePreview" class="border border-[#d1d5dc] rounded-[10px] p-[16px] bg-[#f9fafb] flex items-center gap-[16px]">
+          <img [src]="imagePreview" alt="Preview" class="w-[80px] h-[80px] rounded-[10px] object-cover border border-[#e5e7eb]" />
+          <div class="flex-1">
+            <p class="text-[14px] font-medium text-[#101828]">{{ selectedFileName }}</p>
+            <p class="text-[12px] text-[#6b7280] mt-[2px]">Image uploaded successfully</p>
+          </div>
+          <div class="flex gap-[8px]">
+            <button type="button" (click)="fileInput.click()" class="text-[#155dfc] text-[13px] font-medium px-[12px] py-[6px] rounded-[8px] hover:bg-[#eff6ff] transition-colors cursor-pointer">Change</button>
+            <button type="button" (click)="removeImage()" class="text-[#dc2626] text-[13px] font-medium px-[12px] py-[6px] rounded-[8px] hover:bg-[#fef2f2] transition-colors cursor-pointer">Remove</button>
+          </div>
         </div>
       </div>
 
@@ -257,17 +271,5 @@
 
   </div>
 
-  <!-- Material Design Success Snackbar -->
-  <div *ngIf="showSuccessToast" 
-       class="fixed bottom-[24px] left-1/2 -translate-x-1/2 z-[100] min-w-[344px] bg-[#323232] rounded-[4px] shadow-[0_3px_5px_-1px_rgba(0,0,0,0.2),_0_6px_10px_0_rgba(0,0,0,0.14),_0_1px_18px_0_rgba(0,0,0,0.12)] px-[16px] py-[14px] flex items-center justify-between animate-in slide-in-from-bottom-8 fade-in duration-300">
-       
-    <div class="flex items-center gap-[12px]">
-      <span class="material-icons text-[#4caf50] text-[20px]">check_circle</span>
-      <span class="text-[#ffffff] text-[14px] font-['Roboto',sans-serif] tracking-[0.25px]">Department saved successfully.</span>
-    </div>
-    
-    <button (click)="showSuccessToast = false" class="ml-[24px] text-[#4caf50] hover:bg-[#4caf50]/10 px-[8px] py-[6px] rounded-[4px] text-[14px] font-bold uppercase tracking-[1.25px] transition-colors cursor-pointer outline-none">
-      DISMISS
-    </button>
-  </div>
+  <!-- Material Design Success Snackbar (handled by SweetAlert2 now) -->
 </div>

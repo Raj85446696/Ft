@@ -1,8 +1,6 @@
 <!-- Navbar at the top -->
-<app-navbar></app-navbar>
 
 <!-- Sidebar -->
-<app-sidebar></app-sidebar>
 
 <div class="min-h-screen bg-[#f9fafb] transition-all duration-300 pb-12" 
      [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
@@ -26,29 +24,40 @@
     <div class="bg-white p-6 rounded-[12px] shadow-sm border border-[#e5e7eb] flex items-center gap-4">
       <div class="relative flex-1">
         <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[20px]">search</span>
-        <input type="text" [(ngModel)]="searchQuery" placeholder="Search services..." 
+        <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="applyFilters()" placeholder="Search services..." 
                class="w-full h-[48px] pl-12 pr-4 bg-white border border-[#d1d5dc] rounded-[10px] text-[16px] focus:outline-none focus:ring-1 focus:ring-[#155dfc] placeholder:text-[#9ca3af]">
       </div>
       
       <div class="relative w-[240px]">
-        <select class="w-full h-[48px] px-4 bg-white border border-[#d1d5dc] rounded-[10px] text-[16px] appearance-none focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+        <select [(ngModel)]="filterCategory" (ngModelChange)="applyFilters()" class="w-full h-[48px] px-4 bg-white border border-[#d1d5dc] rounded-[10px] text-[16px] appearance-none focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
           <option value="">All Categories</option>
           <option value="Health">Health</option>
           <option value="Education">Education</option>
           <option value="Finance">Finance</option>
+          <option value="Social Welfare">Social Welfare</option>
+          <option value="Agriculture">Agriculture</option>
+          <option value="IT &amp; Telecom">IT &amp; Telecom</option>
         </select>
         <span class="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-[#4a5565] pointer-events-none">expand_more</span>
       </div>
 
-      <button class="h-[48px] px-6 bg-white border border-[#d1d5dc] rounded-[10px] flex items-center gap-2 text-[16px] font-medium text-[#364153] hover:bg-gray-50 transition-colors">
-        <span class="material-icons text-[20px]">filter_list</span>
-        Filter
-      </button>
+      <div class="relative w-[180px]">
+        <select [(ngModel)]="filterStatus" (ngModelChange)="applyFilters()" class="w-full h-[48px] px-4 bg-white border border-[#d1d5dc] rounded-[10px] text-[16px] appearance-none focus:outline-none focus:ring-1 focus:ring-[#155dfc]">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <span class="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-[#4a5565] pointer-events-none">expand_more</span>
+      </div>
     </div>
 
     <!-- Services Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-      <div *ngFor="let service of services" 
+    <div *ngIf="isLoading" class="flex items-center justify-center py-[64px]">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#155dfc]"></div>
+    </div>
+
+    <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <div *ngFor="let service of filteredServices" 
            class="bg-white rounded-[14px] overflow-hidden border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all flex flex-col group">
         
         <!-- Service Preview / Brand Area -->
@@ -94,7 +103,7 @@
             </button>
             <!-- Active/Inactive Toggle -->
             <label class="relative inline-flex items-center cursor-pointer ml-auto mr-[8px]">
-              <input type="checkbox" [checked]="service.status === 'Active'" class="sr-only peer">
+              <input type="checkbox" [checked]="service.status === 'Active'" (change)="onToggleStatus(service)" class="sr-only peer">
               <div class="w-[36px] h-[20px] bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#155dfc] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[16px] after:w-[16px] after:transition-all peer-checked:bg-[#00c950]"></div>
             </label>
           </div>

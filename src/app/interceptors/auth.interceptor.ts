@@ -3,34 +3,45 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { IdentityService } from '../services/identity.service';
+import { environment } from '../../environments/environment';
 
 /**
- * HTTP Interceptor to add token to requests and handle auth errors
+ * HTTP Interceptor to handle two API styles:
+ * 1. Legacy endpoints (identity-service, core legacy): token in request body
+ * 2. Modern REST endpoints (core REST): Bearer token in Authorization header
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const identityService = inject(IdentityService);
   const router = inject(Router);
-  
-  // Get token from service
+
   const token = identityService.getToken();
-  
-  // Clone request and add token to body if it exists
-  // Note: Identity Service expects token in request body, not headers
   let modifiedReq = req;
-  
-  if (token && req.method !== 'GET') {
-    // For POST/PUT/DELETE requests, add token to body
-    const body = req.body || {};
-    modifiedReq = req.clone({
-      body: { ...body, token: token }
-    });
+
+  if (token) {
+    const isRestEndpoint = isModernRestRequest(req.url);
+
+    if (isRestEndpoint) {
+      // Modern REST: Add Bearer token in Authorization header
+      // Skip if header already set (e.g. by CoreService)
+      if (!req.headers.has('Authorization')) {
+        modifiedReq = req.clone({
+          setHeaders: { Authorization: `Bearer ${token}` }
+        });
+      }
+    } else if (req.method !== 'GET') {
+      // Legacy: Add token to request body (for POST requests)
+      const body = req.body || {};
+      if (typeof body === 'object' && !Array.isArray(body)) {
+        modifiedReq = req.clone({
+          body: { ...body, token: token }
+        });
+      }
+    }
   }
 
   return next(modifiedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Handle authentication errors
       if (error.status === 401 || error.error?.rc === 'LFT' || error.error?.rc === 'UAU') {
-        // Token expired or unauthorized - clear storage (only in browser)
         if (typeof localStorage !== 'undefined') {
           localStorage.clear();
         }
@@ -39,8 +50,38 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         }
         router.navigate(['/login']);
       }
-      
+
       return throwError(() => error);
     })
   );
 };
+
+/**
+ * Determine if a URL targets a modern REST endpoint (needs Bearer header)
+ * REST endpoints have paths like /api/core/department-visibility, /api/core/ratings, etc.
+ * Legacy endpoints are: /slfXxx, /actdeact, /ddc, /fetchDeptVisibility, /api/identity/ws1/xxx
+ */
+function isModernRestRequest(url: string): boolean {
+  const coreRestPaths = [
+    '/department-visibility',
+    '/departments/',
+    '/department-report-card',
+    '/service-groups',
+    '/service-keywords',
+    '/ratings',
+    '/notifications',
+    '/payment-gateway',
+    '/aicte',
+    '/soap-testing',
+    '/ws1/slffetchGroupTypes',
+    '/ws1/slfaddOrUpdateGroupType',
+    '/ws1/slfdeleteGroupType',
+  ];
+
+  // If the URL contains /api/core/ followed by a REST path, it's modern
+  if (url.includes('/api/core/')) {
+    return coreRestPaths.some(p => url.includes(p));
+  }
+
+  return false;
+}

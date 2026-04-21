@@ -1,6 +1,4 @@
 <div class="min-h-screen bg-[#f9fafb]">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <!-- Main Content Padding -->
   <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
@@ -23,11 +21,24 @@
         <!-- SECTION 1: Attach Logo -->
         <div class="space-y-[16px]">
           <h3 class="text-[18px] font-semibold text-[#101828]">Attach Logo for Service *</h3>
-          <div class="border-2 border-dashed border-[#d1d5dc] rounded-[12px] p-[40px] flex flex-col items-center justify-center bg-[#f9fafb] hover:bg-[#f3f4f6] transition-colors cursor-pointer">
+
+          <!-- Preview state -->
+          <div *ngIf="imagePreview" class="relative w-[140px] h-[140px] rounded-[12px] border border-[#e5e7eb] overflow-hidden bg-[#f9fafb] flex items-center justify-center">
+            <img [src]="imagePreview" alt="Logo preview" class="max-w-full max-h-full object-contain p-2">
+            <button type="button" (click)="removeImage()"
+              class="absolute top-[6px] right-[6px] w-[22px] h-[22px] bg-white border border-[#e5e7eb] rounded-full flex items-center justify-center shadow-sm hover:bg-red-50 transition-colors">
+              <span class="material-icons text-[#6b7280] text-[14px]">close</span>
+            </button>
+          </div>
+
+          <!-- Upload area -->
+          <label *ngIf="!imagePreview"
+            class="border-2 border-dashed border-[#d1d5dc] rounded-[12px] p-[40px] flex flex-col items-center justify-center bg-[#f9fafb] hover:bg-[#f3f4f6] transition-colors cursor-pointer">
+            <input type="file" accept=".png,.jpg,.jpeg,.svg" class="hidden" (change)="onFileSelected($event)">
             <span class="material-icons text-[#6b7280] text-[40px] mb-[12px]">cloud_upload</span>
             <p class="text-[#101828] font-medium text-[15px]">Click to upload or drag and drop</p>
             <p class="text-[#6b7280] text-[13px] mt-[4px]">PNG, JPG or SVG (max. 2MB)</p>
-          </div>
+          </label>
         </div>
 
         <hr class="border-[#e5e7eb]">
@@ -41,7 +52,7 @@
               <label class="block text-[14px] font-medium text-[#364153]">Department Name *</label>
               <select [(ngModel)]="service.department" class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc] focus:ring-1 focus:ring-[#155dfc] appearance-none">
                 <option value="" disabled>Select Department</option>
-                <option *ngFor="let dept of departments" [value]="dept">{{dept}}</option>
+                <option *ngFor="let dept of departments" [value]="dept.id">{{dept.name}}</option>
               </select>
             </div>
             
@@ -160,7 +171,7 @@
         <hr class="border-[#e5e7eb]">
 
         <!-- SECTION 7: Status -->
-        <div class="space-y-[16px] pb-[8px]">
+        <div class="space-y-[16px]">
           <h3 class="text-[18px] font-semibold text-[#101828]">Status</h3>
           <div class="flex items-center gap-[12px]">
             <label class="relative inline-flex items-center cursor-pointer">
@@ -168,6 +179,59 @@
               <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#155dfc] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00c950]"></div>
               <span class="ml-[12px] text-[15px] font-medium text-[#364153]">Is Active</span>
             </label>
+          </div>
+        </div>
+
+        <hr class="border-[#e5e7eb]">
+
+        <!-- SECTION 8: Service Flags -->
+        <div class="space-y-[16px] pb-[8px]">
+          <h3 class="text-[18px] font-semibold text-[#101828]">Service Flags</h3>
+          <p class="text-[13px] text-[#6a7282]">Mark this service to highlight it in specific listings.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-[16px]">
+
+            <!-- New -->
+            <label class="flex items-center gap-[14px] p-[16px] border border-[#e5e7eb] rounded-[10px] cursor-pointer hover:border-[#155dfc] hover:bg-[#f5f8ff] transition-all"
+              [ngClass]="{'border-[#155dfc] bg-[#f5f8ff]': service.isNew}">
+              <input type="checkbox" [(ngModel)]="service.isNew" class="sr-only">
+              <div class="w-[20px] h-[20px] rounded-[4px] border-2 flex items-center justify-center flex-shrink-0 transition-colors"
+                [ngClass]="service.isNew ? 'bg-[#155dfc] border-[#155dfc]' : 'border-[#d1d5dc] bg-white'">
+                <span *ngIf="service.isNew" class="material-icons text-white text-[14px]">check</span>
+              </div>
+              <div>
+                <p class="text-[14px] font-semibold text-[#101828]">New</p>
+                <p class="text-[12px] text-[#6a7282]">Mark as newly added</p>
+              </div>
+            </label>
+
+            <!-- Popular -->
+            <label class="flex items-center gap-[14px] p-[16px] border border-[#e5e7eb] rounded-[10px] cursor-pointer hover:border-[#f59e0b] hover:bg-[#fffbf0] transition-all"
+              [ngClass]="{'border-[#f59e0b] bg-[#fffbf0]': service.isPopular}">
+              <input type="checkbox" [(ngModel)]="service.isPopular" class="sr-only">
+              <div class="w-[20px] h-[20px] rounded-[4px] border-2 flex items-center justify-center flex-shrink-0 transition-colors"
+                [ngClass]="service.isPopular ? 'bg-[#f59e0b] border-[#f59e0b]' : 'border-[#d1d5dc] bg-white'">
+                <span *ngIf="service.isPopular" class="material-icons text-white text-[14px]">check</span>
+              </div>
+              <div>
+                <p class="text-[14px] font-semibold text-[#101828]">Popular</p>
+                <p class="text-[12px] text-[#6a7282]">Mark as popular service</p>
+              </div>
+            </label>
+
+            <!-- Trending -->
+            <label class="flex items-center gap-[14px] p-[16px] border border-[#e5e7eb] rounded-[10px] cursor-pointer hover:border-[#00a63e] hover:bg-[#f0fdf4] transition-all"
+              [ngClass]="{'border-[#00a63e] bg-[#f0fdf4]': service.isTrending}">
+              <input type="checkbox" [(ngModel)]="service.isTrending" class="sr-only">
+              <div class="w-[20px] h-[20px] rounded-[4px] border-2 flex items-center justify-center flex-shrink-0 transition-colors"
+                [ngClass]="service.isTrending ? 'bg-[#00a63e] border-[#00a63e]' : 'border-[#d1d5dc] bg-white'">
+                <span *ngIf="service.isTrending" class="material-icons text-white text-[14px]">check</span>
+              </div>
+              <div>
+                <p class="text-[14px] font-semibold text-[#101828]">Trending</p>
+                <p class="text-[12px] text-[#6a7282]">Mark as trending service</p>
+              </div>
+            </label>
+
           </div>
         </div>
 

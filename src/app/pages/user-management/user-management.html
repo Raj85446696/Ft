@@ -1,6 +1,4 @@
 <div class="min-h-screen bg-[#f9fafb]">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
     [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
@@ -141,7 +139,8 @@
 
             <!-- Actions -->
             <div class="flex items-center gap-[8px] mt-auto">
-              <button class="flex-1 bg-[#eff6ff] text-[#155dfc] text-[13px] font-bold h-[36px] rounded-[8px] flex items-center justify-center gap-[6px] hover:bg-[#dbeafe] transition-colors">
+              <button [routerLink]="['/user-management/manage', user.name]"
+                class="flex-1 bg-[#eff6ff] text-[#155dfc] text-[13px] font-bold h-[36px] rounded-[8px] flex items-center justify-center gap-[6px] hover:bg-[#dbeafe] transition-colors">
                 <span class="material-icons text-[16px]">manage_accounts</span>
                 Manage
               </button>

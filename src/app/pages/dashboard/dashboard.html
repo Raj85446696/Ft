@@ -1,6 +1,4 @@
 <div class="min-h-screen bg-[#F8F9FA]">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <div class="min-h-screen bg-[#F8F9FA] p-[32px] pt-[96px] transition-all duration-300"
     [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
@@ -23,7 +21,7 @@
             <div class="flex justify-between items-start">
                <div>
                   <p class="text-[14px] text-[#6C757D] font-medium mb-1">Total Users</p>
-                  <h3 class="text-[22px] font-bold text-[#212529]">1,24,567</h3>
+                  <h3 class="text-[22px] font-bold text-[#212529]">{{ totalUsers | number }}</h3>
                </div>
                <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
                   <span class="material-icons">people</span>
@@ -42,7 +40,7 @@
             <div class="flex justify-between items-start">
                <div>
                   <p class="text-[14px] text-[#6C757D] font-medium mb-1">Departments</p>
-                  <h3 class="text-[22px] font-bold text-[#212529]">48</h3>
+                  <h3 class="text-[22px] font-bold text-[#212529]">{{ totalDepartments | number }}</h3>
                </div>
                <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600">
                   <span class="material-icons">domain</span>
@@ -61,7 +59,7 @@
             <div class="flex justify-between items-start">
                <div>
                   <p class="text-[14px] text-[#6C757D] font-medium mb-1">Active Services</p>
-                  <h3 class="text-[22px] font-bold text-[#212529]">156</h3>
+                  <h3 class="text-[22px] font-bold text-[#212529]">{{ totalServices | number }}</h3>
                </div>
                <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
                   <span class="material-icons">apps</span>
@@ -80,7 +78,7 @@
             <div class="flex justify-between items-start">
                <div>
                   <p class="text-[14px] text-[#6C757D] font-medium mb-1">Total Reports</p>
-                  <h3 class="text-[22px] font-bold text-[#212529]">2,847</h3>
+                  <h3 class="text-[22px] font-bold text-[#212529]">{{ totalReports | number }}</h3>
                </div>
                <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
                   <span class="material-icons">description</span>

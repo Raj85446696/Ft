@@ -1,7 +1,5 @@
 <!-- My Account Page -->
 <div class="bg-[#f9fafb] relative min-h-screen flex flex-col">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <!-- Main Content -->
   <div class="flex-1 bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
@@ -178,19 +176,35 @@
       <div class="bg-white border text-left border-[#e5e7eb] rounded-[16px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[32px]">
          <h2 class="font-semibold text-[18px] text-[#101828] mb-[20px]">Assigned Apps</h2>
          
-         <div *ngIf="assignedApps.length === 0" class="text-[#6b7280] text-[14px] py-[16px]">
+         <div *ngIf="assignedAppPermissions.length === 0" class="text-[#6b7280] text-[14px] py-[16px]">
            No apps assigned yet.
          </div>
 
-         <div class="flex flex-col border-t border-[#f3f4f6]" *ngIf="assignedApps.length > 0">
-            <div *ngFor="let app of assignedApps" class="flex justify-between items-center py-[16px] border-b border-[#f3f4f6] hover:bg-[#f9fafb] px-[8px] -mx-[8px] rounded-[8px] transition-colors group">
-               <span class="text-[#101828] text-[15px] font-medium">{{ app }}</span>
-               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:stroke-[#155dfc] transition-colors"><polyline points="9 18 15 12 9 6"></polyline></svg>
+         <div class="flex flex-col border-t border-[#f3f4f6]" *ngIf="assignedAppPermissions.length > 0">
+            <div *ngFor="let app of assignedAppPermissions" class="py-[16px] border-b border-[#f3f4f6] hover:bg-[#f9fafb] px-[8px] -mx-[8px] rounded-[8px] transition-colors">
+               <div class="flex items-center justify-between gap-[16px]">
+                  <div>
+                     <p class="text-[#101828] text-[15px] font-medium">{{ app.appName }}</p>
+                     <p class="text-[#6b7280] text-[12px] mt-[2px]">{{ app.appId }}</p>
+                  </div>
+                  <span class="text-[12px] font-semibold text-[#155dfc] bg-[#eff6ff] px-[10px] py-[4px] rounded-full">
+                    {{ app.permissions.length }} permission{{ app.permissions.length === 1 ? '' : 's' }}
+                  </span>
+               </div>
+               <div class="flex flex-wrap gap-[8px] mt-[12px]" *ngIf="app.permissions.length > 0">
+                  <span *ngFor="let permission of app.permissions"
+                    class="inline-flex items-center rounded-full bg-[#f3f4f6] text-[#374151] text-[12px] font-medium px-[10px] py-[5px]">
+                    {{ permission }}
+                  </span>
+               </div>
+               <p *ngIf="app.permissions.length === 0" class="text-[#9ca3af] text-[13px] mt-[10px]">
+                 No specific app permissions assigned.
+               </p>
             </div>
          </div>
 
          <div class="mt-[20px] text-[#6b7280] text-[13px] font-medium">
-            Total Assigned Apps: {{ assignedApps.length }}
+            Total Assigned Apps: {{ assignedAppPermissions.length }}
          </div>
       </div>
 

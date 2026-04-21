@@ -3,10 +3,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { IdentityService } from '../../services/identity.service';
 import { ErrorHandlerService } from '../../services/error-handler.service';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +19,6 @@ export class Login implements OnDestroy {
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);
-  private http = inject(HttpClient);
 
   // Login Form fields
   userId: string = '';
@@ -52,8 +49,8 @@ export class Login implements OnDestroy {
   fpMaxPasswordLen = 50;
 
   // Image assets
-  imgLogo = "/assets/umang-logo.png";
-  imgImageDigitalGovernance = "/assets/adbc9337efe8b479d64a442a73cc00f36b104c5e.png";
+  imgLogo = "/assets/selfcare_toplogo.png";
+  imgImageDigitalGovernance = "/assets/process-flow.png";
   imgIcon = "/assets/5207febf337317eb0f51ce7415f6aa0e143b96ff.svg";
   imgIcon1 = "/assets/1c099cf69f3ff7ac2d367b2d6ac4bc7477441cf8.svg";
   imgIcon2 = "/assets/1c099cf69f3ff7ac2d367b2d6ac4bc7477441cf8.svg"; // lock icon
@@ -108,12 +105,8 @@ export class Login implements OnDestroy {
     this.identityService.login(this.userId, this.password).subscribe({
       next: (response) => {
         this.isLoading = false;
-        console.log('Login response received:', response);
-        
+
         if (response.rs === 'S' && response.pd) {
-          // Login successful
-          console.log('Login successful:', response.pd.mailId);
-          
           // Handle remember me
           if (this.rememberMe) {
             this.saveCredentials();
@@ -123,7 +116,6 @@ export class Login implements OnDestroy {
 
           // Check for first login or password expiry
           if (response.pd.firstLogin === 'Y') {
-            // First login — prompt password change via forgot-password modal
             this.errorMessage = 'First login detected. Please change your password.';
             this.cdr.detectChanges();
             this.fpUserId = this.userId;
@@ -132,7 +124,6 @@ export class Login implements OnDestroy {
             const expiryDate = new Date(response.pd.pwdExpiry);
             const today = new Date();
             if (expiryDate < today) {
-              // Password expired — prompt change via forgot-password modal
               this.errorMessage = 'Your password has expired. Please reset it.';
               this.cdr.detectChanges();
               this.fpUserId = this.userId;
@@ -141,20 +132,15 @@ export class Login implements OnDestroy {
             }
           }
 
-          // Navigate to dashboard
           this.router.navigate(['/dashboard']);
         } else {
-          // Login failed
-          console.log('Login failed - calling handleLoginError with rc:', response.rc, 'rd:', response.rd);
           this.handleLoginError(response.rc, response.rd);
           this.cdr.detectChanges();
         }
       },
       error: (error) => {
         this.isLoading = false;
-        console.error('Login error:', error);
         this.errorMessage = error.message || 'Login failed. Please try again.';
-        console.log('Error callback - errorMessage set to:', this.errorMessage);
         this.cdr.detectChanges();
       }
     });
@@ -164,10 +150,7 @@ export class Login implements OnDestroy {
    * Handle login errors with user-friendly messages
    */
   private handleLoginError(code: string, message: string) {
-    console.log('handleLoginError called with code:', code, 'message:', message);
-    // Use the exact message from backend's rd field
     this.errorMessage = message || 'Login failed. Please try again.';
-    console.log('errorMessage set to:', this.errorMessage);
     this.cdr.detectChanges();
 
     // Handle specific actions based on error code
@@ -276,32 +259,25 @@ export class Login implements OnDestroy {
     this.fpErrorMessage = '';
     this.fpIsLoading = true;
 
-    const requestBody = {
-      userId: this.fpUserId,
-      mno: '',
-      lang: 'en',
-      trkr: 'h' + Date.now()
-    };
-
-    this.http.post<any>(`${environment.identityApiUrl}/ws1/slfinitotp`, requestBody)
-      .subscribe({
-        next: (response) => {
-          this.fpIsLoading = false;
-          
-          if (response.rs === 'S') {
-            this.fpSuccessMessage = `OTP successfully sent to ${this.fpUserId}`;
-            this.fpOtpRequested.set(true);
-            this.fpCanRequestOTP.set(false);
-            this.startFPOTPTimer();
-          } else {
-            this.fpErrorMessage = response.rd || 'Failed to send OTP';
-          }
-        },
-        error: (error) => {
-          this.fpIsLoading = false;
-          this.fpErrorMessage = error.error?.rd || error.error?.message || 'Failed to send OTP. Please try again.';
+    this.identityService.initOtp(this.fpUserId).subscribe({
+      next: (response) => {
+        this.fpIsLoading = false;
+        if (response.rs === 'S') {
+          this.fpSuccessMessage = `OTP successfully sent to ${this.fpUserId}`;
+          this.fpOtpRequested.set(true);
+          this.fpCanRequestOTP.set(false);
+          this.startFPOTPTimer();
+        } else {
+          this.fpErrorMessage = response.rd || 'Failed to send OTP';
         }
-      });
+            this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.fpIsLoading = false;
+        this.fpErrorMessage = error.message || 'Failed to send OTP. Please try again.';
+          this.cdr.detectChanges();
+      }
+    });
   }
 
   /**
@@ -355,52 +331,26 @@ export class Login implements OnDestroy {
     this.fpSuccessMessage = '';
     this.fpIsLoading = true;
 
-    const requestBody = {
-      userId: this.fpUserId,
-      newpwd: this.fpNewPassword,
-      otp: this.fpOtp,
-      lang: 'en',
-      trkr: 'k' + Date.now()
-    };
-
-    this.http.post<any>(`${environment.identityApiUrl}/ws1/slffp`, requestBody)
-      .subscribe({
-        next: (response) => {
-          this.fpIsLoading = false;
-          
-          if (response.rs === 'S') {
-            this.fpSuccessMessage = 'Password has been successfully changed!';
-            this.fpErrorMessage = '';
-            
-            // Close modal after 2 seconds
-            setTimeout(() => {
-              this.closeForgotPasswordModal();
-            }, 2000);
-          } else {
-            this.fpErrorMessage = response.rd || 'Failed to change password';
-          }
-        },
-        error: (error) => {
-          this.fpIsLoading = false;
-          
-          if (error.error?.rc === 'SAO') {
-            // Same as old password — user can try a different password with same OTP
-            this.fpErrorMessage = error.error?.rd || 'New password cannot be the same as your last 3 passwords.';
-            this.fpNewPassword = '';
-            this.fpConfirmPassword = '';
-          } else if (error.error?.rc === 'SLF2002' || error.error?.rc === 'IOT') {
-            // OTP invalid or expired — reset OTP flow
-            this.fpErrorMessage = error.error?.rd || 'OTP has expired. Please request a new one.';
-            this.fpOtp = '';
-            this.fpNewPassword = '';
-            this.fpConfirmPassword = '';
-            this.fpCanRequestOTP.set(true);
-            this.fpOtpRequested.set(false);
-          } else {
-            this.fpErrorMessage = error.error?.rd || error.error?.message || 'Failed to change password. Please try again.';
-          }
+    this.identityService.forgotPassword(this.fpUserId, this.fpNewPassword, this.fpOtp).subscribe({
+      next: (response) => {
+        this.fpIsLoading = false;
+        if (response.rs === 'S') {
+          this.fpSuccessMessage = 'Password has been successfully changed!';
+          this.fpErrorMessage = '';
+          setTimeout(() => {
+            this.closeForgotPasswordModal();
+          }, 2000);
+        } else {
+          this.fpErrorMessage = response.rd || 'Failed to change password';
         }
-      });
+            this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.fpIsLoading = false;
+        this.fpErrorMessage = error.message || 'Failed to change password. Please try again.';
+          this.cdr.detectChanges();
+      }
+    });
   }
 
   /**

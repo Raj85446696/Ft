@@ -1,6 +1,4 @@
 <div class="min-h-screen bg-[#F8F9FA]">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <main class="transition-all duration-300 pt-[96px] pb-8 px-[32px]"
         [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
@@ -26,7 +24,7 @@
         <div class="bg-white p-6 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] flex justify-between items-start hover:shadow-md transition-shadow">
           <div>
             <p class="text-[14px] text-[#6C757D] font-medium mb-1">Active Banners</p>
-            <h3 class="text-[24px] font-bold text-[#212529]">2</h3>
+            <h3 class="text-[24px] font-bold text-[#212529]">{{activeBannerCount}}</h3>
           </div>
           <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600">
             <span class="material-icons text-[24px]">check_circle</span>
@@ -37,7 +35,7 @@
         <div class="bg-white p-6 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] flex justify-between items-start hover:shadow-md transition-shadow">
           <div>
              <p class="text-[14px] text-[#6C757D] font-medium mb-1">Scheduled</p>
-             <h3 class="text-[24px] font-bold text-[#212529]">1</h3>
+             <h3 class="text-[24px] font-bold text-[#212529]">{{scheduledBannerCount}}</h3>
           </div>
           <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
             <span class="material-icons text-[24px]">event</span>
@@ -48,7 +46,7 @@
         <div class="bg-white p-6 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] flex justify-between items-start hover:shadow-md transition-shadow">
            <div>
              <p class="text-[14px] text-[#6C757D] font-medium mb-1">Inactive/Expired</p>
-             <h3 class="text-[24px] font-bold text-[#212529]">1</h3>
+             <h3 class="text-[24px] font-bold text-[#212529]">{{inactiveBannerCount}}</h3>
            </div>
           <div class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-500">
             <span class="material-icons text-[24px]">block</span>
@@ -59,7 +57,7 @@
         <div class="bg-white p-6 rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] flex justify-between items-start hover:shadow-md transition-shadow">
            <div>
              <p class="text-[14px] text-[#6C757D] font-medium mb-1">Total Clicks</p>
-             <h3 class="text-[24px] font-bold text-[#212529]">5,526</h3>
+             <h3 class="text-[24px] font-bold text-[#212529]">{{totalClickCount | number}}</h3>
            </div>
           <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
             <span class="material-icons text-[24px]">touch_app</span>
@@ -107,7 +105,7 @@
       <div class="bg-white rounded-[12px] shadow-[0_4px_6px_rgba(0,0,0,0.05)] border border-[#e5e7eb] overflow-hidden">
         <div class="p-6 border-b border-[#e5e7eb] flex justify-between items-center bg-white">
            <h2 class="text-[16px] font-bold text-[#212529]">Banner Statistics</h2>
-           <span class="text-[13px] font-medium text-[#6C757D]">Active Banners: <span class="font-bold text-[#212529]">2 / 4</span></span>
+           <span class="text-[13px] font-medium text-[#6C757D]">Active Banners: <span class="font-bold text-[#212529]">{{activeBannerCount}} / {{banners.length}}</span></span>
         </div>
         
         <div class="p-6 space-y-6">

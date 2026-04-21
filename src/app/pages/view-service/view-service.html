@@ -1,184 +1,197 @@
 <div class="min-h-screen bg-[#f9fafb]">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
-  <!-- Main Content Padding -->
   <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
     [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
-    
-    <div class="max-w-[1000px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-      
-      <!-- Breadcrumbs & Header -->
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="flex items-center justify-center py-[80px]">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#155dfc]"></div>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!isLoading && service" class="max-w-[1000px] mx-auto animate-in fade-in duration-500">
+
+      <!-- Header -->
       <div class="flex items-center justify-between mb-[32px]">
         <div class="space-y-2">
           <a routerLink="/app-inside/services" class="inline-flex items-center gap-[8px] text-[14px] text-[#4a5565] font-medium hover:text-[#155dfc] transition-colors cursor-pointer">
             <span class="material-icons text-[18px]">arrow_back</span>
-            Back to Service Plus
+            Back to Services
           </a>
           <h1 class="text-[28px] font-bold text-[#101828] flex items-center gap-[12px]">
-            {{service.title}}
-            <span [ngClass]="service.isActive ? 'bg-[#dcfce7] text-[#008236] border-[#bbf7d0]' : 'bg-[#f3f4f6] text-[#364153] border-[#e5e7eb]'" class="px-3 py-1 rounded-full text-[12px] font-bold border tracking-wide uppercase align-middle">
-              {{service.isActive ? 'Active' : 'Inactive'}}
+            {{ service.title || 'Service Details' }}
+            <span [ngClass]="service.isActive ? 'bg-[#dcfce7] text-[#008236] border-[#bbf7d0]' : 'bg-[#f3f4f6] text-[#364153] border-[#e5e7eb]'"
+              class="px-3 py-1 rounded-full text-[12px] font-bold border tracking-wide uppercase align-middle">
+              {{ service.isActive ? 'Active' : 'Inactive' }}
             </span>
           </h1>
         </div>
-        <button routerLink="/edit-service" class="h-[44px] px-[24px] text-[14px] font-medium text-[#155dfc] bg-[#eff6ff] rounded-[8px] hover:bg-blue-100 flex items-center gap-[8px] transition-colors">
+        <button [routerLink]="['/edit-service', serviceId]"
+          class="h-[44px] px-[24px] text-[14px] font-medium text-[#155dfc] bg-[#eff6ff] rounded-[8px] hover:bg-blue-100 flex items-center gap-[8px] transition-colors">
           <span class="material-icons text-[18px]">edit</span>
           Edit Service
         </button>
       </div>
 
-      <!-- Main Data Container -->
+      <!-- Card -->
       <div class="bg-white rounded-[14px] border border-[#e5e7eb] shadow-sm p-[32px] space-y-[32px]">
-        
-        <!-- SECTION 1: Logo Preview -->
+
+        <!-- Branding -->
         <div class="space-y-[16px]">
           <h3 class="text-[18px] font-semibold text-[#101828] border-b border-[#e5e7eb] pb-[12px]">Service Branding</h3>
           <div class="flex items-center gap-[24px]">
-            <div class="w-[100px] h-[100px] rounded-[16px] bg-gradient-to-br from-[#eff6ff] to-[#eef2ff] border border-[#dbeafe] flex items-center justify-center p-[16px] shadow-sm">
-               <img src="/assets/vaccination_service_icon_1774859915087.png" alt="Service Logo" class="object-contain w-full h-full">
+            <div class="w-[100px] h-[100px] rounded-[16px] bg-gradient-to-br from-[#eff6ff] to-[#eef2ff] border border-[#dbeafe] flex items-center justify-center p-[16px] shadow-sm overflow-hidden">
+              <img *ngIf="service.image" [src]="service.image" [alt]="service.title" class="object-contain w-full h-full">
+              <span *ngIf="!service.image" class="material-icons text-[40px] text-[#155dfc]">apps</span>
             </div>
             <div class="space-y-[4px]">
-               <p class="text-[15px] font-bold text-[#101828]">Official Logo</p>
-               <p class="text-[13px] text-[#6a7282]">Verified digital branding asset</p>
+              <p class="text-[15px] font-bold text-[#101828]">{{ service.title }}</p>
+              <p class="text-[13px] text-[#6a7282]">Service ID: {{ service.serviceId }}</p>
             </div>
           </div>
         </div>
 
         <hr class="border-[#e5e7eb]">
 
-        <!-- SECTION 2: Basic Details -->
+        <!-- Basic Details -->
         <div class="space-y-[24px]">
           <h3 class="text-[18px] font-semibold text-[#101828] border-b border-[#e5e7eb] pb-[12px]">Basic Details</h3>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-[32px]">
             <div class="space-y-[6px]">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Department Name</label>
-              <p class="text-[15px] font-medium text-[#101828] break-words">{{service.department}}</p>
+              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Department ID</label>
+              <p class="text-[15px] font-medium text-[#101828]">{{ service.department || 'N/A' }}</p>
             </div>
             <div class="space-y-[6px]">
               <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Service Title</label>
-              <p class="text-[15px] font-medium text-[#101828] break-words">{{service.title}}</p>
+              <p class="text-[15px] font-medium text-[#101828]">{{ service.title || 'N/A' }}</p>
             </div>
           </div>
 
           <div class="space-y-[6px]">
-            <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Service Description</label>
-            <p class="text-[15px] text-[#364153] leading-relaxed break-words bg-[#f9fafb] p-[16px] rounded-[10px] border border-[#f3f4f6]">
-              {{service.description}}
+            <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Description</label>
+            <p class="text-[15px] text-[#364153] leading-relaxed bg-[#f9fafb] p-[16px] rounded-[10px] border border-[#f3f4f6]">
+              {{ service.description || 'No description provided.' }}
             </p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-[32px]">
             <div class="space-y-[6px]">
               <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Service ID</label>
-              <p class="text-[15px] font-mono font-medium text-[#155dfc] break-words">{{service.serviceId}}</p>
+              <p class="text-[15px] font-mono font-medium text-[#155dfc]">{{ service.serviceId }}</p>
             </div>
             <div class="space-y-[6px]">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Service Owner Code</label>
-              <p class="text-[15px] font-mono font-medium text-[#101828] break-words">{{service.ownerCode}}</p>
+              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Department Type</label>
+              <p class="text-[15px] font-medium text-[#101828]">{{ service.deptType || 'N/A' }}</p>
             </div>
           </div>
         </div>
 
         <hr class="border-[#e5e7eb]">
 
-        <!-- SECTION 3: Classification -->
+        <!-- Classification -->
         <div class="space-y-[24px]">
           <h3 class="text-[18px] font-semibold text-[#101828] border-b border-[#e5e7eb] pb-[12px]">Classification</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-[32px]">
             <div class="space-y-[6px]">
               <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Category</label>
-              <p class="text-[15px] font-medium text-[#101828] break-words">{{service.category}}</p>
+              <p class="text-[15px] font-medium text-[#101828]">{{ service.category || 'N/A' }}</p>
             </div>
             <div class="space-y-[6px]">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Search Keywords</label>
-              <div class="flex flex-wrap gap-[8px] mt-[4px]">
-                 <span *ngFor="let kw of service.keywords.split(',')" class="px-[10px] py-[4px] bg-[#f3f4f6] text-[#4a5565] rounded-[6px] text-[13px] font-medium">
-                   {{kw.trim()}}
-                 </span>
+              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Language</label>
+              <p class="text-[15px] font-medium text-[#101828]">{{ service.language || 'N/A' }}</p>
+            </div>
+          </div>
+          <div class="space-y-[6px]" *ngIf="keywordList.length > 0">
+            <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Search Keywords</label>
+            <div class="flex flex-wrap gap-[8px] mt-[4px]">
+              <span *ngFor="let kw of keywordList"
+                class="px-[10px] py-[4px] bg-[#f3f4f6] text-[#4a5565] rounded-[6px] text-[13px] font-medium">
+                {{ kw }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="border-[#e5e7eb]">
+
+        <!-- Service Flags -->
+        <div class="space-y-[16px]">
+          <h3 class="text-[18px] font-semibold text-[#101828] border-b border-[#e5e7eb] pb-[12px]">Service Flags</h3>
+          <div class="flex flex-wrap gap-[12px]">
+
+            <div class="flex items-center gap-[10px] px-[16px] py-[10px] rounded-[10px] border"
+              [ngClass]="service.flagnew === 'yes' ? 'bg-[#f5f8ff] border-[#155dfc]' : 'bg-[#f9fafb] border-[#e5e7eb]'">
+              <div class="w-[20px] h-[20px] rounded-[4px] border-2 flex items-center justify-center"
+                [ngClass]="service.flagnew === 'yes' ? 'bg-[#155dfc] border-[#155dfc]' : 'border-[#d1d5dc] bg-white'">
+                <span *ngIf="service.flagnew === 'yes'" class="material-icons text-white text-[14px]">check</span>
               </div>
+              <span class="text-[14px] font-medium" [ngClass]="service.flagnew === 'yes' ? 'text-[#155dfc]' : 'text-[#9ca3af]'">New</span>
             </div>
+
+            <div class="flex items-center gap-[10px] px-[16px] py-[10px] rounded-[10px] border"
+              [ngClass]="service.popular === 'yes' ? 'bg-[#fffbf0] border-[#f59e0b]' : 'bg-[#f9fafb] border-[#e5e7eb]'">
+              <div class="w-[20px] h-[20px] rounded-[4px] border-2 flex items-center justify-center"
+                [ngClass]="service.popular === 'yes' ? 'bg-[#f59e0b] border-[#f59e0b]' : 'border-[#d1d5dc] bg-white'">
+                <span *ngIf="service.popular === 'yes'" class="material-icons text-white text-[14px]">check</span>
+              </div>
+              <span class="text-[14px] font-medium" [ngClass]="service.popular === 'yes' ? 'text-[#f59e0b]' : 'text-[#9ca3af]'">Popular</span>
+            </div>
+
+            <div class="flex items-center gap-[10px] px-[16px] py-[10px] rounded-[10px] border"
+              [ngClass]="service.trending === 'yes' ? 'bg-[#f0fdf4] border-[#00a63e]' : 'bg-[#f9fafb] border-[#e5e7eb]'">
+              <div class="w-[20px] h-[20px] rounded-[4px] border-2 flex items-center justify-center"
+                [ngClass]="service.trending === 'yes' ? 'bg-[#00a63e] border-[#00a63e]' : 'border-[#d1d5dc] bg-white'">
+                <span *ngIf="service.trending === 'yes'" class="material-icons text-white text-[14px]">check</span>
+              </div>
+              <span class="text-[14px] font-medium" [ngClass]="service.trending === 'yes' ? 'text-[#00a63e]' : 'text-[#9ca3af]'">Trending</span>
+            </div>
+
           </div>
         </div>
 
         <hr class="border-[#e5e7eb]">
 
-        <!-- SECTION 4: Address Information -->
+        <!-- Contact Info -->
         <div class="space-y-[24px]">
-          <h3 class="text-[18px] font-semibold text-[#101828] border-b border-[#e5e7eb] pb-[12px]">Address Information</h3>
+          <h3 class="text-[18px] font-semibold text-[#101828] border-b border-[#e5e7eb] pb-[12px]">Contact Information</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-[32px]">
             <div class="space-y-[6px]">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Address Info 1</label>
-              <p class="text-[15px] font-medium text-[#101828] break-words">{{service.address1 || 'N/A'}}</p>
+              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Contact</label>
+              <p class="text-[15px] font-medium text-[#101828]">{{ service.contact || 'N/A' }}</p>
             </div>
             <div class="space-y-[6px]">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Address Info 2</label>
-              <p class="text-[15px] font-medium text-[#101828] break-words">{{service.address2 || 'N/A'}}</p>
+              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Email</label>
+              <p class="text-[15px] font-medium text-[#101828]">{{ service.email || 'N/A' }}</p>
             </div>
-          </div>
-        </div>
-
-        <hr class="border-[#e5e7eb]">
-
-        <!-- SECTION 5: Configuration -->
-        <div class="space-y-[24px]">
-          <h3 class="text-[18px] font-semibold text-[#101828] border-b border-[#e5e7eb] pb-[12px]">Configuration</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-[32px]">
             <div class="space-y-[6px]">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">FAQ</label>
-              <a *ngIf="service.faq" [href]="service.faq" target="_blank" class="text-[15px] font-medium text-[#155dfc] hover:underline flex items-center gap-[4px]">
-                {{service.faq}} <span class="material-icons text-[16px]">open_in_new</span>
+              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Website</label>
+              <a *ngIf="service.website" [href]="service.website" target="_blank"
+                class="text-[15px] font-medium text-[#155dfc] hover:underline flex items-center gap-[4px]">
+                {{ service.website }} <span class="material-icons text-[16px]">open_in_new</span>
               </a>
-              <p *ngIf="!service.faq" class="text-[15px] text-[#9ca3af]">Not provided</p>
+              <p *ngIf="!service.website" class="text-[15px] text-[#9ca3af]">N/A</p>
             </div>
             <div class="space-y-[6px]">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Tiny URL</label>
-              <a *ngIf="service.tinyUrl" [href]="service.tinyUrl" target="_blank" class="text-[15px] font-medium text-[#155dfc] hover:underline flex items-center gap-[4px]">
-                {{service.tinyUrl}} <span class="material-icons text-[16px]">open_in_new</span>
+              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">URL / Tiny URL</label>
+              <a *ngIf="service.tinyUrl" [href]="service.tinyUrl" target="_blank"
+                class="text-[15px] font-medium text-[#155dfc] hover:underline flex items-center gap-[4px]">
+                {{ service.tinyUrl }} <span class="material-icons text-[16px]">open_in_new</span>
               </a>
-              <p *ngIf="!service.tinyUrl" class="text-[15px] text-[#9ca3af]">Not provided</p>
+              <p *ngIf="!service.tinyUrl" class="text-[15px] text-[#9ca3af]">N/A</p>
             </div>
-            <div class="space-y-[6px] md:col-span-2">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Secret Key</label>
-              <p class="text-[15px] font-mono font-medium text-[#101828] break-words flex items-center gap-[12px]">
-                {{service.secretKey}} 
-                <span class="material-icons text-[#9ca3af] text-[18px] cursor-pointer hover:text-[#155dfc]">visibility_off</span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <hr class="border-[#e5e7eb]">
-
-        <!-- SECTION 6: Technical Details -->
-        <div class="space-y-[24px]">
-          <h3 class="text-[18px] font-semibold text-[#101828] border-b border-[#e5e7eb] pb-[12px]">Technical Details</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-[32px]">
-            <div class="space-y-[6px]">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Service Language</label>
-              <p class="text-[15px] font-medium text-[#101828] break-words">{{service.language}}</p>
-            </div>
-            <div class="space-y-[6px]">
-              <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Redirect API (Optional)</label>
-              <p class="text-[15px] font-mono font-medium text-[#101828] break-words">{{service.redirectApi || 'None'}}</p>
-            </div>
-            <div class="space-y-[6px]">
-               <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Instance ID</label>
-               <p class="text-[15px] font-mono font-medium text-[#101828] break-words">{{service.instanceId}}</p>
-             </div>
-             <div class="space-y-[6px]">
-               <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Dynamic Value Path</label>
-               <p class="text-[15px] font-mono font-medium text-[#101828] break-words">{{service.dynamicPath}}</p>
-             </div>
-             <div class="space-y-[6px]">
-               <label class="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider">Version Code</label>
-               <p class="text-[15px] font-mono font-medium text-[#155dfc] break-words bg-[#eff6ff] inline-flex px-[8px] py-[2px] rounded-[4px] border border-[#dbeafe]">{{service.versionCode}}</p>
-             </div>
           </div>
         </div>
 
       </div>
     </div>
+
+    <!-- No data state -->
+    <div *ngIf="!isLoading && !service" class="flex flex-col items-center justify-center py-[80px] text-center">
+      <span class="material-icons text-[48px] text-[#9ca3af] mb-4">info</span>
+      <p class="text-[16px] text-[#4a5565]">Service not found.</p>
+      <a routerLink="/app-inside/services" class="mt-4 text-[#155dfc] hover:underline text-[14px]">Back to Services</a>
+    </div>
+
   </div>
 </div>

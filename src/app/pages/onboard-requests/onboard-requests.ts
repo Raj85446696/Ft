@@ -1,11 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
-import { Navbar } from '../../components/navbar/navbar';
-import { Sidebar } from '../../components/sidebar/sidebar';
 import { IdentityService, ChildUser } from '../../services/identity.service';
+import Swal from 'sweetalert2';
 
 interface OnboardRequest {
   id: string;
@@ -20,11 +19,12 @@ interface OnboardRequest {
 @Component({
   selector: 'app-onboard-requests',
   standalone: true,
-  imports: [CommonModule, FormsModule, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule],
   templateUrl: './onboard-requests.html',
   styleUrl: './onboard-requests.css'
 })
 export class OnboardRequests implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
   router = inject(Router);
   identityService = inject(IdentityService);
@@ -33,6 +33,7 @@ export class OnboardRequests implements OnInit {
   searchQuery = '';
   requests: OnboardRequest[] = [];
   loading = false;
+  errorMessage = '';
 
   ngOnInit() {
     this.loadRequests();
@@ -40,6 +41,7 @@ export class OnboardRequests implements OnInit {
 
   loadRequests() {
     this.loading = true;
+    this.errorMessage = '';
     this.identityService.fetchAllUsers().subscribe({
       next: (response) => {
         if (response.rs === 'S' && response.pd?.app) {
@@ -47,13 +49,15 @@ export class OnboardRequests implements OnInit {
             .filter(u => (u.utype || '').toLowerCase() === 'registered')
             .map(u => this.mapToRequest(u));
         } else {
-          console.error('Failed to load requests:', response.rd);
+          this.errorMessage = response.rd || 'Failed to load requests';
         }
         this.loading = false;
+            this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error loading requests:', err);
+        this.errorMessage = 'Failed to load requests: ' + (err.message || 'Unknown error');
         this.loading = false;
+          this.cdr.detectChanges();
       }
     });
   }
@@ -80,7 +84,7 @@ export class OnboardRequests implements OnInit {
   get rejectedCount() { return this.requests.filter(r => r.status === 'Rejected').length; }
 
   filteredRequests() {
-    return this.requests.filter(r => 
+    return this.requests.filter(r =>
       r.status === this.activeTab &&
       (r.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
        r.email.toLowerCase().includes(this.searchQuery.toLowerCase()))
@@ -92,40 +96,60 @@ export class OnboardRequests implements OnInit {
   }
 
   onApprove(request: OnboardRequest) {
-    if (confirm(`Approve onboard request for ${request.name}?`)) {
-      this.identityService.updateUserStatus(request.email, 'active', 'Approved by admin').subscribe({
-        next: (response) => {
-          if (response.rs === 'S') {
-            request.status = 'Approved';
-            alert('User approved successfully!');
-          } else {
-            alert('Failed to approve: ' + response.rd);
+    Swal.fire({
+      title: 'Approve Request?',
+      text: `Approve onboard request for ${request.name}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#155dfc',
+      confirmButtonText: 'Approve'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.identityService.updateUserStatus(request.email, 'active', 'Approved by admin').subscribe({
+          next: (response) => {
+            if (response.rs === 'S') {
+              request.status = 'Approved';
+              Swal.fire('Approved', 'User approved successfully!', 'success');
+            } else {
+              Swal.fire('Error', response.rd || 'Failed to approve request', 'error');
+            }
+                this.cdr.detectChanges();
+          },
+          error: () => {
+            Swal.fire('Error', 'Failed to approve user', 'error');
+            this.cdr.detectChanges();
           }
-        },
-        error: (err) => {
-          alert('Error approving user: ' + err.message);
-          console.error('Approve error:', err);
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   onReject(request: OnboardRequest) {
-    if (confirm(`Reject and remove onboard request for ${request.name}?`)) {
-      this.identityService.deleteUser(request.email, 'Rejected by admin').subscribe({
-        next: (response) => {
-          if (response.rs === 'S') {
-            this.requests = this.requests.filter(r => r.email !== request.email);
-            alert('Onboard request rejected and user removed.');
-          } else {
-            alert('Failed to reject: ' + response.rd);
+    Swal.fire({
+      title: 'Reject Request?',
+      text: `Reject and remove onboard request for ${request.name}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      confirmButtonText: 'Reject'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.identityService.deleteUser(request.email, 'Rejected by admin').subscribe({
+          next: (response) => {
+            if (response.rs === 'S') {
+              this.requests = this.requests.filter(r => r.email !== request.email);
+              Swal.fire('Rejected', 'Onboard request rejected and user removed.', 'success');
+            } else {
+              Swal.fire('Error', response.rd || 'Failed to reject request', 'error');
+            }
+                this.cdr.detectChanges();
+          },
+          error: () => {
+            Swal.fire('Error', 'Failed to reject user', 'error');
+            this.cdr.detectChanges();
           }
-        },
-        error: (err) => {
-          alert('Error rejecting user: ' + err.message);
-          console.error('Reject error:', err);
-        }
-      });
-    }
+        });
+      }
+    });
   }
 }

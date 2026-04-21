@@ -1,7 +1,5 @@
 <!-- View Department Page -->
 <div class="bg-white relative min-h-screen flex flex-col">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <!-- Main Content -->
   <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
@@ -24,7 +22,7 @@
             <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             Close
           </button>
-          <button routerLink="/edit-department" class="flex items-center gap-[8px] bg-[#155dfc] text-white h-[44px] px-[24px] rounded-[10px] shadow-sm hover:bg-[#1447e6] font-medium text-[16px] transition-colors cursor-pointer">
+          <button [routerLink]="['/edit-department', deptId]" class="flex items-center gap-[8px] bg-[#155dfc] text-white h-[44px] px-[24px] rounded-[10px] shadow-sm hover:bg-[#1447e6] font-medium text-[16px] transition-colors cursor-pointer">
             <svg xmlns="http://www.w-images.com/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
             Edit
           </button>

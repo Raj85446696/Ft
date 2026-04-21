@@ -1,20 +1,25 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Sidebar } from '../../components/sidebar/sidebar';
-import { Navbar } from '../../components/navbar/navbar';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
-import { IdentityService } from '../../services/identity.service';
+import { IdentityService, FetchedRight } from '../../services/identity.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 
+interface AssignedAppPermission {
+  appId: string;
+  appName: string;
+  permissions: string[];
+}
+
 @Component({
   selector: 'app-my-account',
   standalone: true,
-  imports: [Sidebar, Navbar, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './my-account.html',
   styleUrl: './my-account.css',
 })
 export class MyAccount implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
   identityService = inject(IdentityService);
 
@@ -32,6 +37,8 @@ export class MyAccount implements OnInit {
   };
 
   assignedApps: string[] = [];
+  assignedAppPermissions: AssignedAppPermission[] = [];
+  private rightNameMap = new Map<string, string>();
 
   // Edit state
   editingField: string | null = null;
@@ -49,6 +56,7 @@ export class MyAccount implements OnInit {
 
   ngOnInit() {
     this.loadProfile();
+    this.loadRightCatalog();
   }
 
   loadProfile() {
@@ -79,7 +87,99 @@ export class MyAccount implements OnInit {
       if (profile.apps?.length) {
         this.assignedApps = profile.apps.map((app: { appname: string }) => app.appname).filter(Boolean);
       }
+
+      this.assignedAppPermissions = this.buildAssignedAppPermissions(profile);
+      if (this.assignedApps.length === 0 && this.assignedAppPermissions.length > 0) {
+        this.assignedApps = this.assignedAppPermissions.map(app => app.appName);
+      }
     }
+  }
+
+  loadRightCatalog() {
+    this.identityService.fetchRights().subscribe({
+      next: (res) => {
+        if (res.rs === 'S' && res.rights?.length) {
+          this.rightNameMap = new Map(
+            res.rights.map((right: FetchedRight) => [
+              right.rightid,
+              right.displayRightName || right.rightnam || `Permission ${right.rightid}`
+            ])
+          );
+          this.assignedAppPermissions = this.assignedAppPermissions.map(app => ({
+            ...app,
+            permissions: app.permissions.map(permission => this.rightNameMap.get(permission) || permission)
+          }));
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  private buildAssignedAppPermissions(profile: any): AssignedAppPermission[] {
+    const appsById = new Map<string, AssignedAppPermission>();
+    const appNameById = new Map<string, string>();
+
+    if (Array.isArray(profile?.apps)) {
+      profile.apps.forEach((app: any) => {
+        const appId = String(app?.appid || app?.appId || '').trim();
+        const appName = String(app?.appname || app?.appName || '').trim();
+        const rights = this.parseRights(app?.rights);
+
+        if (appId) {
+          appNameById.set(appId, appName || `App ${appId}`);
+        }
+
+        if (appId || appName) {
+          const key = appId || appName;
+          appsById.set(key, {
+            appId: appId || key,
+            appName: appName || `App ${appId || key}`,
+            permissions: this.mapRightIdsToNames(rights)
+          });
+        }
+      });
+    }
+
+    const previousRights = profile?.previousRights || profile?.PreviousRights || [];
+    if (Array.isArray(previousRights)) {
+      previousRights.forEach((entry: any) => {
+        const appId = String(entry?.app || '').trim();
+        if (!appId) return;
+
+        const permissionNames = this.mapRightIdsToNames(this.parseRights(entry?.rights));
+        const existing = appsById.get(appId);
+        const appName = appNameById.get(appId) || `App ${appId}`;
+
+        if (existing) {
+          existing.permissions = Array.from(new Set([...existing.permissions, ...permissionNames]));
+          if (!existing.appName || existing.appName === `App ${appId}`) {
+            existing.appName = appName;
+          }
+        } else {
+          appsById.set(appId, {
+            appId,
+            appName,
+            permissions: permissionNames
+          });
+        }
+      });
+    }
+
+    return Array.from(appsById.values());
+  }
+
+  private parseRights(rights: unknown): string[] {
+    if (typeof rights !== 'string' || !rights.trim()) return [];
+    return rights.split(',').map(id => id.trim()).filter(Boolean);
+  }
+
+  private mapRightIdsToNames(rightIds: string[]): string[] {
+    return Array.from(new Set(
+      rightIds.map(rightId => this.rightNameMap.get(rightId) || rightId)
+    ));
   }
 
   startEdit(field: string) {
@@ -131,6 +231,7 @@ export class MyAccount implements OnInit {
             text: res.rd || 'Something went wrong. Please try again.'
           });
         }
+            this.cdr.detectChanges();
       },
       error: (err) => {
         this.saving = false;
@@ -139,6 +240,7 @@ export class MyAccount implements OnInit {
           title: 'Update Failed',
           text: err.message || 'Something went wrong. Please try again.'
         });
+          this.cdr.detectChanges();
       }
     });
   }
@@ -189,6 +291,7 @@ export class MyAccount implements OnInit {
             text: res.rd || 'Password change failed.'
           });
         }
+            this.cdr.detectChanges();
       },
       error: (err) => {
         this.saving = false;
@@ -197,6 +300,7 @@ export class MyAccount implements OnInit {
           title: 'Failed',
           text: err.message || 'Password change failed.'
         });
+          this.cdr.detectChanges();
       }
     });
   }

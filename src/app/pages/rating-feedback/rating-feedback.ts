@@ -1,41 +1,104 @@
-import { Component, inject } from '@angular/core';
-import { Sidebar } from '../../components/sidebar/sidebar';
-import { Navbar } from '../../components/navbar/navbar';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
+import { CoreService } from '../../services/core.service';
 
 @Component({
   selector: 'app-rating-feedback',
   standalone: true,
-  imports: [Sidebar, Navbar, CommonModule],
+  imports: [CommonModule],
   templateUrl: './rating-feedback.html',
   styleUrl: './rating-feedback.css',
 })
-export class RatingFeedback {
+export class RatingFeedback implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
+  private coreService = inject(CoreService);
 
-  // Icons used in cards and ratings
-  // Note: These hashes are from the Figma design provided. 
-  // If they are not found, we can use existing placeholders or Lucide icons.
-  imgStar = '/assets/17c3bfa3481f16d2c6ffd8c73a883c67bdb68635.svg'; // Using a verified star icon
-  imgReviews = '/assets/1da71bf95465b4d58e5dc91618fbe2c6ad258fc0.svg'; // Placeholder chat/message
-  imgSatisfaction = '/assets/7548c0ab9f021aff37480c5678c8da2b95582612.svg'; // Placeholder trend
+  imgStar = '/assets/17c3bfa3481f16d2c6ffd8c73a883c67bdb68635.svg';
+  imgReviews = '/assets/1da71bf95465b4d58e5dc91618fbe2c6ad258fc0.svg';
+  imgSatisfaction = '/assets/7548c0ab9f021aff37480c5678c8da2b95582612.svg';
 
-  serviceRatings = [
-    { name: 'Vaccination Certificate', reviews: 2450, rating: 4.8, change: '+0.3', changeType: 'up' },
-    { name: 'Tax Filing', reviews: 1890, rating: 4.6, change: '+0.2', changeType: 'up' },
-    { name: 'Admit Card Download', reviews: 3200, rating: 4.9, change: '+0.1', changeType: 'up' },
-    { name: 'Driving License', reviews: 980, rating: 4.2, change: '-0.1', changeType: 'down' },
-    { name: 'Electricity Bill', reviews: 1560, rating: 4.5, change: '+0.4', changeType: 'up' },
-  ];
+  isLoading = true;
+  serviceRatings: any[] = [];
+  userFeedback: any[] = [];
 
-  userFeedback = [
-    { name: 'Rahul Sharma', service: 'Vaccination Certificate', rating: 5, comment: 'Excellent service! Very smooth process.', time: '2 hours ago' },
-    { name: 'Priya Patel', service: 'Tax Filing', rating: 4, comment: 'Good experience, but could be faster.', time: '5 hours ago' },
-    { name: 'Amit Kumar', service: 'Admit Card', rating: 5, comment: 'Perfect! Got my admit card instantly.', time: '1 day ago' },
-    { name: 'Sneha Reddy', service: 'Driving License', rating: 3, comment: 'Process was confusing at times.', time: '1 day ago' },
-    { name: 'Vikram Singh', service: 'Electricity Bill', rating: 5, comment: 'Very convenient and easy to use.', time: '2 days ago' },
-  ];
+  ngOnInit() {
+    this.loadRatings();
+  }
+
+  loadRatings() {
+    this.isLoading = true;
+    this.coreService.searchServices().subscribe({
+      next: (res) => {
+        if (res.rs === 'S' && res.pd) {
+          const services = Array.isArray(res.pd) ? res.pd : [res.pd];
+          const topServices = services.slice(0, 10);
+
+          this.serviceRatings = topServices.map((s: any) => ({
+            name: s.serviceName || s.sname || s.categoryName || '',
+            reviews: 0,
+            rating: parseFloat(s.avgrating) || 0,
+            change: '+0.0',
+            changeType: 'up',
+            srid: s.serviceId || s.srid || ''
+          }));
+
+          // Load detailed ratings for each service
+          topServices.forEach((s: any, i: number) => {
+            const srid = s.serviceId || s.srid;
+            if (srid) {
+              this.coreService.getServiceRating(Number(srid)).subscribe({
+                next: (ratingRes) => {
+                  if (ratingRes.success && ratingRes.data) {
+                    this.serviceRatings[i].reviews = ratingRes.data.totalRatings || 0;
+                    this.serviceRatings[i].rating = ratingRes.data.avg || 0;
+                  }
+                      this.cdr.detectChanges();
+                }
+              });
+
+              // Load comments for user feedback
+              if (i < 5) {
+                this.coreService.getRatingComments(Number(srid), 0, 5).subscribe({
+                  next: (commentsRes) => {
+                    if (commentsRes.success && commentsRes.data?.comments) {
+                      commentsRes.data.comments.forEach((c: any) => {
+                        this.userFeedback.push({
+                          name: `User #${c.uid}`,
+                          service: this.serviceRatings[i]?.name || '',
+                          rating: c.currentRating || 0,
+                          comment: c.comments || 'No comment',
+                          time: c.createdDate || ''
+                        });
+                      });
+                    }
+                        this.cdr.detectChanges();
+                  }
+                });
+              }
+            }
+          });
+        }
+        this.isLoading = false;
+            this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoading = false;
+          this.cdr.detectChanges();
+      }
+    });
+  }
+
+  get avgRating(): number {
+    if (!this.serviceRatings.length) return 0;
+    const sum = this.serviceRatings.reduce((s, r) => s + (r.rating || 0), 0);
+    return Math.round((sum / this.serviceRatings.length) * 10) / 10;
+  }
+
+  get totalReviews(): number {
+    return this.serviceRatings.reduce((s, r) => s + (r.reviews || 0), 0);
+  }
 
   getStarsArray(rating: number): number[] {
     return Array(5).fill(0).map((_, i) => i < rating ? 1 : 0);

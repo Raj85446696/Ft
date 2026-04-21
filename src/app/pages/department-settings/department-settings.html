@@ -1,7 +1,5 @@
 <!-- Department Settings Page -->
 <div class="bg-white relative min-h-screen flex flex-col">
-  <app-navbar></app-navbar>
-  <app-sidebar></app-sidebar>
 
   <!-- Main Content -->
   <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
@@ -20,19 +18,46 @@
           </div>
           <div>
             <h1 class="font-['Inter:Bold',sans-serif] font-bold text-[30px] text-[#101828] leading-[36px]">
-              Department Settings
+              {{ deptName || 'Department Settings' }}
             </h1>
-            <p class="text-[#6b7280] text-[14px] mt-[4px]">Health • Central Department • 45 Services</p>
+            <p class="text-[#6b7280] text-[14px] mt-[4px]">
+              <ng-container *ngIf="deptCategory">{{ deptCategory }} • </ng-container>
+              <ng-container *ngIf="deptType">{{ deptType }} • </ng-container>
+              {{ activeServiceCount !== null ? activeServiceCount + ' Active Services' : 'Loading...' }}
+            </p>
           </div>
         </div>
-        <button class="bg-[#155dfc] text-white h-[44px] px-[24px] rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)] hover:bg-[#1447e6] font-medium text-[16px] transition-colors cursor-pointer">
-          Save Changes
+        <button *ngIf="activeTab === 'visibility'"
+          (click)="saveVisibility()"
+          [disabled]="isSavingVisibility"
+          class="bg-[#155dfc] text-white h-[44px] px-[24px] rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)] hover:bg-[#1447e6] font-medium text-[16px] transition-colors cursor-pointer disabled:opacity-60">
+          {{ isSavingVisibility ? 'Saving...' : 'Save Visibility' }}
+        </button>
+        <button *ngIf="activeTab === 'faqs'"
+          (click)="openAddFaq()"
+          class="bg-[#155dfc] text-white h-[44px] px-[24px] rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)] hover:bg-[#1447e6] font-medium text-[16px] transition-colors cursor-pointer flex items-center gap-[8px]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Add FAQ
         </button>
       </div>
     </div>
 
+    <!-- Tab Navigation -->
+    <div class="flex gap-[4px] mb-[24px] border-b border-[#e5e7eb]">
+      <button (click)="activeTab = 'visibility'"
+        class="px-[20px] py-[10px] text-[14px] font-medium transition-colors border-b-2 -mb-[2px]"
+        [ngClass]="activeTab === 'visibility' ? 'text-[#155dfc] border-[#155dfc]' : 'text-[#6b7280] border-transparent hover:text-[#101828]'">
+        Visibility &amp; Platform
+      </button>
+      <button (click)="activeTab = 'faqs'"
+        class="px-[20px] py-[10px] text-[14px] font-medium transition-colors border-b-2 -mb-[2px]"
+        [ngClass]="activeTab === 'faqs' ? 'text-[#155dfc] border-[#155dfc]' : 'text-[#6b7280] border-transparent hover:text-[#101828]'">
+        FAQs <span *ngIf="faqs.length > 0" class="ml-[6px] bg-[#eff6ff] text-[#155dfc] text-[11px] px-[6px] py-[2px] rounded-full">{{faqs.length}}</span>
+      </button>
+    </div>
+
     <!-- Grid Content (70-30 split) -->
-    <div class="grid grid-cols-12 gap-[24px]">
+    <div *ngIf="activeTab === 'visibility'" class="grid grid-cols-12 gap-[24px]">
       
       <!-- Left Column: Functional Settings -->
       <div class="col-span-8 flex flex-col gap-[24px]">
@@ -44,13 +69,14 @@
           
           <div class="grid grid-cols-3 gap-[16px]">
             <!-- Add Service -->
-            <div class="border border-[#e5e7eb] rounded-[10px] p-[16px] flex flex-col items-center justify-center text-center hover:border-[#155dfc] hover:bg-[#eff6ff] cursor-pointer transition-colors group">
+            <a [routerLink]="['/service-onboard']" [queryParams]="{ deptId: deptId }"
+              class="border border-[#e5e7eb] rounded-[10px] p-[16px] flex flex-col items-center justify-center text-center hover:border-[#155dfc] hover:bg-[#eff6ff] cursor-pointer transition-colors group no-underline">
               <div class="w-[40px] h-[40px] border border-[#e5e7eb] rounded-full bg-[#f3f4f6] group-hover:bg-white group-hover:border-[#155dfc] flex items-center justify-center mb-[12px] text-[#4a5565] group-hover:text-[#155dfc] transition-colors">
                 <svg xmlns="http://www.w-images.com/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg>
               </div>
               <h3 class="font-medium text-[14px] text-[#101828] mb-[4px]">Add Service</h3>
               <p class="text-[12px] text-[#6b7280]">Create a new service for this department</p>
-            </div>
+            </a>
             
             <!-- Service Scheme -->
             <div class="border border-[#e5e7eb] rounded-[10px] p-[16px] flex flex-col items-center justify-center text-center hover:border-[#155dfc] hover:bg-[#eff6ff] cursor-pointer transition-colors group">
@@ -249,15 +275,15 @@
            <div class="flex flex-col gap-[16px]">
               <div class="flex justify-between items-center pb-[12px] border-b border-[#f3f4f6]">
                  <span class="text-[#6b7280] text-[14px]">Category</span>
-                 <span class="text-[#101828] font-medium text-[14px]">Health</span>
+                 <span class="text-[#101828] font-medium text-[14px]">{{ deptCategory || '—' }}</span>
               </div>
               <div class="flex justify-between items-center pb-[12px] border-b border-[#f3f4f6]">
                  <span class="text-[#6b7280] text-[14px]">Type</span>
-                 <span class="text-[#101828] font-medium text-[14px]">Central</span>
+                 <span class="text-[#101828] font-medium text-[14px]">{{ deptType || '—' }}</span>
               </div>
               <div class="flex justify-between items-center pb-[12px] border-b border-[#f3f4f6]">
-                 <span class="text-[#6b7280] text-[14px]">Services</span>
-                 <span class="text-[#101828] font-medium text-[14px]">45</span>
+                 <span class="text-[#6b7280] text-[14px]">Active Services</span>
+                 <span class="text-[#101828] font-medium text-[14px]">{{ activeServiceCount !== null ? activeServiceCount : '—' }}</span>
               </div>
               <div class="flex justify-between items-center">
                  <span class="text-[#6b7280] text-[14px]">Created</span>
@@ -269,5 +295,104 @@
       </div>
       
     </div>
+
+    <!-- FAQs Tab -->
+    <div *ngIf="activeTab === 'faqs'">
+
+      <!-- Add/Edit FAQ Form -->
+      <div *ngIf="showFaqForm" class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px] mb-[24px]">
+        <h2 class="font-semibold text-[16px] text-[#101828] mb-[20px]">{{ editingFaqSeq !== null ? 'Edit FAQ' : 'Add FAQ' }}</h2>
+        <div class="grid grid-cols-2 gap-[16px] mb-[16px]">
+          <div *ngIf="editingFaqSeq !== null">
+            <label class="block text-[13px] font-medium text-[#364153] mb-[6px]">Sequence Order</label>
+            <input type="number" [ngModel]="faqForm.seqOrder" readonly
+              class="w-full border border-[#d1d5dc] rounded-[10px] px-[14px] py-[10px] text-[14px] bg-[#f9fafb] text-[#6b7280] cursor-not-allowed" />
+          </div>
+          <div [ngClass]="editingFaqSeq !== null ? '' : 'col-span-2'">
+            <label class="block text-[13px] font-medium text-[#364153] mb-[6px]">Language</label>
+            <select [(ngModel)]="faqForm.lang"
+              class="w-full border border-[#d1d5dc] rounded-[10px] px-[14px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] bg-white">
+              <option value="en">English</option>
+              <option value="hi">Hindi</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-[16px]">
+          <label class="block text-[13px] font-medium text-[#364153] mb-[6px]">Question <span class="text-red-500">*</span></label>
+          <input type="text" [(ngModel)]="faqForm.question" placeholder="Enter FAQ question"
+            class="w-full border border-[#d1d5dc] rounded-[10px] px-[14px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc]" />
+        </div>
+        <div class="mb-[16px]">
+          <label class="block text-[13px] font-medium text-[#364153] mb-[6px]">Answer <span class="text-red-500">*</span></label>
+          <textarea [(ngModel)]="faqForm.answer" rows="4" placeholder="Enter FAQ answer"
+            class="w-full border border-[#d1d5dc] rounded-[10px] px-[14px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc] resize-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-[16px] mb-[20px]">
+          <div>
+            <label class="block text-[13px] font-medium text-[#364153] mb-[6px]">Start Date (Optional)</label>
+            <input type="datetime-local" [(ngModel)]="faqForm.startDate"
+              class="w-full border border-[#d1d5dc] rounded-[10px] px-[14px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc]" />
+          </div>
+          <div>
+            <label class="block text-[13px] font-medium text-[#364153] mb-[6px]">End Date (Optional)</label>
+            <input type="datetime-local" [(ngModel)]="faqForm.endDate"
+              class="w-full border border-[#d1d5dc] rounded-[10px] px-[14px] py-[10px] text-[14px] focus:outline-none focus:border-[#155dfc]" />
+          </div>
+        </div>
+        <div class="flex gap-[12px]">
+          <button (click)="saveFaq()" [disabled]="isSavingFaq"
+            class="bg-[#155dfc] text-white px-[20px] py-[10px] rounded-[10px] text-[14px] font-medium hover:bg-[#1447e6] transition-colors disabled:opacity-60 cursor-pointer">
+            {{ isSavingFaq ? 'Saving...' : (editingFaqSeq !== null ? 'Update FAQ' : 'Add FAQ') }}
+          </button>
+          <button (click)="cancelFaqForm()"
+            class="border border-[#e5e7eb] text-[#4a5565] px-[20px] py-[10px] rounded-[10px] text-[14px] font-medium hover:bg-[#f9fafb] transition-colors cursor-pointer">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- FAQ List -->
+      <div class="bg-white border border-[#e5e7eb] rounded-[14px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] p-[24px]">
+        <div *ngIf="isFaqLoading" class="text-center py-[40px] text-[#6b7280] text-[14px]">
+          Loading FAQs...
+        </div>
+
+        <div *ngIf="!isFaqLoading && faqs.length === 0" class="text-center py-[40px]">
+          <svg class="mx-auto mb-[12px] text-[#d1d5dc]" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <p class="text-[#6b7280] text-[14px]">No FAQs added yet.</p>
+          <button (click)="openAddFaq()" class="mt-[12px] text-[#155dfc] text-[13px] font-medium hover:underline cursor-pointer">+ Add your first FAQ</button>
+        </div>
+
+        <div *ngIf="!isFaqLoading && faqs.length > 0" class="flex flex-col divide-y divide-[#f3f4f6]">
+          <div *ngFor="let faq of faqs" class="py-[20px] flex items-start justify-between gap-[16px]">
+            <div class="flex items-start gap-[14px] flex-1">
+              <div class="w-[28px] h-[28px] bg-[#eff6ff] text-[#155dfc] rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 mt-[2px]">
+                {{ faq.seqOrder }}
+              </div>
+              <div>
+                <p class="text-[14px] font-semibold text-[#101828] mb-[6px]">{{ faq.question }}</p>
+                <p class="text-[13px] text-[#4a5565] leading-[1.6]">{{ faq.answer }}</p>
+                <div *ngIf="faq.startDate || faq.endDate" class="mt-[8px] flex gap-[12px] text-[11px] text-[#9ca3af]">
+                  <span *ngIf="faq.startDate">From: {{ faq.startDate | date:'mediumDate' }}</span>
+                  <span *ngIf="faq.endDate">To: {{ faq.endDate | date:'mediumDate' }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-[8px] shrink-0">
+              <button (click)="openEditFaq(faq)"
+                class="text-[#155dfc] bg-[#eff6ff] hover:bg-[#dbeafe] px-[12px] py-[6px] rounded-[8px] text-[12px] font-medium transition-colors cursor-pointer">
+                Edit
+              </button>
+              <button (click)="deleteFaq(faq)"
+                class="text-[#dc2626] bg-[#fef2f2] hover:bg-[#fee2e2] px-[12px] py-[6px] rounded-[8px] text-[12px] font-medium transition-colors cursor-pointer">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </div>

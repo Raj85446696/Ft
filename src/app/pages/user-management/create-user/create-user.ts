@@ -1,20 +1,19 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SidebarService } from '../../../services/sidebar.service';
-import { Navbar } from '../../../components/navbar/navbar';
-import { Sidebar } from '../../../components/sidebar/sidebar';
 import { IdentityService, FetchedRight, FetchedRole } from '../../../services/identity.service';
 
 @Component({
   selector: 'app-create-user',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css'
 })
 export class CreateUser implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
   router = inject(Router);
   identityService = inject(IdentityService);
@@ -68,8 +67,10 @@ export class CreateUser implements OnInit {
           this.availableRoles = res.roles;
         }
         this.rolesLoading = false;
+            this.cdr.detectChanges();
       },
-      error: () => { this.rolesLoading = false; }
+      error: () => { this.rolesLoading = false;
+          this.cdr.detectChanges(); }
     });
   }
 
@@ -81,8 +82,10 @@ export class CreateUser implements OnInit {
           this.availableRights = res.rights;
         }
         this.rightsLoading = false;
+            this.cdr.detectChanges();
       },
-      error: () => { this.rightsLoading = false; }
+      error: () => { this.rightsLoading = false;
+          this.cdr.detectChanges(); }
     });
   }
 
@@ -184,10 +187,12 @@ export class CreateUser implements OnInit {
         } else {
           this.errorMessage = response.rd || 'Failed to create user';
         }
+            this.cdr.detectChanges();
       },
       error: (err) => {
         this.isSubmitting = false;
         this.errorMessage = err.message || 'Error creating user';
+          this.cdr.detectChanges();
       }
     });
   }

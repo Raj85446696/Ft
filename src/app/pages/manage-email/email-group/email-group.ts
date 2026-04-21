@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SidebarService } from '../../../services/sidebar.service';
-import { Navbar } from '../../../components/navbar/navbar';
-import { Sidebar } from '../../../components/sidebar/sidebar';
 
 interface EmailGroup {
   id: string;
@@ -18,7 +16,7 @@ interface EmailGroup {
 @Component({
   selector: 'app-email-group',
   standalone: true,
-  imports: [CommonModule, FormsModule, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule],
   templateUrl: './email-group.html',
   styleUrl: './email-group.css'
 })

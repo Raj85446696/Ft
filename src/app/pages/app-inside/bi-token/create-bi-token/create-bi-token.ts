@@ -3,13 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SidebarService } from '../../../../services/sidebar.service';
-import { Navbar } from '../../../../components/navbar/navbar';
-import { Sidebar } from '../../../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-create-bi-token',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './create-bi-token.html',
   styleUrl: './create-bi-token.css'
 })

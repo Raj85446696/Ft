@@ -1,325 +1,240 @@
-<div class="bg-white relative w-full min-h-screen flex flex-col lg:flex-row-reverse overflow-x-hidden" data-name="Admin Panel Dashboard UI" data-node-id="2:3">
-      <div class="bg-[#f9fafb] content-stretch flex min-h-screen items-center justify-center px-4 md:px-8 2xl:px-[155.8px] py-8 lg:py-0 w-full lg:w-1/2" data-name="Container" data-node-id="2:4">
-        <div class="relative shrink-0 w-full max-w-[448px]" data-name="Container" data-node-id="2:5">
-          <div class="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col gap-[24px] items-start relative size-full">
-            <div class="bg-white content-stretch flex flex-col gap-[32px] min-h-[923.188px] max-h-[95vh] overflow-y-auto items-start pt-[32px] px-[32px] relative rounded-[16px] shadow-[0px_20px_25px_0px_rgba(0,0,0,0.1),0px_8px_10px_0px_rgba(0,0,0,0.1)] shrink-0 w-full" data-name="Container" data-node-id="2:6">
-              <div class="bg-[#f3f4f6] content-stretch flex gap-[8px] h-[56px] items-start pt-[4px] px-[4px] relative rounded-[14px] shrink-0 w-full" data-name="Container" data-node-id="2:7">
-                <div routerLink="/login" class="cursor-pointer flex-[184_0_0] h-[48px] min-h-px min-w-px relative rounded-[10px]" data-name="Button" data-node-id="2:8">
-                  <div class="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
-                    <p class="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[24px] left-[92.22px] not-italic text-[#4a5565] text-[16px] text-center top-[9.8px] whitespace-nowrap" data-node-id="2:9">
-                      Login
-                    </p>
-                  </div>
+<div class="relative w-full min-h-screen flex flex-col lg:flex-row overflow-x-hidden bg-white">
+
+  <!-- ── Left Panel: Process Flow Image ── -->
+  <div class="hidden lg:flex flex-col relative w-full lg:w-[62%] min-h-screen overflow-hidden"
+       style="background-color: #eceff6;">
+    <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg"
+         preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="tri-grid-o" x="0" y="0" width="80" height="70" patternUnits="userSpaceOnUse">
+          <polygon points="40,0 80,70 0,70" fill="none" stroke="#cdd3de" stroke-width="0.6"/>
+          <polygon points="0,0 80,0 40,70"  fill="none" stroke="#cdd3de" stroke-width="0.6"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#tri-grid-o)"/>
+    </svg>
+    <div class="relative z-10 flex-1 flex items-center justify-center p-10">
+      <img [src]="imgImageDigitalGovernance" class="max-w-[85%] max-h-[76vh] object-contain" alt="SelfCare Process Flow" />
+    </div>
+    <div class="relative z-10 pb-8 text-center shrink-0">
+      <p class="font-bold text-[#374151] text-[14px]">UMANG Selfcare Version (2.0.15)</p>
+      <p class="text-[#6b7280] text-[12px] mt-1">&#9670; NeGD 2018 | Last reviewed and updated on : Nov 23, 2023</p>
+    </div>
+  </div>
+
+  <!-- ── Right Panel: Onboard Form ── -->
+  <div class="flex min-h-screen items-start justify-center px-6 py-10 w-full lg:w-[38%] overflow-y-auto"
+       style="background: linear-gradient(135deg, #e8eeff 0%, #f5f7ff 50%, #eef4ff 100%);">
+    <div class="w-full max-w-[400px] flex flex-col">
+
+      <!-- White Card -->
+      <div class="bg-white rounded-3xl shadow-[0_8px_40px_rgba(26,86,219,0.13)] overflow-hidden">
+
+        <!-- Accent stripe -->
+        <div class="h-1.5" style="background: linear-gradient(90deg, #1a56db 0%, #6366f1 100%);"></div>
+
+        <div class="px-8 py-8">
+
+          <!-- Logo + Heading -->
+          <div class="flex flex-col items-center mb-7">
+            <img [src]="imgLogo" class="h-14 object-contain mb-4" alt="UMANG SelfCare" />
+            <h1 class="font-bold text-[20px] text-[#1e293b] tracking-tight">Organization Onboarding</h1>
+            <p class="text-[#64748b] text-[12.5px] mt-1.5">Request access to UMANG SelfCare</p>
+          </div>
+
+          <!-- Tab Switcher — ONBOARD active -->
+          <div class="flex bg-[#f1f5f9] rounded-full p-1 mb-6">
+            <div routerLink="/login"
+                 class="cursor-pointer flex-1 text-center py-[9px] rounded-full text-[#94a3b8] font-medium text-[14px] transition-all hover:text-[#64748b]">
+              LOGIN
+            </div>
+            <div routerLink="/onboard"
+                 class="cursor-pointer flex-1 text-center py-[9px] rounded-full bg-white shadow text-[#1a56db] font-semibold text-[14px] transition-all">
+              ONBOARD
+            </div>
+          </div>
+
+          <!-- Form Fields -->
+          <div class="flex flex-col gap-[13px]">
+
+            <!-- Organization Type -->
+            <div class="flex flex-col gap-[4px]">
+              <label class="font-medium text-[12px] text-[#475569] uppercase tracking-wide">
+                Organization Type <span class="text-[#ef4444]">*</span>
+              </label>
+              <select [(ngModel)]="orgType"
+                      class="h-[48px] rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 text-[14px] text-[#1e293b] outline-none cursor-pointer appearance-none transition-all focus:border-[#3b82f6] focus:bg-white focus:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]">
+                <option value="" disabled>Select Organization Type</option>
+                <option value="central">Central</option>
+                <option value="state">State</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <!-- Name of Organization -->
+            <div class="flex flex-col gap-[4px]">
+              <label class="font-medium text-[12px] text-[#475569] uppercase tracking-wide">
+                Name of Organization <span class="text-[#ef4444]">*</span>
+              </label>
+              <div class="group flex items-center h-[48px] rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 gap-3 transition-all focus-within:border-[#3b82f6] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]">
+                <div class="shrink-0 size-[17px] opacity-40 group-focus-within:opacity-70 transition-opacity">
+                  <img alt="" class="size-full object-contain" [src]="imgIcon" />
                 </div>
-                <div routerLink="/onboard" class="cursor-pointer bg-[#155dfc] flex-[184_0_0] h-[48px] min-h-px min-w-px relative rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)]" data-name="Button" data-node-id="2:10">
-                  <div class="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
-                    <p class="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[24px] left-[92.39px] not-italic text-[16px] text-center text-white top-[9.8px] whitespace-nowrap" data-node-id="2:11">
-                      Onboard
-                    </p>
-                  </div>
-                </div>
+                <input type="text" [(ngModel)]="orgName"
+                       class="flex-1 text-[14px] text-[#1e293b] placeholder-[#94a3b8] bg-transparent outline-none border-none h-full"
+                       placeholder="e.g., Ministry of Health" />
               </div>
-              <div class="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="2:12">
-                <div class="content-stretch flex flex-col gap-[4px] h-[55.987px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="2:13">
-                  <div class="content-stretch flex h-[31.988px] items-start relative shrink-0 w-full" data-name="Heading 2" data-node-id="2:14">
-                    <p class="flex-[1_0_0] font-['Inter:Bold',sans-serif] font-bold leading-[32px] min-h-px min-w-px not-italic relative text-[#101828] text-[24px]" data-node-id="2:15">
-                      Organization Onboarding
-                    </p>
-                  </div>
-                  <div class="h-[20px] relative shrink-0 w-full" data-name="Paragraph" data-node-id="2:16">
-                    <p class="absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-0 not-italic text-[#4a5565] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="2:17">
-                      Request access to UMANG SelfCare
-                    </p>
-                  </div>
+            </div>
+
+            <!-- Name of Requestor -->
+            <div class="flex flex-col gap-[4px]">
+              <label class="font-medium text-[12px] text-[#475569] uppercase tracking-wide">
+                Name of Requestor <span class="text-[#ef4444]">*</span>
+              </label>
+              <div class="group flex items-center h-[48px] rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 gap-3 transition-all focus-within:border-[#3b82f6] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]">
+                <div class="shrink-0 size-[17px] opacity-40 group-focus-within:opacity-70 transition-opacity">
+                  <img alt="" class="size-full object-contain" [src]="imgIcon1" />
                 </div>
-                <div class="content-stretch flex flex-col gap-[20px] items-start relative shrink-0 w-full" data-name="Form" data-node-id="2:18">
-                  <div class="content-stretch flex flex-col gap-[12px] h-[79.2px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="2:19">
-                    <div class="h-[20px] relative shrink-0 w-full" data-name="Label" data-node-id="2:20">
-                      <p class="absolute font-['Inter:Medium',sans-serif] font-medium leading-[0] left-0 not-italic text-[#364153] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="2:21">
-                        <span class="leading-[20px]">Organization Type </span>
-                        <span class="leading-[20px] text-[#fb2c36]">*</span>
-                      </p>
-                    </div>
-                    <select [(ngModel)]="orgType" class="border-[#d1d5dc] border-[1.6px] border-solid w-full h-[47.2px] rounded-[10px] px-[16px] font-['Inter:Medium',sans-serif] text-[14px] text-black outline-none bg-transparent cursor-pointer appearance-none">
-                      <option value="" disabled>Select Organization Type</option>
-                      <option value="central">Central</option>
-                      <option value="state">State</option>
-                      <option value="other">Other</option>
-                    </select>
+                <input type="text" [(ngModel)]="requestorName"
+                       class="flex-1 text-[14px] text-[#1e293b] placeholder-[#94a3b8] bg-transparent outline-none border-none h-full"
+                       placeholder="Full name of the person requesting access" />
+              </div>
+            </div>
+
+            <!-- Email with OTP -->
+            <div class="flex flex-col gap-[4px]">
+              <label class="font-medium text-[12px] text-[#475569] uppercase tracking-wide">
+                Email <span class="text-[#ef4444]">*</span>
+              </label>
+              <div class="flex gap-[8px]">
+                <div class="group flex items-center flex-1 h-[48px] rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 gap-3 transition-all focus-within:border-[#3b82f6] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]">
+                  <div class="shrink-0 size-[17px] opacity-40 group-focus-within:opacity-70 transition-opacity">
+                    <img alt="" class="size-full object-contain" [src]="imgIcon2" />
                   </div>
-                  <div class="content-stretch flex flex-col gap-[8px] h-[77.6px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="2:32">
-                    <div class="h-[20px] relative shrink-0 w-full" data-name="Label" data-node-id="2:33">
-                      <p class="absolute font-['Inter:Medium',sans-serif] font-medium leading-[0] left-0 not-italic text-[#364153] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="2:34">
-                        <span class="leading-[20px]">Name of Organization </span>
-                        <span class="leading-[20px] text-[#fb2c36]">*</span>
-                      </p>
-                    </div>
-                    <div class="h-[49.6px] relative shrink-0 w-full" data-name="Container" data-node-id="2:35">
-                        <div class="absolute border-[#d1d5dc] border-[0.8px] border-solid content-stretch flex h-[49.6px] items-center left-0 overflow-clip pl-[40px] pr-[16px] py-[12px] rounded-[10px] top-0 w-full" data-name="Text Input" data-node-id="2:36">
-                        <input type="text" [(ngModel)]="orgName" class="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[16px] text-black placeholder-gray-500 w-full bg-transparent outline-none h-full border-none whitespace-nowrap" placeholder="e.g., Ministry of Health" />
-                      </div>
-                      <div class="absolute left-[12px] size-[20px] top-[14.8px]" data-name="Icon" data-node-id="2:38">
-                        <img alt="" class="absolute block max-w-none size-full" [src]="imgIcon" />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="content-stretch flex flex-col gap-[8px] h-[77.6px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="2:46">
-                    <div class="h-[20px] relative shrink-0 w-full" data-name="Label" data-node-id="2:47">
-                      <p class="absolute font-['Inter:Medium',sans-serif] font-medium leading-[0] left-0 not-italic text-[#364153] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="2:48">
-                        <span class="leading-[20px]">Name of Requestor </span>
-                        <span class="leading-[20px] text-[#fb2c36]">*</span>
-                      </p>
-                    </div>
-                    <div class="h-[49.6px] relative shrink-0 w-full" data-name="Container" data-node-id="2:49">
-                        <div class="absolute border-[#d1d5dc] border-[0.8px] border-solid content-stretch flex h-[49.6px] items-center left-0 overflow-clip pl-[40px] pr-[16px] py-[12px] rounded-[10px] top-0 w-full" data-name="Text Input" data-node-id="2:50">
-                        <input type="text" [(ngModel)]="requestorName" class="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[16px] text-black placeholder-gray-500 w-full bg-transparent outline-none h-full border-none whitespace-nowrap" placeholder="Full name of the person requesting access" />
-                      </div>
-                      <div class="absolute left-[12px] size-[20px] top-[14.8px]" data-name="Icon" data-node-id="2:52">
-                        <img alt="" class="absolute block max-w-none size-full" [src]="imgIcon1" />
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Email Field with OTP -->
-                  <div class="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-name="Container">
-                    <div class="h-[20px] relative shrink-0 w-full" data-name="Label">
-                      <p class="absolute font-['Inter:Medium',sans-serif] font-medium leading-[0] left-0 not-italic text-[#364153] text-[14px] top-[-0.2px] whitespace-nowrap">
-                        <span class="leading-[20px]">Email </span>
-                        <span class="leading-[20px] text-[#fb2c36]">*</span>
-                      </p>
-                    </div>
-                    <div class="relative shrink-0 w-full flex gap-[12px]" data-name="Container">
-                      <div class="h-[49.6px] relative flex-1" data-name="Container">
-                        <div class="absolute border-[#d1d5dc] border-[0.8px] border-solid content-stretch flex h-[49.6px] items-center left-0 overflow-clip pl-[40px] pr-[16px] py-[12px] rounded-[10px] top-0 w-full" data-name="Email Input">
-                          <input 
-                            type="email" 
-                            [(ngModel)]="email" 
-                            class="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[16px] text-black placeholder-gray-500 w-full bg-transparent outline-none h-full border-none" 
-                            placeholder="email@domain.gov.in" />
-                        </div>
-                        <div class="absolute left-[12px] size-[20px] top-[14.8px]" data-name="Icon">
-                          <img alt="" class="absolute block max-w-none size-full" [src]="imgIcon2" />
-                        </div>
-                      </div>
-                      <button 
-                        *ngIf="!emailOtpRequested()"
+                  <input type="email" [(ngModel)]="email"
+                         class="flex-1 text-[14px] text-[#1e293b] placeholder-[#94a3b8] bg-transparent outline-none border-none h-full"
+                         placeholder="email@domain.gov.in" />
+                </div>
+                <button *ngIf="!emailOtpRequested()"
                         (click)="requestEmailOtp()"
                         [disabled]="emailOtpLoading"
-                        class="bg-[#155dfc] h-[49.6px] px-[24px] rounded-[10px] text-white font-['Inter:Medium',sans-serif] font-medium text-[14px] whitespace-nowrap hover:bg-[#1348d4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                        {{ emailOtpLoading ? 'Sending...' : 'Request OTP' }}
-                      </button>
-                    </div>
-                    <p *ngIf="emailOtpError" class="text-[#fb2c36] text-[13px] font-['Inter:Regular',sans-serif] mt-[4px]">{{ emailOtpError }}</p>
-                    <p *ngIf="emailOtpSuccess" class="text-[#10b981] text-[13px] font-['Inter:Regular',sans-serif] mt-[4px]">{{ emailOtpSuccess }}</p>
-                    <div *ngIf="emailOtpRequested()" class="w-full flex flex-col gap-[8px] mt-[12px]">
-                      <div class="relative shrink-0 w-full flex gap-[12px]">
-                        <div class="h-[49.6px] relative flex-1">
-                          <div class="border-[#d1d5dc] border-[0.8px] border-solid content-stretch flex h-[49.6px] items-center overflow-clip pl-[16px] pr-[16px] py-[12px] rounded-[10px] w-full" data-name="OTP Input">
-                            <input 
-                              type="text" 
-                              [(ngModel)]="emailOtp"
-                              maxlength="6"
-                              class="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[16px] text-black placeholder-gray-500 w-full bg-transparent outline-none h-full border-none" 
-                              placeholder="Enter 6-digit OTP" />
-                          </div>
-                        </div>
-                        <button 
-                          (click)="resendEmailOtp()"
-                          [disabled]="emailTimer() > 0"
-                          [ngClass]="{'bg-gray-300 cursor-not-allowed': emailTimer() > 0, 'bg-[#155dfc] hover:bg-[#1348d4]': emailTimer() === 0}"
-                          class="h-[49.6px] px-[24px] rounded-[10px] text-white font-['Inter:Medium',sans-serif] font-medium text-[14px] whitespace-nowrap transition-colors">
-                          Resend OTP
-                        </button>
-                      </div>
-                      <p class="text-[#6a7282] text-[12px] font-['Inter:Regular',sans-serif]">
-                        <span *ngIf="emailTimer() > 0">Didn't get OTP? You can re-request in {{ emailTimer() }} seconds.</span>
-                        <span *ngIf="emailTimer() === 0">You can now resend the OTP.</span>
-                      </p>
-                    </div>
+                        class="h-[48px] px-4 rounded-xl text-white font-semibold text-[12px] whitespace-nowrap transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_2px_8px_rgba(26,86,219,0.3)] hover:shadow-[0_4px_12px_rgba(26,86,219,0.4)] hover:scale-[1.02]"
+                        style="background: linear-gradient(135deg, #1a56db 0%, #6366f1 100%);">
+                  {{ emailOtpLoading ? 'Sending...' : 'Get OTP' }}
+                </button>
+              </div>
+              <p *ngIf="emailOtpError"   class="text-[#ef4444] text-[11.5px] mt-0.5">{{ emailOtpError }}</p>
+              <p *ngIf="emailOtpSuccess" class="text-[#10b981] text-[11.5px] mt-0.5">{{ emailOtpSuccess }}</p>
+              <div *ngIf="emailOtpRequested()" class="flex flex-col gap-[6px] mt-1">
+                <div class="flex gap-[8px]">
+                  <div class="flex items-center flex-1 h-[48px] rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 transition-all focus-within:border-[#3b82f6] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]">
+                    <input type="text" [(ngModel)]="emailOtp" maxlength="6"
+                           class="flex-1 text-[14px] text-[#1e293b] placeholder-[#94a3b8] bg-transparent outline-none border-none h-full"
+                           placeholder="Enter 6-digit OTP" />
                   </div>
+                  <button (click)="resendEmailOtp()"
+                          [disabled]="emailTimer() > 0"
+                          [ngClass]="{'bg-[#e2e8f0] text-[#94a3b8] cursor-not-allowed': emailTimer() > 0, 'text-white shadow-[0_2px_8px_rgba(26,86,219,0.3)] hover:scale-[1.02]': emailTimer() === 0}"
+                          [style]="emailTimer() === 0 ? 'background: linear-gradient(135deg, #1a56db 0%, #6366f1 100%)' : ''"
+                          class="h-[48px] px-4 rounded-xl font-semibold text-[12px] whitespace-nowrap transition-all">
+                    Resend
+                  </button>
+                </div>
+                <p class="text-[#94a3b8] text-[11.5px]">
+                  <span *ngIf="emailTimer() > 0">Resend OTP in {{ emailTimer() }}s</span>
+                  <span *ngIf="emailTimer() === 0">You can now resend the OTP.</span>
+                </p>
+              </div>
+            </div>
 
-                  <!-- Mobile Field with OTP -->
-                  <div class="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-name="Container">
-                    <div class="h-[20px] relative shrink-0 w-full" data-name="Label">
-                      <p class="absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-0 not-italic text-[#364153] text-[14px] top-[-0.2px] whitespace-nowrap">
-                        Mobile Number
-                      </p>
-                    </div>
-                    <div class="relative shrink-0 w-full flex gap-[12px]" data-name="Container">
-                      <div class="h-[49.6px] relative flex-1" data-name="Container">
-                        <div class="absolute border-[#d1d5dc] border-[0.8px] border-solid content-stretch flex h-[49.6px] items-center left-0 overflow-clip pl-[40px] pr-[16px] py-[12px] rounded-[10px] top-0 w-full" data-name="Phone Input">
-                          <input 
-                            type="text" 
-                            [(ngModel)]="mobile"
-                            class="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[16px] text-black placeholder-gray-500 w-full bg-transparent outline-none h-full border-none" 
-                            placeholder="+91 98765 43210" />
-                        </div>
-                        <div class="absolute left-[12px] size-[20px] top-[14.8px]" data-name="Icon">
-                          <img alt="" class="absolute block max-w-none size-full" [src]="imgIcon3" />
-                        </div>
-                      </div>
-                      <button 
-                        *ngIf="!mobileOtpRequested()"
+            <!-- Mobile Number with OTP -->
+            <div class="flex flex-col gap-[4px]">
+              <label class="font-medium text-[12px] text-[#475569] uppercase tracking-wide">Mobile Number</label>
+              <div class="flex gap-[8px]">
+                <div class="group flex items-center flex-1 h-[48px] rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 gap-3 transition-all focus-within:border-[#3b82f6] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]">
+                  <div class="shrink-0 size-[17px] opacity-40 group-focus-within:opacity-70 transition-opacity">
+                    <img alt="" class="size-full object-contain" [src]="imgIcon3" />
+                  </div>
+                  <input type="text" [(ngModel)]="mobile"
+                         class="flex-1 text-[14px] text-[#1e293b] placeholder-[#94a3b8] bg-transparent outline-none border-none h-full"
+                         placeholder="+91 98765 43210" />
+                </div>
+                <button *ngIf="!mobileOtpRequested()"
                         (click)="requestMobileOtp()"
                         [disabled]="mobileOtpLoading"
-                        class="bg-[#155dfc] h-[49.6px] px-[24px] rounded-[10px] text-white font-['Inter:Medium',sans-serif] font-medium text-[14px] whitespace-nowrap hover:bg-[#1348d4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                        {{ mobileOtpLoading ? 'Sending...' : 'Request OTP' }}
-                      </button>
-                    </div>
-                    <p *ngIf="mobileOtpError" class="text-[#fb2c36] text-[13px] font-['Inter:Regular',sans-serif] mt-[4px]">{{ mobileOtpError }}</p>
-                    <p *ngIf="mobileOtpSuccess" class="text-[#10b981] text-[13px] font-['Inter:Regular',sans-serif] mt-[4px]">{{ mobileOtpSuccess }}</p>
-                    <div *ngIf="mobileOtpRequested()" class="w-full flex flex-col gap-[8px] mt-[12px]">
-                      <div class="relative shrink-0 w-full flex gap-[12px]">
-                        <div class="h-[49.6px] relative flex-1">
-                          <div class="border-[#d1d5dc] border-[0.8px] border-solid content-stretch flex h-[49.6px] items-center overflow-clip pl-[16px] pr-[16px] py-[12px] rounded-[10px] w-full" data-name="OTP Input">
-                            <input 
-                              type="text" 
-                              [(ngModel)]="mobileOtp"
-                              maxlength="6"
-                              class="font-['Inter:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[16px] text-black placeholder-gray-500 w-full bg-transparent outline-none h-full border-none" 
-                              placeholder="Enter 6-digit OTP" />
-                          </div>
-                        </div>
-                        <button 
-                          (click)="resendMobileOtp()"
+                        class="h-[48px] px-4 rounded-xl text-white font-semibold text-[12px] whitespace-nowrap transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_2px_8px_rgba(26,86,219,0.3)] hover:shadow-[0_4px_12px_rgba(26,86,219,0.4)] hover:scale-[1.02]"
+                        style="background: linear-gradient(135deg, #1a56db 0%, #6366f1 100%);">
+                  {{ mobileOtpLoading ? 'Sending...' : 'Get OTP' }}
+                </button>
+              </div>
+              <p *ngIf="mobileOtpError"   class="text-[#ef4444] text-[11.5px] mt-0.5">{{ mobileOtpError }}</p>
+              <p *ngIf="mobileOtpSuccess" class="text-[#10b981] text-[11.5px] mt-0.5">{{ mobileOtpSuccess }}</p>
+              <div *ngIf="mobileOtpRequested()" class="flex flex-col gap-[6px] mt-1">
+                <div class="flex gap-[8px]">
+                  <div class="flex items-center flex-1 h-[48px] rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 transition-all focus-within:border-[#3b82f6] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)]">
+                    <input type="text" [(ngModel)]="mobileOtp" maxlength="6"
+                           class="flex-1 text-[14px] text-[#1e293b] placeholder-[#94a3b8] bg-transparent outline-none border-none h-full"
+                           placeholder="Enter 6-digit OTP" />
+                  </div>
+                  <button (click)="resendMobileOtp()"
                           [disabled]="mobileTimer() > 0"
-                          [ngClass]="{'bg-gray-300 cursor-not-allowed': mobileTimer() > 0, 'bg-[#155dfc] hover:bg-[#1348d4]': mobileTimer() === 0}"
-                          class="h-[49.6px] px-[24px] rounded-[10px] text-white font-['Inter:Medium',sans-serif] font-medium text-[14px] whitespace-nowrap transition-colors">
-                          Resend OTP
-                        </button>
-                      </div>
-                      <p class="text-[#6a7282] text-[12px] font-['Inter:Regular',sans-serif]">
-                        <span *ngIf="mobileTimer() > 0">Didn't get OTP? You can re-request in {{ mobileTimer() }} seconds.</span>
-                        <span *ngIf="mobileTimer() === 0">You can now resend the OTP.</span>
-                      </p>
-                    </div>
-                  </div>
-                  <div class="bg-[#eff6ff] border-[#bedbff] border-[0.8px] border-solid h-[117.6px] relative rounded-[10px] shrink-0 w-full" data-name="Container" data-node-id="2:100">
-                    <div class="absolute left-[16px] size-[20px] top-[18px]" data-name="Icon" data-node-id="2:101">
-                      <img alt="" class="absolute block max-w-none size-full" [src]="imgIcon5" />
-                    </div>
-                    <div class="absolute content-stretch flex flex-col gap-[4px] h-[84px] items-start left-[48px] top-[16px] w-[318.4px]" data-name="Container" data-node-id="2:105">
-                      <div class="h-[20px] relative shrink-0 w-full" data-name="Paragraph" data-node-id="2:106">
-                        <p class="absolute font-['Inter:Medium',sans-serif] font-medium leading-[20px] left-0 not-italic text-[#193cb8] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="2:107">
-                          Review Process
-                        </p>
-                      </div>
-                      <div class="h-[60px] relative shrink-0 w-full" data-name="Paragraph" data-node-id="2:108">
-                        <p class="absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-0 not-italic text-[#193cb8] text-[14px] top-[-0.2px] w-[313px]" data-node-id="2:109">Your request will be reviewed by the administrator. You'll receive an email notification once approved or if additional information is needed.</p>
-                      </div>
-                    </div>
-                  </div>
-                  <p *ngIf="submitError" class="text-[#fb2c36] text-[13px] font-['Inter:Medium',sans-serif]">{{ submitError }}</p>
-                  <p *ngIf="submitSuccess" class="text-[#10b981] text-[13px] font-['Inter:Medium',sans-serif]">{{ submitSuccess }}</p>
-                  <div class="content-stretch flex gap-[12px] items-start pt-[16px] pb-[24px] mb-[24px] relative shrink-0 w-full" data-name="Container" data-node-id="2:110">
-                    <button (click)="onCancel()" class="bg-[#f3f4f6] flex-[186_0_0] h-[48px] min-h-px min-w-px relative rounded-[10px] cursor-pointer border-none" data-name="Button" data-node-id="2:111">
-                      <p class="font-['Inter:Medium',sans-serif] font-medium leading-[24px] not-italic text-[#364153] text-[16px] text-center whitespace-nowrap">
-                        Cancel
-                      </p>
-                    </button>
-                    <button (click)="onSubmit()" [disabled]="isSubmitting" class="bg-[#155dfc] flex-[186_0_0] h-[48px] min-h-px min-w-px relative rounded-[10px] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] cursor-pointer border-none disabled:opacity-50 disabled:cursor-not-allowed" data-name="Button" data-node-id="2:113">
-                      <p class="font-['Inter:Medium',sans-serif] font-medium leading-[24px] not-italic text-[16px] text-center text-white whitespace-nowrap">
-                        {{ isSubmitting ? 'Submitting...' : 'Submit' }}
-                      </p>
-                    </button>
-                  </div>
+                          [ngClass]="{'bg-[#e2e8f0] text-[#94a3b8] cursor-not-allowed': mobileTimer() > 0, 'text-white shadow-[0_2px_8px_rgba(26,86,219,0.3)] hover:scale-[1.02]': mobileTimer() === 0}"
+                          [style]="mobileTimer() === 0 ? 'background: linear-gradient(135deg, #1a56db 0%, #6366f1 100%)' : ''"
+                          class="h-[48px] px-4 rounded-xl font-semibold text-[12px] whitespace-nowrap transition-all">
+                    Resend
+                  </button>
                 </div>
+                <p class="text-[#94a3b8] text-[11.5px]">
+                  <span *ngIf="mobileTimer() > 0">Resend OTP in {{ mobileTimer() }}s</span>
+                  <span *ngIf="mobileTimer() === 0">You can now resend the OTP.</span>
+                </p>
               </div>
             </div>
-            <div class="content-stretch flex h-[15.988px] items-start relative shrink-0 w-full" data-name="Paragraph" data-node-id="2:116">
-              <p class="font-['Inter:Regular',sans-serif] font-normal leading-[16px] not-italic relative shrink-0 text-[#6a7282] text-[12px] text-center whitespace-nowrap" data-node-id="2:117">
-                © 2024 UMANG SelfCare. All rights reserved. Powered by Government of India
-              </p>
+
+            <!-- Review Process Info Box -->
+            <div class="rounded-2xl p-4 flex gap-3"
+                 style="background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%); border: 1px solid #c7d7fe;">
+              <div class="shrink-0 size-[18px] mt-0.5">
+                <img alt="" class="size-full" [src]="imgIcon5" />
+              </div>
+              <div>
+                <p class="font-semibold text-[#3730a3] text-[12.5px]">Review Process</p>
+                <p class="text-[#4338ca] text-[12px] mt-1 leading-[17px]">
+                  Your request will be reviewed by the administrator. You'll receive an email notification once approved or if additional information is needed.
+                </p>
+              </div>
             </div>
+
+            <!-- Error / Success -->
+            <p *ngIf="submitError"   class="text-[#ef4444] text-[12.5px] font-medium">{{ submitError }}</p>
+            <p *ngIf="submitSuccess" class="text-[#10b981] text-[12.5px] font-medium">{{ submitSuccess }}</p>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-[10px] mt-1 pb-2">
+              <button (click)="onCancel()"
+                      class="flex-1 h-[48px] rounded-xl bg-[#f1f5f9] text-[#475569] font-semibold text-[14px] cursor-pointer hover:bg-[#e2e8f0] transition-all border-none">
+                Cancel
+              </button>
+              <button (click)="onSubmit()"
+                      [disabled]="isSubmitting"
+                      [class.opacity-60]="isSubmitting"
+                      [class.cursor-not-allowed]="isSubmitting"
+                      class="flex-1 h-[48px] rounded-xl text-white font-semibold text-[14px] cursor-pointer transition-all border-none shadow-[0_4px_16px_rgba(26,86,219,0.35)] hover:shadow-[0_6px_22px_rgba(26,86,219,0.45)] hover:scale-[1.01] active:scale-[0.99]"
+                      style="background: linear-gradient(135deg, #1a56db 0%, #6366f1 100%);">
+                {{ isSubmitting ? 'Submitting...' : 'Submit Request' }}
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
-      <div class="hidden lg:block relative h-[1011.175px] overflow-clip w-full lg:w-1/2" data-name="Container" data-node-id="2:118" style="background-image: linear-gradient(126.914deg, rgb(21, 93, 252) 0%, rgb(20, 71, 230) 50%, rgb(55, 42, 172) 100%)">
-        <div class="absolute bg-black inset-0" data-name="Container" data-node-id="2:119" ></div>
-        <div class="absolute bg-white blur-[64px] left-[80px] rounded-[26843500px] size-[256px] top-[80px]" data-name="Container" data-node-id="2:120" ></div>
-        <div class="absolute bg-[#51a2ff] blur-[64px] left-[295.6px] rounded-[26843500px] size-[384px] top-[547.17px]" data-name="Container" data-node-id="2:121" ></div>
-        <div class="absolute inset-0" data-name="Container" data-node-id="2:122">
-          <div class="absolute content-stretch flex flex-col gap-[48px] h-[254px] items-start left-[48px] top-[48px] w-[663.6px]" data-name="Container" data-node-id="2:123">
-            <div class="content-stretch flex gap-[12px] h-[72px] items-center relative shrink-0 w-full" data-name="Container" data-node-id="2:124">
-              <div class="bg-white h-[72px] relative rounded-[14px] shrink-0 w-[88px]" data-name="Container" data-node-id="2:125">
-                <div class="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start pt-[12px] px-[12px] relative size-full">
-                  <div class="h-[48px] shrink-0 w-full" data-name="Image (Umang Logo)" data-node-id="2:126" ></div>
-                </div>
-              </div>
-              <div class="h-[56px] relative shrink-0 w-[142.7px]" data-name="Container" data-node-id="2:127">
-                <div class="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start relative size-full">
-                  <div class="h-[36px] relative shrink-0 w-full" data-name="Heading 1" data-node-id="2:128">
-                    <p class="absolute font-['Inter:Bold',sans-serif] font-bold leading-[36px] left-0 not-italic text-[30px] text-white top-[-1.6px] whitespace-nowrap" data-node-id="2:129">
-                      UMANG
-                    </p>
-                  </div>
-                  <div class="h-[20px] relative shrink-0 w-full" data-name="Paragraph" data-node-id="2:130">
-                    <p class="absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-0 not-italic text-[#dbeafe] text-[14px] top-[-0.2px] whitespace-nowrap" data-node-id="2:131">
-                      SelfCare Admin System
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="content-stretch flex flex-col gap-[16px] h-[134px] items-start relative shrink-0 w-full" data-name="Container" data-node-id="2:132">
-              <div class="font-['Inter:Bold',sans-serif] font-bold h-[90px] leading-[45px] not-italic relative shrink-0 text-[36px] text-white w-full whitespace-nowrap" data-name="Heading 2" data-node-id="2:133">
-                <p class="absolute left-0 top-[-2.6px]" data-node-id="2:134">
-                  Unified Mobile Application
-                </p>
-                <p class="absolute left-0 top-[42.4px]" data-node-id="2:135">
-                  for New-age Governance
-                </p>
-              </div>
-              <div class="h-[28px] relative shrink-0 w-full" data-name="Paragraph" data-node-id="2:136">
-                <p class="absolute font-['Inter:Regular',sans-serif] font-normal leading-[28px] left-0 not-italic text-[#dbeafe] text-[18px] top-[-1.4px] whitespace-nowrap" data-node-id="2:137">
-                  Empowering government services through digital transformation
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="absolute border-4 border-solid border-white h-[320px] left-[48px] rounded-[16px] shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)] top-[452.59px] w-[663.6px]" data-name="Image (Digital Governance)" data-node-id="2:138">
-            <div aria-hidden="true" class="absolute inset-0 pointer-events-none rounded-[16px]">
-              <div class="absolute bg-[rgba(255,255,255,0)] inset-0 rounded-[16px]" ></div>
-              <img alt="" class="absolute max-w-none object-cover rounded-[16px] size-full" [src]="imgImageDigitalGovernance" />
-            </div>
-          </div>
-          <div class="absolute h-[56px] left-[48px] top-[907.17px] w-[663.6px]" data-name="Container" data-node-id="2:139">
-            <div class="absolute content-stretch flex flex-col h-[56px] items-start left-0 top-0 w-[210.525px]" data-name="Container" data-node-id="2:140">
-              <div class="h-[36px] relative shrink-0 w-full" data-name="Container" data-node-id="2:141">
-                <p class="-translate-x-1/2 absolute font-['Inter:Bold',sans-serif] font-bold leading-[36px] left-[105.14px] not-italic text-[30px] text-center text-white top-[-1.6px] whitespace-nowrap" data-node-id="2:142">
-                  1000+
-                </p>
-              </div>
-              <div class="h-[20px] relative shrink-0 w-full" data-name="Container" data-node-id="2:143">
-                <p class="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-[106.03px] not-italic text-[#bedbff] text-[14px] text-center top-[-0.2px] whitespace-nowrap" data-node-id="2:144">
-                  Services
-                </p>
-              </div>
-            </div>
-            <div class="absolute content-stretch flex flex-col h-[56px] items-start left-[226.52px] top-0 w-[210.538px]" data-name="Container" data-node-id="2:145">
-              <div class="h-[36px] relative shrink-0 w-full" data-name="Container" data-node-id="2:146">
-                <p class="-translate-x-1/2 absolute font-['Inter:Bold',sans-serif] font-bold leading-[36px] left-[105.9px] not-italic text-[30px] text-center text-white top-[-1.6px] whitespace-nowrap" data-node-id="2:147">
-                  50+
-                </p>
-              </div>
-              <div class="h-[20px] relative shrink-0 w-full" data-name="Container" data-node-id="2:148">
-                <p class="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-[105.71px] not-italic text-[#bedbff] text-[14px] text-center top-[-0.2px] whitespace-nowrap" data-node-id="2:149">
-                  Departments
-                </p>
-              </div>
-            </div>
-            <div class="absolute content-stretch flex flex-col h-[56px] items-start left-[453.06px] top-0 w-[210.525px]" data-name="Container" data-node-id="2:150">
-              <div class="h-[36px] relative shrink-0 w-full" data-name="Container" data-node-id="2:151">
-                <p class="-translate-x-1/2 absolute font-['Inter:Bold',sans-serif] font-bold leading-[36px] left-[106.23px] not-italic text-[30px] text-center text-white top-[-1.6px] whitespace-nowrap" data-node-id="2:152">
-                  24/7
-                </p>
-              </div>
-              <div class="h-[20px] relative shrink-0 w-full" data-name="Container" data-node-id="2:153">
-                <p class="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[20px] left-[105.44px] not-italic text-[#bedbff] text-[14px] text-center top-[-0.2px] whitespace-nowrap" data-node-id="2:154">
-                  Support
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <!-- Footer below card -->
+      <p class="text-center text-[#94a3b8] text-[11px] mt-5 pb-4">
+        © 2024 UMANG SelfCare. All rights reserved. Powered by Government of India
+      </p>
+
     </div>
+  </div>
+
+</div>

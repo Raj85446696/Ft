@@ -1,0 +1,167 @@
+<div class="min-h-screen bg-[#f9fafb]">
+
+  <div class="min-h-screen bg-[#f9fafb] p-[32px] pt-[96px] transition-all duration-300"
+    [ngClass]="{'ml-[80px]': sidebarService.isCollapsed(), 'ml-[255px]': !sidebarService.isCollapsed()}">
+
+    <div class="space-y-8">
+
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-1">
+          <a routerLink="/services-plus/manage-scheme"
+             class="inline-flex items-center gap-2 text-[14px] text-[#4a5565] hover:text-[#155dfc] transition-colors mb-2">
+            <span class="material-icons text-[18px]">arrow_back</span>
+            Back to Manage Schemes
+          </a>
+          <h1 class="text-[32px] font-bold text-[#101828]">Scheme Mapping</h1>
+          <p class="text-[16px] text-[#4a5565]">Map schemes to departments and services</p>
+        </div>
+        <button (click)="onAddMapping()"
+                class="bg-[#155dfc] text-white px-6 py-3 rounded-[12px] flex items-center gap-2 text-[16px] font-bold shadow-lg shadow-blue-500/20 hover:bg-[#0047e0] transition-all cursor-pointer">
+          <span class="material-icons text-[20px]">add</span>
+          Add Mapping
+        </button>
+      </div>
+
+      <!-- Filter Row -->
+      <div class="bg-white rounded-[24px] border border-[#e5e7eb] shadow-sm p-6 flex flex-wrap gap-4 items-end">
+        <div class="flex-1 min-w-[220px] space-y-2">
+          <label class="block text-[13px] font-bold text-[#6a7282] uppercase tracking-wide">Department</label>
+          <div *ngIf="isLoadingDepts" class="text-[13px] text-[#9ca3af]">Loading...</div>
+          <select *ngIf="!isLoadingDepts" [(ngModel)]="selectedDeptId" (change)="onDeptChange()"
+                  class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[10px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc]">
+            <option value="">Select Department</option>
+            <option *ngFor="let d of departments" [value]="d.deptId">{{d.sname}}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Add Mapping Form -->
+      <div *ngIf="showForm" class="bg-white rounded-[24px] border border-[#dbeafe] shadow-sm p-6 space-y-5">
+        <h2 class="text-[18px] font-bold text-[#101828]">New Mapping</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- Scheme -->
+          <div class="space-y-2">
+            <label class="block text-[13px] font-medium text-[#364153]">Scheme <span class="text-red-500">*</span></label>
+            <div *ngIf="isLoadingSchemes" class="text-[13px] text-[#9ca3af]">Loading...</div>
+            <select *ngIf="!isLoadingSchemes" [(ngModel)]="form.schemeId"
+                    class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc]">
+              <option value="" disabled>Select Scheme</option>
+              <option *ngFor="let s of schemes" [value]="s.schemeId">{{s.schemeName}}</option>
+            </select>
+          </div>
+
+          <!-- Service ID -->
+          <div class="space-y-2">
+            <label class="block text-[13px] font-medium text-[#364153]">Service ID <span class="text-red-500">*</span></label>
+            <input type="text" [(ngModel)]="form.serviceId" placeholder="Enter service ID"
+                   class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc]">
+          </div>
+
+          <!-- Service Type -->
+          <div class="space-y-2">
+            <label class="block text-[13px] font-medium text-[#364153]">Service Type <span class="text-red-500">*</span></label>
+            <div *ngIf="isLoadingDeptServices" class="text-[13px] text-[#9ca3af]">Loading services...</div>
+            <select *ngIf="!isLoadingDeptServices" [(ngModel)]="form.serviceTypeId"
+                    class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc]">
+              <option value="" disabled>{{ selectedDeptId ? 'Select Service' : 'Select a department first' }}</option>
+              <option *ngFor="let s of deptServices" [value]="s.serviceId">{{s.serviceName || s.sname}}</option>
+            </select>
+          </div>
+
+          <!-- Scheme Type -->
+          <div class="space-y-2">
+            <label class="block text-[13px] font-medium text-[#364153]">Scheme Type <span class="text-red-500">*</span></label>
+            <select [(ngModel)]="form.typeId"
+                    class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc]">
+              <option value="" disabled>Select Scheme Type</option>
+              <option *ngFor="let t of schemeTypes" [value]="t.typeId">{{t.typeName}}</option>
+            </select>
+          </div>
+
+          <!-- Status -->
+          <div class="space-y-2">
+            <label class="block text-[13px] font-medium text-[#364153]">Status</label>
+            <select [(ngModel)]="form.status"
+                    class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc]">
+              <option value="active">Active</option>
+              <option value="deactive">Inactive</option>
+            </select>
+          </div>
+
+          <!-- Order -->
+          <div class="space-y-2">
+            <label class="block text-[13px] font-medium text-[#364153]">Display Order</label>
+            <input type="number" [(ngModel)]="form.orderId" min="1"
+                   class="w-full h-[46px] px-[16px] bg-[#f9fafb] border border-[#e5e7eb] rounded-[8px] text-[14px] text-[#101828] focus:outline-none focus:border-[#155dfc]">
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button (click)="onCancelForm()"
+                  class="h-[40px] px-[20px] text-[14px] font-medium text-[#4a5565] bg-white border border-[#d1d5dc] rounded-[8px] hover:bg-gray-50 cursor-pointer">
+            Cancel
+          </button>
+          <button (click)="onSubmitMapping()" [disabled]="isSubmitting"
+                  class="h-[40px] px-[28px] text-[14px] font-medium text-white bg-[#155dfc] rounded-[8px] hover:bg-blue-700 disabled:opacity-60 cursor-pointer">
+            {{isSubmitting ? 'Saving...' : 'Save Mapping'}}
+          </button>
+        </div>
+      </div>
+
+      <!-- Mappings Table -->
+      <div class="bg-white rounded-[24px] border border-[#e5e7eb] shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-[#f3f4f6]">
+          <h2 class="text-[18px] font-bold text-[#101828]">
+            {{selectedDeptId ? 'Mappings for ' + getDeptName(selectedDeptId) : 'Select a department to view mappings'}}
+          </h2>
+        </div>
+
+        <div *ngIf="isLoadingMappings" class="py-[60px] text-center text-[#6b7280] text-[14px]">
+          Loading mappings...
+        </div>
+
+        <div *ngIf="!isLoadingMappings && !selectedDeptId" class="py-[60px] text-center text-[#9ca3af] text-[14px]">
+          <span class="material-icons text-[48px] text-[#d1d5db] block mb-3">link_off</span>
+          Select a department above to see its scheme mappings.
+        </div>
+
+        <div *ngIf="!isLoadingMappings && selectedDeptId && mappings.length === 0" class="py-[60px] text-center text-[#6b7280] text-[14px]">
+          No mappings found for this department.
+        </div>
+
+        <div *ngIf="!isLoadingMappings && mappings.length > 0" class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-[#fcfdfe] border-b border-[#e5e7eb]">
+                <th class="px-6 py-5 text-left text-[13px] font-bold text-[#6a7282] uppercase tracking-wider">Scheme</th>
+                <th class="px-6 py-5 text-left text-[13px] font-bold text-[#6a7282] uppercase tracking-wider">Scheme Type</th>
+                <th class="px-6 py-5 text-left text-[13px] font-bold text-[#6a7282] uppercase tracking-wider">Service ID</th>
+                <th class="px-6 py-5 text-left text-[13px] font-bold text-[#6a7282] uppercase tracking-wider">Service Type</th>
+                <th class="px-6 py-5 text-left text-[13px] font-bold text-[#6a7282] uppercase tracking-wider">Order</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#f3f4f6]">
+              <tr *ngFor="let m of mappings" class="hover:bg-[#f8fbff] transition-all">
+                <td class="px-6 py-5">
+                  <p class="text-[15px] font-bold text-[#101828]">{{m.schemeName}}</p>
+                  <p class="text-[12px] text-[#9ca3af] font-mono">{{m.schemeId}}</p>
+                </td>
+                <td class="px-6 py-5 text-[14px] text-[#4a5565]">{{m.schemeTypeName || '—'}}</td>
+                <td class="px-6 py-5 text-[14px] text-[#4a5565] font-mono">{{m.serviceId}}</td>
+                <td class="px-6 py-5 text-[14px] text-[#4a5565]">{{m.serviceTypeName || '—'}}</td>
+                <td class="px-6 py-5 text-[14px] text-[#4a5565]">{{m.orderId}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-6 bg-[#fcfdfe] border-t border-[#f3f4f6]">
+          <p class="text-[14px] text-[#6a7282]">{{mappings.length}} mapping(s) found.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

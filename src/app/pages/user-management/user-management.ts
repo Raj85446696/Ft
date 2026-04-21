@@ -1,11 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
-import { Navbar } from '../../components/navbar/navbar';
-import { Sidebar } from '../../components/sidebar/sidebar';
 import { IdentityService, ChildUser } from '../../services/identity.service';
+import Swal from 'sweetalert2';
 
 interface User {
   id: string;
@@ -23,11 +22,12 @@ interface User {
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './user-management.html',
   styleUrl: './user-management.css'
 })
 export class UserManagement implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
   sidebarService = inject(SidebarService);
   router = inject(Router);
   identityService = inject(IdentityService);
@@ -48,7 +48,7 @@ export class UserManagement implements OnInit {
   loadUsers() {
     this.loading = true;
     this.errorMessage = '';
-    
+
     this.identityService.fetchAllUsers().subscribe({
       next: (response) => {
         if (response.rs === 'S' && response.pd?.app) {
@@ -60,11 +60,12 @@ export class UserManagement implements OnInit {
           this.errorMessage = response.rd || 'Failed to load users';
         }
         this.loading = false;
+            this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = 'Error loading users: ' + (err.message || 'Unknown error');
         this.loading = false;
-        console.error('Load users error:', err);
+          this.cdr.detectChanges();
       }
     });
   }
@@ -96,9 +97,9 @@ export class UserManagement implements OnInit {
   get adminCount() { return this.users.filter(u => u.role.toLowerCase().includes('admin')).length; }
   get activeCount() { return this.users.filter(u => u.status === 'Active').length; }
   get inactiveCount() { return this.users.filter(u => u.status === 'Inactive').length; }
-  
+
   filteredUsers() {
-    return this.users.filter(u => 
+    return this.users.filter(u =>
       u.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       u.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       u.department.toLowerCase().includes(this.searchQuery.toLowerCase())
@@ -121,42 +122,62 @@ export class UserManagement implements OnInit {
   }
 
   onDelete(user: User) {
-    if (confirm(`Are you sure you want to delete user "${user.name}"?`)) {
-      this.identityService.deleteUser(user.email).subscribe({
-        next: (response) => {
-          if (response.rs === 'S') {
-            this.users = this.users.filter(u => u.id !== user.id);
-            alert('User deleted successfully');
-          } else {
-            alert('Delete failed: ' + response.rd);
+    Swal.fire({
+      title: 'Delete User?',
+      text: `Are you sure you want to delete user "${user.name}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      confirmButtonText: 'Delete'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.identityService.deleteUser(user.email).subscribe({
+          next: (response) => {
+            if (response.rs === 'S') {
+              this.users = this.users.filter(u => u.id !== user.id);
+              Swal.fire('Deleted', 'User deleted successfully', 'success');
+            } else {
+              Swal.fire('Error', response.rd || 'Delete failed', 'error');
+            }
+                this.cdr.detectChanges();
+          },
+          error: () => {
+            Swal.fire('Error', 'Failed to delete user', 'error');
+            this.cdr.detectChanges();
           }
-        },
-        error: (err) => {
-          alert('Error deleting user: ' + err.message);
-          console.error('Delete user error:', err);
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   onToggleStatus(user: User) {
     const newStatus = user.status === 'Active' ? 'deactive' : 'active';
     const newStatusText = user.status === 'Active' ? 'deactivate' : 'activate';
-    
-    if (confirm(`Are you sure you want to ${newStatusText} user "${user.name}"?`)) {
-      this.identityService.updateUserStatus(user.email, newStatus, `${newStatusText}d by admin`).subscribe({
-        next: (response) => {
-          if (response.rs === 'S') {
-            user.status = user.status === 'Active' ? 'Inactive' : 'Active';
-          } else {
-            alert('Status update failed: ' + response.rd);
+
+    Swal.fire({
+      title: `${newStatusText.charAt(0).toUpperCase() + newStatusText.slice(1)} User?`,
+      text: `Are you sure you want to ${newStatusText} user "${user.name}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#155dfc',
+      confirmButtonText: 'Yes'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.identityService.updateUserStatus(user.email, newStatus, `${newStatusText}d by admin`).subscribe({
+          next: (response) => {
+            if (response.rs === 'S') {
+              user.status = user.status === 'Active' ? 'Inactive' : 'Active';
+            } else {
+              Swal.fire('Error', response.rd || 'Status update failed', 'error');
+            }
+                this.cdr.detectChanges();
+          },
+          error: () => {
+            Swal.fire('Error', 'Failed to update user status', 'error');
+            this.cdr.detectChanges();
           }
-        },
-        error: (err) => {
-          alert('Error updating status: ' + err.message);
-          console.error('Update status error:', err);
-        }
-      });
-    }
+        });
+      }
+    });
   }
 }
